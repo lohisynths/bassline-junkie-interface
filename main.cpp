@@ -1,24 +1,40 @@
 #include "mbed.h"
-#include "USBSerial.h"
-
-// Virtual USB Serial port
-USBSerial usb_serial;
+#include "USBMIDI.h"
 
 DigitalOut led(LED1);
 
-int main(void)
-{
-    int i = 0;
 
-    // Print on STDIO
-    printf("USBDevice Serial started\r\n");
+void show_message(MIDIMessage msg) {
+    switch (msg.type()) {
+        case MIDIMessage::NoteOnType:
+            printf("NoteOn key:%d, velocity: %d, channel: %d\n", msg.key(), msg.velocity(), msg.channel());
+            break;
+        case MIDIMessage::NoteOffType:
+            printf("NoteOff key:%d, velocity: %d, channel: %d\n", msg.key(), msg.velocity(), msg.channel());
+            break;
+        case MIDIMessage::ControlChangeType:
+            printf("ControlChange controller: %d, data: %d\n", msg.controller(), msg.value());
+            break;
+        case MIDIMessage::PitchWheelType:
+            printf("PitchWheel channel: %d, pitch: %d\n", msg.channel(), msg.pitch());
+            break;
+        default:
+            printf("Another message\n");
+    }
+}
 
-    while(1) {
+USBMIDI midi;
 
-        // Print on Virtual USB Serial port
-        usb_serial.printf("I am a virtual serial port: %d\r\n", i++);
-
-        led = !led;
-        wait(0.1);
+int main() {
+    midi.attach(show_message);         // call back for messages received
+    while (1) {
+        for(int i=48; i<83; i++) {     // send some messages!
+            midi.write(MIDIMessage::NoteOn(i));
+            led = !led;
+            wait(0.25);
+            led = !led;
+            midi.write(MIDIMessage::NoteOff(i));
+            wait(0.5);
+        }
     }
 }

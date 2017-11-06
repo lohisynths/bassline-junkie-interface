@@ -132,12 +132,10 @@ main.o: ../main.cpp ../mbed_config.h ../mbed/./mbed.h \
  ../mbed/./platform/FileSystemHandle.h ../mbed/./platform/DirHandle.h \
  ../mbed/./platform/FileHandle.h ../mbed/./platform/DirHandle.h \
  ../mbed/./platform/Callback.h ../mbed/./platform/FunctionPointer.h \
- ../USBDevice/USBSerial/USBSerial.h ../USBDevice/USBSerial/USBCDC.h \
- ../USBDevice/USBDevice/USBEndpoints.h \
+ ../USBDevice/USBMIDI/USBMIDI.h ../USBDevice/USBDevice/USBEndpoints.h \
  ../USBDevice/targets/TARGET_STM/USBEndpoints_STM32.h \
  ../USBDevice/USBDevice/USBDescriptor.h \
  ../USBDevice/USBDevice/USBDevice_Types.h \
  ../USBDevice/USBDevice/USBDevice.h \
  ../USBDevice/USBDevice/USBDevice_Types.h ../USBDevice/USBDevice/USBHAL.h \
- ../USBDevice/USBDevice/USBEndpoints.h \
- ../USBDevice/USBSerial/CircBuffer.h
+ ../USBDevice/USBDevice/USBEndpoints.h ../USBDevice/USBMIDI/MIDIMessage.h
