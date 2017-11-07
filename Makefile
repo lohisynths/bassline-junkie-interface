@@ -65,6 +65,12 @@ OBJECTS += USBDevice/targets/TARGET_STM/USBHAL_STM32F4.o
 OBJECTS += main.o
 OBJECTS += PCA9685.o
 OBJECTS += src/Pwm.o
+OBJECTS += src/Mux.o
+OBJECTS += src/Enc.o
+OBJECTS += src/Knob.o
+OBJECTS += src/Button.o
+OBJECTS += src/ADSRCTL.o
+OBJECTS += src/OSCCTL.o
 
  SYS_OBJECTS += mbed/TARGET_NUCLEO_F411RE/TOOLCHAIN_GCC_ARM/stm32f4xx_hal_flash_ramfunc.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_F411RE/TOOLCHAIN_GCC_ARM/PeripheralPins.o
@@ -283,7 +289,7 @@ C_FLAGS += -include
 C_FLAGS += mbed_config.h
 
 CXX_FLAGS += -g
-CXX_FLAGS += -std=gnu++98
+CXX_FLAGS += -std=c++11
 CXX_FLAGS += -fno-rtti
 CXX_FLAGS += -Wvla
 CXX_FLAGS += -D__MBED__=1
