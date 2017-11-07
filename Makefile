@@ -71,6 +71,7 @@ OBJECTS += src/Knob.o
 OBJECTS += src/Button.o
 OBJECTS += src/ADSRCTL.o
 OBJECTS += src/OSCCTL.o
+OBJECTS += src/ENC8.o
 
  SYS_OBJECTS += mbed/TARGET_NUCLEO_F411RE/TOOLCHAIN_GCC_ARM/stm32f4xx_hal_flash_ramfunc.o
  SYS_OBJECTS += mbed/TARGET_NUCLEO_F411RE/TOOLCHAIN_GCC_ARM/PeripheralPins.o

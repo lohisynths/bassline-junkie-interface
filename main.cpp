@@ -5,6 +5,7 @@
 #include "src/Mux.h"
 #include "src/ADSRCTL.h"
 #include "src/OSCCTL.h"
+#include "src/ENC8.h"
 
 DigitalOut led(LED1);
 
@@ -53,6 +54,7 @@ int main() {
 
 	ADSR_CTL adsr;
 	OSC_CTL osc;
+	ENC8 enc8;
 
 	adsr.init(&leds, mux_enc.get(), mux_sw.get(), &midi);
 	osc.init(&leds, mux_enc.get(), mux_sw.get(), &midi);
@@ -86,6 +88,7 @@ int main() {
 
 		uint32_t mux_data = mux_enc.get();
 		uint32_t sw_data = mux_sw.get();
+		enc8.update(mux_data, sw_data);
 
 		adsr.update(mux_data, sw_data);
 		osc.update(mux_data, sw_data);
