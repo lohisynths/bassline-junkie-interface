@@ -1,4 +1,5 @@
 #include "mbed.h"
+#include "PCA9685.h"
 #include "USBMIDI.h"
 
 DigitalOut led(LED1);
@@ -24,8 +25,11 @@ void show_message(MIDIMessage msg) {
 }
 
 USBMIDI midi;
+PCA9685 pwm(I2C_SDA, I2C_SCL);
+bool toggle=0;
 
 int main() {
+	pwm.begin();
     midi.attach(show_message);         // call back for messages received
     while (1) {
         for(int i=48; i<83; i++) {     // send some messages!
@@ -35,6 +39,8 @@ int main() {
             led = !led;
             midi.write(MIDIMessage::NoteOff(i));
             wait(0.5);
+            pwm.setPWM(0,0, toggle*256);
+        	toggle^=1;
         }
     }
 }
