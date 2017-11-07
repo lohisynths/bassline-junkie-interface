@@ -77,7 +77,7 @@
 class PCA9685
 {
 public:
-    PCA9685(PinName sda, PinName scl, int addr = 0x80);
+    PCA9685();
     void frequencyI2C(int freq);
     void begin(void); //Initialize the controller
     void reset(void); //Reset the controller
@@ -99,11 +99,16 @@ public:
      *  @param  on: from 0 to 4095 the tick when the signal should pass from low to high
      *  @param off: from 0 to 4095 the tick when the signal should pass from high to low
      */
+    void set_address(uint8_t addr) {_i2caddr=addr;}
+
+    void i2c_probe();
+
+
+
 private:
     void write8(uint8_t address, uint8_t data);
     char read8(char address);
     int _i2caddr;
-    I2C i2c;
 };
 
 #endif

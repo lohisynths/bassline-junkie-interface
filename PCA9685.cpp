@@ -1,6 +1,32 @@
 #include "PCA9685.h"
 #include "mbed.h"
-PCA9685::PCA9685(PinName sda, PinName scl, int addr) : i2c(sda, scl), _i2caddr(addr) {}
+PCA9685::PCA9685() : _i2caddr(0) {}
+
+static I2C i2c(I2C_SDA, I2C_SCL); // sda, scl
+
+
+extern int dupa[];
+extern int count_;
+
+void PCA9685::i2c_probe()
+{
+    printf("Searching for I2C devices...\n");
+
+    int *tab = dupa;
+    int count = 0;
+    for (int address=4; address<256; address+=2) {
+        if (!i2c.write(address, NULL, 0)) { // 0 returned is ok
+
+            printf(" - I2C device found at address 0x%02X\r\n", address);
+            *tab = address;
+            tab++;
+            count++;
+        }
+    }
+    count_ = count;
+
+    printf("%d devices found\r\n", count);
+}
 
 
 void PCA9685::begin(void)
@@ -36,18 +62,6 @@ int adr[10] = {};
 
 void PCA9685::reset(void)
 {
-	int *tab= adr;
-
-    for (int address=4; address<256; address+=2) {
-        if (!i2c.write(address, NULL, 0)) { // 0 returned is ok
-            printf(" - I2C device found at address 0x%02X\r\n", address);
-            *tab++ = count;
-
-            count++;
-        }
-    }
-
-
     write8(PCA9685_MODE1, 0x0);
 }
 void PCA9685::setPrescale(uint8_t prescale) {
