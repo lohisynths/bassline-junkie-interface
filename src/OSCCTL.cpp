@@ -7,8 +7,6 @@
 
 #include "OSCCTL.h"
 
-extern bool start;
-
 OSC_CTL::OSC_CTL() : midi(nullptr) {
 	// TODO Auto-generated constructor stub
 
@@ -97,7 +95,7 @@ void OSC_CTL::update(int32_t mux_data, int32_t sw_data) {
 		{
 			if(i==0 && !knob[i].get_sw_state())
 			{
-				start^=1;
+				//start^=1;
 			}
 
 #ifdef DEBUG
