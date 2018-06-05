@@ -16,10 +16,9 @@
 #include "USBMIDI.h"
 
 
-#define OSC_KNOB_COUNT 5
-#define OSC_COUNT 3
-
-#define OSC_BUTTON_COUNT 3
+//#define OSC_KNOB_COUNT 5
+//#define OSC_COUNT 3
+//#define OSC_BUTTON_COUNT 3
 
 class OSC_CTL {
 public:

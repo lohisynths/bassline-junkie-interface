@@ -29,6 +29,8 @@
 
 class ADSR : public UI_BLOCK<ADSR_KNOB_COUNT, ADSR_BUTTON_COUNT, ADSR_COUNT> {
 public:
+	~ADSR(){};
+
 	char const *NAME = "ADSR";
 	enum ADSR_BUTTONS {
 		ADSR0, ADSR1, ADSR2, LOOP
@@ -37,17 +39,16 @@ public:
 	void init(Mux *mux, Pwm *leds) {
 
 		knob_data adsr_ctl[ADSR_KNOB_COUNT] = {
-				ADSR_FIRST_ENC_LED +  0, ADSR_FIRST_ENC_MUX_ADR + 0, mux->get(0),
-				ADSR_FIRST_ENC_LED + 10, ADSR_FIRST_ENC_MUX_ADR + 3, mux->get(0),
+				ADSR_FIRST_ENC_LED + 30, ADSR_FIRST_ENC_MUX_ADR + 9, mux->get(0),
 				ADSR_FIRST_ENC_LED + 20, ADSR_FIRST_ENC_MUX_ADR + 6, mux->get(0),
-				ADSR_FIRST_ENC_LED + 30, ADSR_FIRST_ENC_MUX_ADR + 9, mux->get(0)
+				ADSR_FIRST_ENC_LED + 10, ADSR_FIRST_ENC_MUX_ADR + 3, mux->get(0),
+				ADSR_FIRST_ENC_LED +  0, ADSR_FIRST_ENC_MUX_ADR + 0, mux->get(0)
 		};
-
 		sw_data adsr_ctl_sw[ADSR_BUTTON_COUNT] = {
-				ADSR_FIRST_BUTTON_LED,   ADSR_FIRST_BUTTON_MUX_ADR,     mux->get(0),
-				ADSR_FIRST_BUTTON_LED+1, ADSR_FIRST_BUTTON_MUX_ADR + 1, mux->get(0),
+				ADSR_FIRST_BUTTON_LED+3, ADSR_FIRST_BUTTON_MUX_ADR + 3, mux->get(0),
 				ADSR_FIRST_BUTTON_LED+2, ADSR_FIRST_BUTTON_MUX_ADR + 2, mux->get(0),
-				ADSR_FIRST_BUTTON_LED+3, ADSR_FIRST_BUTTON_MUX_ADR + 3, mux->get(0)
+				ADSR_FIRST_BUTTON_LED+1, ADSR_FIRST_BUTTON_MUX_ADR + 1, mux->get(0),
+				ADSR_FIRST_BUTTON_LED,   ADSR_FIRST_BUTTON_MUX_ADR,     mux->get(0)
 		};
 		init_internal(*leds, adsr_ctl, adsr_ctl_sw);
 		Button *sw = get_sw();
