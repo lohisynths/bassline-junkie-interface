@@ -11,6 +11,7 @@
 #include "utils.h"
 #include "mbed.h"
 
+#define MUX_COUNT 2
 
 
 class Mux {
@@ -18,23 +19,26 @@ public:
 	Mux();
 	virtual ~Mux();
 
-	void init(PinName input_pin);
+	void init();
 
 	void update();
 
 
-	uint16_t &get();
+	uint16_t *get(uint8_t index);
 	void print();
+	void print(uint8_t mux_nr);
+
 
 	void print_bit(uint8_t pin);
 
 
 private:
-	uint16_t mux_data=0;
 
-	DigitalIn *mux;
+	uint16_t mux_data[MUX_COUNT];
 
-	BusOut *mux_adr;
+	DigitalIn *mux[MUX_COUNT];
+
+	BusOut mux_adr;
 
 
 };
