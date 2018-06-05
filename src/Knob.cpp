@@ -14,19 +14,6 @@ struct knob_map {
 	uint8_t sw_bit;
 };
 
-static const struct knob_map knob_mapping[KNOB_COUNT] = {
-	{ 6, 30, 3 },
-	{ 4, 20, 2 },
-	{ 2, 10, 1 },
-	{ 0, 0, 0 },
-
-	{ 14, 78, 8 },
-	{ 12, 68, 9 },
-	{ 10, 58, 10 },
-	{ 8, 48, 11 },
-
-	{ 16, 96, 16 }
-};
 
 Knob::Knob() {
 

@@ -1,46 +1,34 @@
 
-#include "src/Synth.h"
+#include "mbed.h"
+#include "src/Mux.h"
+#include "src/Pwm.h"
+#include "src/Knob.h"
+#include "src/UI_BLOCK.h"
+#include "src/ADSR.h"
 
-// PA_0 - mux 0 - env encoders, env buttons
-// 0-2  - env encoder 0
-// 3-5  - env encoder 1
-// 6-8  - env encoder 2
-// 9-11 - env encoder 3
-// 12   - env button  loop
-// 13   - env button  2
-// 14   - env button  1
-// 15   - env button  0
+#define MUX_COUNT 2
 
-
-uint16_t mux_data;
-
-Mux mux(PA_0);
-
-Pwm leds;
-Knob knob;
-uint8_t last_led;
-
-ADSR_CTL adsr;
-
+PinName mux_addr[MUX_COUNT] = {PA_0, PA_1};
 
 int main() {
+	Pwm leds;
+	Mux mux[MUX_COUNT];
+	ADSR adsr;
+
 	leds.init();
 
-	adsr.init(leds, mux_data);
-
-
-
-	while(1) {
-		mux_data = mux.get();
-		adsr.update();
+	for(int i=0; i < MUX_COUNT; i++) {
+		mux[i].init(mux_addr[i]);
 	}
 
+	adsr.init(mux, &leds);
 
-	//Synth synth;
-
-
-	//synth.run();
-
-
+	while(1) {
+		for(int i=0; i < MUX_COUNT; i++) {
+			mux[i].update();
+		}
+		//mux.print();
+		adsr.update();
+	}
 }
 

@@ -12,17 +12,6 @@ struct sw_map {
 	uint8_t sw_bit;
 };
 
-static const struct sw_map sw_mapping[BUTTON_COUNT] = {
-	{43, 7},
-	{42, 6},
-	{41, 5},
-	{40, 4},
-
-	{90, 13},
-	{89, 14},
-	{88, 15}
-};
-
 Button::Button() {
 
 }
@@ -58,7 +47,7 @@ bool Button::get()
 	return last_sw;
 }
 
-void Button::led_on(uint16_t val)
+void Button::set_led_val(uint16_t val)
 {
 	m_leds->set(led, val);
 }

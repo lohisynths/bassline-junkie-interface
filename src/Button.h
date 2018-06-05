@@ -23,7 +23,7 @@ public:
 
 	bool get();
 
-	void led_on(uint16_t val);
+	void set_led_val(uint16_t val);
 
 private:
 	Pwm *m_leds=nullptr;

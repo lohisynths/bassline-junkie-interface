@@ -14,8 +14,7 @@
 #define PWM_DRIVERS_COUNT 7
 #define PWM_COUNT 16
 
-#define KNOB_COUNT 9
-#define BUTTON_COUNT 7
+
 
 #define ENC_MUX_INPUT_PIN 4
 #define SW_MUX_INPUT_PIN 3

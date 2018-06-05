@@ -8,10 +8,26 @@
 #include "Mux.h"
 
 
-Mux::Mux(PinName input_pin) :
-		mux_data(0), mux(input_pin), mux_adr(PB_5, PB_4, PB_10, PA_8) {
+// PA_0 - mux 0 - env encoders, env buttons
+// 0-2  - env encoder 0
+// 3-5  - env encoder 1
+// 6-8  - env encoder 2
+// 9-11 - env encoder 3
+// 12   - env button  loop
+// 13   - env button  2
+// 14   - env button  1
+// 15   - env button  0
+
+Mux::Mux() {
 
 }
+
+void Mux::init(PinName input_pin) {
+	mux_adr = new BusOut(PB_5, PB_4, PB_10, PA_8);
+	mux = new DigitalIn(input_pin);
+}
+
+
 
 Mux::~Mux() {
 
@@ -21,8 +37,8 @@ Mux::~Mux() {
 
 void Mux::update() {
 	for (uint8_t i = 0; i < 16; i++) {
-		mux_adr.write(i);
-		bool bit = mux.read();
+		mux_adr->write(i);
+		bool bit = mux->read();
 		if (bit)
 			SETBIT(mux_data, (i));
 		else
@@ -30,8 +46,7 @@ void Mux::update() {
 	}
 }
 
-uint16_t Mux::get() {
-	update();
+uint16_t &Mux::get() {
 	return mux_data;
 }
 
