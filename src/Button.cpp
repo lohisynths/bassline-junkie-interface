@@ -31,18 +31,19 @@ Button::~Button() {
 
 }
 
-void Button::init(size_t index, Pwm *pwm, int16_t mux_data) {
-	leds = pwm;
+void Button::init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data) {
+	m_leds = &pwm;
+	m_mux_data = &mux_data;
 
-	led = sw_mapping[index].led;
-	sw_bit = sw_mapping[index].sw_bit;
+	led = led_index;
+	sw_bit = mux_index;
 
 }
 
-bool Button::update(int16_t sw_data) {
+bool Button::update() {
 	bool ret = false;
 
-	bool sw = CHECKBIT(sw_data, sw_bit);
+	bool sw = CHECKBIT(*m_mux_data, sw_bit);
 
 	if (last_sw != sw) {
 		ret = true;
@@ -59,7 +60,7 @@ bool Button::get()
 
 void Button::led_on(uint16_t val)
 {
-	leds->set(led, val);
+	m_leds->set(led, val);
 }
 
 

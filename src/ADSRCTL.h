@@ -26,13 +26,16 @@ public:
 	ADSR_CTL();
 	virtual ~ADSR_CTL();
 
-	void init(Pwm *leds, int16_t enc_mux_data, int16_t sw_mux_data, USBMIDI *_midi);
-	void update(int16_t mux_data, int16_t sw_data);
+	void init(Pwm &leds, uint16_t &enc_mux_data);
+	void update();
+	void update_buttons();
 
 private:
+	uint16_t *m_mux_data;
+	Pwm *m_leds;
+
 	Knob knob[ADSR_KNOB_COUNT];
 	Button sw[ADSR_BUTTON_COUNT];
-	USBMIDI *midi;
 
 	uint16_t knob_value[ADSR_COUNT]={};
 	uint8_t current_adsr = 0;

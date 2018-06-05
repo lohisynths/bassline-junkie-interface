@@ -28,7 +28,7 @@ void OSC_CTL::init(Pwm *leds, int32_t enc_mux_data, int32_t sw_mux_data, USBMIDI
 	}
 
 	for (int i = 0; i < OSC_BUTTON_COUNT; i++) {
-		sw[i].init(i+4, leds, sw_mux_data);
+		//sw[i].init(i+4, leds, sw_mux_data);
 	}
 
 	sw[current_osc].led_on(sw_bright);
@@ -38,10 +38,10 @@ void OSC_CTL::init(Pwm *leds, int32_t enc_mux_data, int32_t sw_mux_data, USBMIDI
 
 
 
-void OSC_CTL::update(int32_t mux_data, int32_t sw_data) {
+void OSC_CTL::update() {
 
 	for (int i = 0; i < OSC_BUTTON_COUNT; i++) {
-		bool ret = sw[i].update(sw_data);
+		bool ret = sw[i].update();
 
 		if (ret) {
 

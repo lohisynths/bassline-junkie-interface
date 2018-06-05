@@ -8,7 +8,7 @@
 #ifndef SRC_UTILS_H_
 #define SRC_UTILS_H_
 
-//#define DEBUG
+#define DEBUG
 
 
 #define PWM_DRIVERS_COUNT 7

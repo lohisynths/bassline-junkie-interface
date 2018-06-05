@@ -17,17 +17,17 @@ public:
 	Button();
 	virtual ~Button();
 
-	void init(size_t index, Pwm *pwm, int16_t mux_data);
+	void init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data);
 
-	bool update(int16_t sw_data);
+	bool update();
 
 	bool get();
 
 	void led_on(uint16_t val);
 
 private:
-	Pwm *leds=nullptr;
-
+	Pwm *m_leds=nullptr;
+	uint16_t *m_mux_data;
 	uint8_t led=0;
 	uint8_t sw_bit=0;
 

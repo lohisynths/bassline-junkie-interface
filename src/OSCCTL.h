@@ -28,7 +28,7 @@ public:
 
 
 	void init(Pwm *leds, int32_t enc_mux_data, int32_t sw_mux_data, USBMIDI *_midi);
-	void update(int32_t mux_data, int32_t sw_data);
+	void update();
 
 private:
 	Knob knob[OSC_KNOB_COUNT];

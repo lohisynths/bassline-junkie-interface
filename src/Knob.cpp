@@ -56,6 +56,7 @@ void Knob::init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_da
 
 
 knob_msg Knob::update() {
+
 	knob_msg ret;
 
 	bool sw = CHECKBIT(*m_mux_data, m_mux_index);

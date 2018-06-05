@@ -15,7 +15,7 @@ Synth::Synth() : led(LED1), mux_enc(PA_1), mux_sw(PA_0) {
 	leds.init();
 
 
-	adsr.init(&leds, mux_enc.get(), mux_sw.get(), &midi);
+	//adsr.init(&leds, mux_enc.get(), mux_sw.get(), &midi);
 	osc.init(&leds, mux_enc.get(), mux_sw.get(), &midi);
 
 	printf("configured = %d \n", midi.configured());
@@ -57,8 +57,8 @@ void Synth::run()
 		uint32_t sw_data = mux_sw.get();
 		enc8.update(mux_data, sw_data);
 
-		adsr.update(mux_data, sw_data);
-		osc.update(mux_data, sw_data);
+		//adsr.update(mux_data, sw_data);
+		osc.update();
 	}
 }
 
