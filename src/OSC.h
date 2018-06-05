@@ -15,7 +15,6 @@
 #define OSC_COUNT					(3)
 
 #define OSC_FIRST_ENC_LED			(3*16)
-#define OSC_FIRST_ENC_MUX_ADR		(0)
 
 #define OSC_FIRST_BUTTON_LED		(6*16+(12))
 
@@ -25,24 +24,21 @@ public:
 	~OSC(){};
 
 	char const *NAME = "OSC";
-	enum OSC_BUTTONS {
-		OSC0, OSC1, OSC2, LOOP
-	};
 
 	void init(Mux *mux, Pwm *leds) {
 
 		knob_data OSC_ctl[OSC_KNOB_COUNT] = {
-				OSC_FIRST_ENC_LED +  0, OSC_FIRST_ENC_MUX_ADR + 0,  mux->get(1),
-				OSC_FIRST_ENC_LED + 10, OSC_FIRST_ENC_MUX_ADR + 3,  mux->get(1),
-				OSC_FIRST_ENC_LED + 20, OSC_FIRST_ENC_MUX_ADR + 6,  mux->get(1),
-				OSC_FIRST_ENC_LED + 30, OSC_FIRST_ENC_MUX_ADR + 9,  mux->get(1),
-				OSC_FIRST_ENC_LED + 48, OSC_FIRST_ENC_MUX_ADR + 12, mux->get(1)
+				OSC_FIRST_ENC_LED + 48, 12, mux->get(1),
+				OSC_FIRST_ENC_LED + 30, 9,  mux->get(1),
+				OSC_FIRST_ENC_LED + 20, 6,  mux->get(1),
+				OSC_FIRST_ENC_LED + 10, 3,  mux->get(1),
+				OSC_FIRST_ENC_LED +  0, 0,  mux->get(1)
 		};
 
 		sw_data OSC_ctl_sw[OSC_BUTTON_COUNT] = {
-				OSC_FIRST_BUTTON_LED,   15,    mux->get(1),
-				OSC_FIRST_BUTTON_LED+1, 0 + 1, mux->get(0),
-				OSC_FIRST_BUTTON_LED+2, 0 + 2, mux->get(0),
+				OSC_FIRST_BUTTON_LED+2, 3, 	  mux->get(3),
+				OSC_FIRST_BUTTON_LED+1, 2,	  mux->get(3),
+				OSC_FIRST_BUTTON_LED,   15,   mux->get(1)
 		};
 		init_internal(*leds, OSC_ctl, OSC_ctl_sw);
 		Button *sw = get_sw();
@@ -57,12 +53,8 @@ public:
 			DEBUG_LOG(" released\r\n");
 
 		if (state) {
-			if (index == LOOP) {
-				select_loop(index, state);
-			} else {
-				if (index != current_instance) {
-					select_OSC(index);
-				}
+			if (index != current_instance) {
+				select_OSC(index);
 			}
 		}
 	};
@@ -104,24 +96,8 @@ public:
 			knob[i].led_on(led_nr, led_bright);
 		}
 
-		sw[LOOP].set_led_val(OSC_loop[current_instance] * sw_bright);
-
 		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
 	};
-
-	void select_loop(uint8_t index, bool loop) {
-		OSC_loop[current_instance] ^= 1;
-		Button *sw = get_sw();
-		sw[index].set_led_val(OSC_loop[current_instance] * sw_bright);
-
-		DEBUG_LOG("%s %d ", NAME, current_instance);
-		if (OSC_loop[current_instance]) {
-			DEBUG_LOG("LOOP ON\r\n");
-		} else {
-			DEBUG_LOG("LOOP OFF\r\n");
-		}
-	}
-
 
 private:
 	bool OSC_loop[OSC_COUNT]={};

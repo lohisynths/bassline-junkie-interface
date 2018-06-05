@@ -25,7 +25,9 @@ int main() {
 		for(int i=0; i < MUX_COUNT; i++) {
 			mux.update();
 		}
-		//mux.print(1);
+		//mux.print_bit(3, 2);
+		//mux.print(3);
+
 		adsr.update();
 		osc.update();
 	}

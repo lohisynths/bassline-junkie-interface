@@ -22,7 +22,7 @@ Mux::Mux() : mux_adr(PB_5, PB_4, PB_10, PA_8) {
 
 }
 
-static PinName mux_addr[MUX_COUNT] = {PA_0, PA_1};
+static PinName mux_addr[MUX_COUNT] = {PA_0, PA_1, PA_4, PB_0};
 
 
 void Mux::init() {
@@ -60,12 +60,8 @@ uint16_t *Mux::get(uint8_t index) {
 	return &mux_data[index];
 }
 
-void Mux::print_bit(uint8_t pin) {
-
-	for(uint8_t mux_nr=0; mux_nr<MUX_COUNT; mux_nr++) {
-		printf("mux %d %u\r\n", mux_nr, CHECKBIT(mux_data[mux_nr], 15-pin));
-	}
-
+void Mux::print_bit(uint8_t mux_index, uint8_t pin) {
+	printf("mux %d %u\r\n", mux_index, CHECKBIT(mux_data[mux_index], pin));
 
 }
 

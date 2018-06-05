@@ -43,7 +43,7 @@ public:
 			knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data);
 		}
 		for (int i = 0; i < BUTTON_COUNT; i++) {
-			sw[i].init(swdata[i].sw_first_led,  swdata[i].sw_first_mux_adr, leds, *knobdata[i].knobs_mux_data);
+			sw[i].init(swdata[i].sw_first_led,  swdata[i].sw_first_mux_adr, leds, *swdata[i].sw_mux_data);
 		}
 	};
 

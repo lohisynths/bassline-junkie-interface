@@ -11,7 +11,7 @@
 #include "utils.h"
 #include "mbed.h"
 
-#define MUX_COUNT 2
+#define MUX_COUNT 4
 
 
 class Mux {
@@ -29,7 +29,7 @@ public:
 	void print(uint8_t mux_nr);
 
 
-	void print_bit(uint8_t pin);
+	void print_bit(uint8_t mux_index, uint8_t pin);
 
 
 private:
