@@ -42,7 +42,7 @@ VPATH = ..
 ###############################################################################
 # Project settings
 
-PROJECT := STM32_USBDevice_Serial
+PROJECT := bassline_junkie-interface
 
 
 # Project settings
