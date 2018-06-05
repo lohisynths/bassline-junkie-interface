@@ -29,43 +29,43 @@ static const struct knob_map knob_mapping[KNOB_COUNT] = {
 };
 
 Knob::Knob() {
+
+
+
 }
 
 Knob::~Knob() {
 }
 
-void Knob::init(size_t index, Pwm *pwm, int32_t mux_data) {
-	leds = pwm;
+void Knob::init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data) {
 
-	first_led = knob_mapping[index].first_led;
-	enc_a_bit = knob_mapping[index].enc_bit + 1;
-	enc_b_bit = knob_mapping[index].enc_bit;
+	leds = &pwm;
+	m_mux_data = &mux_data;
+	m_first_led = led_index;
+	m_mux_index = mux_index;
 
-	sw_bit = knob_mapping[index].sw_bit;
+	encoder.init(*m_mux_data, m_mux_index+1);
 
-	encoder.update(
-			CHECKBIT(mux_data, enc_a_bit),
-			CHECKBIT(mux_data, enc_b_bit));
+	encoder.update();
 
 	encoder.set(0);
 	led_on(0, 512);
 
+
 }
 
 
-knob_msg Knob::update(int32_t mux_data, int32_t sw_data) {
+knob_msg Knob::update() {
 	knob_msg ret;
 
-	bool sw = CHECKBIT(sw_data, sw_bit);
+	bool sw = CHECKBIT(*m_mux_data, m_mux_index);
 
 	if (last_sw != sw) {
 		ret.switch_changed = true;
 		last_sw = sw;
 	}
 
-	bool change = encoder.update(
-		CHECKBIT(mux_data, enc_a_bit),
-		CHECKBIT(mux_data, enc_b_bit));
+	bool change = encoder.update();
 
 	if (change) {
 		int16_t enc = encoder.get();
@@ -100,7 +100,7 @@ bool Knob::get_sw_state(){
 
 void Knob::led_on(size_t led_nr, int16_t bright) {
 	led_nr = 9 - led_nr;
-	led_nr += first_led;
+	led_nr += m_first_led;
 	leds->set(led_last, 0);
 	leds->set(led_nr, bright);
 	led_last = led_nr;

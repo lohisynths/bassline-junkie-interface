@@ -16,18 +16,20 @@
 
 class Mux {
 public:
-	Mux(uint8_t input_pin);
+	Mux(PinName input_pin);
 	virtual ~Mux();
 
 	void update();
 
 
-	uint32_t get();
+	uint16_t get();
 	void print();
+
+	void print_bit(uint8_t pin);
 
 
 private:
-	uint32_t mux_data=0;
+	uint16_t mux_data=0;
 
 	DigitalIn mux;
 

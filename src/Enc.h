@@ -9,15 +9,19 @@
 #define SRC_ENC_H_
 
 #include "mbed.h"
+#include "utils.h"
 
 class Enc {
 public:
 	Enc();
 	virtual ~Enc();
 
-	bool update(bool curModeA, bool curModeB	);
+	bool update();
 	int16_t get();
 	void set(int16_t val);
+	void init(uint16_t &data, uint8_t first_bit);
+
+
 
 
 private:
@@ -31,6 +35,12 @@ private:
 	// current and last encoder positions
 	int16_t encPos;
 	int16_t encPosLast;
+	bool curModeA;
+	bool curModeB;
+
+	uint16_t *mux_data = nullptr;
+	uint8_t bit_a;
+
 
 };
 

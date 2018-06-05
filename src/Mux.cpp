@@ -7,18 +7,9 @@
 
 #include "Mux.h"
 
-//	DigitalIn mux1;//(PA_0);
-//	DigitalIn mux2;//(PA_1);
-//
-//	BusOut mux_adr;//(PA_8, PB_10, PB_4, PB_5);
 
-static PinName inputs[2]={
-	PA_0,
-	PA_1
-};
-
-Mux::Mux(uint8_t input_pin) :
-		mux_data(0), mux(inputs[input_pin]), mux_adr(PA_8, PB_10, PB_4, PB_5) {
+Mux::Mux(PinName input_pin) :
+		mux_data(0), mux(input_pin), mux_adr(PB_5, PB_4, PB_10, PA_8) {
 
 }
 
@@ -39,16 +30,21 @@ void Mux::update() {
 	}
 }
 
-uint32_t Mux::get() {
+uint16_t Mux::get() {
 	update();
 	return mux_data;
 }
 
+void Mux::print_bit(uint8_t pin) {
+	printf("%u\r\n", CHECKBIT(mux_data, 15-pin));
+
+}
+
 void Mux::print() {
-	for (uint8_t i = 0; i < 32; i++) {
-		printf("%lu", CHECKBIT(mux_data, i));
-		printf(" ");
+	for (uint8_t i = 0; i < 16; i++) {
+		printf("%u", CHECKBIT(mux_data, 15-i));
+		//printf(" ");
 	}
-	printf("\n");
+	printf("\r\n");
 
 }

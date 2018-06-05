@@ -7,14 +7,23 @@
 
 #include "Enc.h"
 
-Enc::Enc() : lastModeA(0), lastModeB(0), encPos(0), encPosLast(0) {
-	// TODO Auto-generated constructor stub
+Enc::Enc(){
 
 }
 
 Enc::~Enc() {
 	// TODO Auto-generated destructor stub
 }
+
+void Enc::init(uint16_t &data, uint8_t first_bit) {
+	mux_data = &data;
+	bit_a = first_bit;
+	lastModeA = 0;
+	lastModeB = 0;
+	encPos = 0;
+	encPosLast = 0;
+}
+
 
 void Enc::set(int16_t val){
 	encPos=val;
@@ -28,7 +37,9 @@ int16_t Enc::get(){
 
 
 // https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/
-bool Enc::update(bool curModeA, bool curModeB) {
+bool Enc::update() {
+	curModeA = CHECKBIT(*mux_data, bit_a+1);
+	curModeB = CHECKBIT(*mux_data, bit_a);
 	// utility variables
 	bool change=0;
 	// compare the four possible states to figure out what has happened

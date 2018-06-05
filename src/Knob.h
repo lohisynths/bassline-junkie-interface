@@ -21,9 +21,10 @@ struct knob_msg{
 class Knob {
 public:
 	Knob();
+
 	virtual ~Knob();
-	knob_msg update(int32_t mux_data, int32_t sw_data);
-	void init(size_t index, Pwm *pwm, int32_t mux_data)	;
+	knob_msg update();
+	void init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data)	;
 
 	void reset(int16_t mux_data);
 
@@ -37,25 +38,25 @@ public:
 
 
 private:
+
+	Pwm *leds;
+	uint16_t *m_mux_data;
+
+
 	Enc encoder;
 
-	Pwm *leds = nullptr;
 
 	uint16_t encoder_value = 0;
-
 	int16_t enc_last = 0;
-
 	uint16_t led_last = 0;
-
 	uint16_t last_sw = 1;
 
 
 	/////////////////////
 	// mux and pwm registers bit numbers
-	uint8_t enc_a_bit = 0;
-	uint8_t enc_b_bit = 0;
-	uint8_t sw_bit = 0;
-	uint8_t first_led = 0;
+	uint8_t m_first_led = 0;
+	uint8_t m_mux_index = 0;
+
 
 
 

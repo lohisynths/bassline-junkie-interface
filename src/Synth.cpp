@@ -10,7 +10,7 @@
 	uint8_t notes[] = { 42, 44, 41 };
 	static uint8_t seq = 0;
 
-Synth::Synth() : led(LED1), mux_enc(1), mux_sw(0) {
+Synth::Synth() : led(LED1), mux_enc(PA_1), mux_sw(PA_0) {
 
 	leds.init();
 

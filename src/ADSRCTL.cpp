@@ -26,7 +26,7 @@ enum ADSR_BUTTONS{
 void ADSR_CTL::init(Pwm *leds, int16_t enc_mux_data, int16_t sw_mux_data, USBMIDI *_midi) {
 	midi = _midi;
 	for (int i = 0; i < ADSR_KNOB_COUNT; i++) {
-		knob[i].init(i, leds, enc_mux_data);
+		//knob[i].init(i, leds, enc_mux_data);
 	}
 
 	for (int i = 0; i < ADSR_BUTTON_COUNT; i++) {
@@ -117,7 +117,7 @@ void ADSR_CTL::update(int16_t mux_data, int16_t sw_data) {
 
 
 	for (uint8_t i = 0; i < ADSR_KNOB_COUNT; i++) {
-		knob_msg ret = knob[i].update(mux_data, sw_data);
+		knob_msg ret = knob[i].update();
 		if(ret.switch_changed)
 		{
 #ifdef DEBUG

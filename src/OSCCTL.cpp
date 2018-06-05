@@ -24,7 +24,7 @@ void OSC_CTL::init(Pwm *leds, int32_t enc_mux_data, int32_t sw_mux_data, USBMIDI
 
 
 	for (int i = 0; i < OSC_KNOB_COUNT; i++) {
-		knob[i].init(i+4, leds, enc_mux_data);
+		//knob[i].init(i+4, leds, enc_mux_data);
 	}
 
 	for (int i = 0; i < OSC_BUTTON_COUNT; i++) {
@@ -90,7 +90,7 @@ void OSC_CTL::update(int32_t mux_data, int32_t sw_data) {
 
 
 	for (int i = 0; i < OSC_KNOB_COUNT; i++) {
-		knob_msg ret = knob[i].update(mux_data, sw_data);
+		knob_msg ret;// = knob_msg{0};//knob[i].update(mux_data, sw_data);
 		if(ret.switch_changed)
 		{
 			if(i==0 && !knob[i].get_sw_state())
