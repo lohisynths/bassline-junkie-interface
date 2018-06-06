@@ -10,7 +10,7 @@
 
 
 
-MIDI::MIDI() : pc(PA_9, PA_10) {}
+MIDI::MIDI() : pc(PA_9, PA_10, 115200) {}
 
 MIDI::~MIDI() {}
 
