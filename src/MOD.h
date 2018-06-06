@@ -1,46 +1,45 @@
 /*
- * OSC.h
+ * MOD.h
  *
  *  Created on: Jun 5, 2018
  *      Author: alax
  */
 
-#ifndef SRC_OSC_H_
-#define SRC_OSC_H_
+#ifndef SRC_MOD_H_
+#define SRC_MOD_H_
 
 #include "UI_BLOCK.h"
 
-#define OSC_KNOB_COUNT				(5)
-#define OSC_BUTTON_COUNT			(3)
-#define OSC_COUNT					(3)
+#define MOD_KNOB_COUNT				(1)
+#define MOD_BUTTON_COUNT			(6)
+#define MOD_COUNT					(6)
 
-#define OSC_FIRST_ENC_LED			(3*16)
+#define MOD_FIRST_ENC_LED			(7*16)
 
-#define OSC_FIRST_BUTTON_LED		(6*16+(12))
+#define MOD_FIRST_BUTTON_LED		(7*16+(10))
 
 
-class OSC : public UI_BLOCK<OSC_KNOB_COUNT, OSC_BUTTON_COUNT, OSC_COUNT> {
+class MOD : public UI_BLOCK<MOD_KNOB_COUNT, MOD_BUTTON_COUNT, MOD_COUNT> {
 public:
-	~OSC(){};
+	~MOD(){};
 
-	char const *NAME = "OSC";
+	char const *NAME = "MOD";
 
 	void init(Mux *mux, Pwm *leds) {
 
-		knob_data OSC_ctl[OSC_KNOB_COUNT] = {
-				OSC_FIRST_ENC_LED + 48, 12, mux->get(1),
-				OSC_FIRST_ENC_LED + 30, 9,  mux->get(1),
-				OSC_FIRST_ENC_LED + 20, 6,  mux->get(1),
-				OSC_FIRST_ENC_LED + 10, 3,  mux->get(1),
-				OSC_FIRST_ENC_LED +  0, 0,  mux->get(1)
+		knob_data MOD_ctl[MOD_KNOB_COUNT] = {
+				MOD_FIRST_ENC_LED +  0, 0,  mux->get(2)
 		};
 
-		sw_data OSC_ctl_sw[OSC_BUTTON_COUNT] = {
-				OSC_FIRST_BUTTON_LED+2, 3, 	  mux->get(3),
-				OSC_FIRST_BUTTON_LED+1, 2,	  mux->get(3),
-				OSC_FIRST_BUTTON_LED,   15,   mux->get(1)
+		sw_data MOD_ctl_sw[MOD_BUTTON_COUNT] = {
+				MOD_FIRST_BUTTON_LED,   3, 	mux->get(2),
+				MOD_FIRST_BUTTON_LED+1, 4,	mux->get(2),
+				MOD_FIRST_BUTTON_LED+2, 5,  mux->get(2),
+				MOD_FIRST_BUTTON_LED+3, 6, 	mux->get(2),
+				MOD_FIRST_BUTTON_LED+4, 7,	mux->get(2),
+				MOD_FIRST_BUTTON_LED+5, 8,  mux->get(2)
 		};
-		init_internal(*leds, OSC_ctl, OSC_ctl_sw);
+		init_internal(*leds, MOD_ctl, MOD_ctl_sw);
 		Button *sw = get_sw();
 		sw[current_instance].set_led_val(sw_bright);
 	}
@@ -54,7 +53,7 @@ public:
 
 		if (state) {
 			if (index != current_instance) {
-				select_OSC(index);
+				select_MOD(index);
 			}
 		}
 	};
@@ -72,25 +71,25 @@ public:
 
 		Knob *knob = get_knobs();
 		int16_t actual_value = knob[index].get_value();
-		OSC_val[current_instance][index] = actual_value;
+		MOD_val[current_instance][index] = actual_value;
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
 	}
 
-	void select_OSC(uint8_t index) {
+	void select_MOD(uint8_t index) {
 		Button *sw = get_sw();
 
 		sw[index].set_led_val(sw_bright);
 
-		// get button number of button from current OSC and turn led off
+		// get button number of button from current MOD and turn led off
 		sw[current_instance].set_led_val(0);
 
 		current_instance = index;
 
-		for (int i = 0; i < OSC_KNOB_COUNT; i++) {
+		for (int i = 0; i < MOD_KNOB_COUNT; i++) {
 			Knob *knob = get_knobs();
-			knob[i].set_value(OSC_val[current_instance][i]);
+			knob[i].set_value(MOD_val[current_instance][i]);
 
 			int led_nr = knob[i].get_value() / 7;
 			knob[i].led_on(led_nr, led_bright);
@@ -100,7 +99,7 @@ public:
 	};
 
 private:
-	int16_t OSC_val[OSC_COUNT][OSC_KNOB_COUNT]={};
+	int16_t MOD_val[MOD_COUNT][MOD_KNOB_COUNT]={};
 
 	int led_bright = 256;
 	int sw_bright = 1024;
@@ -110,4 +109,4 @@ private:
 };
 
 
-#endif /* SRC_OSC_H_ */
+#endif /* SRC_MOD_H_ */

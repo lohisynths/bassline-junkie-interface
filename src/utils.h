@@ -11,17 +11,10 @@
 #define DEBUG
 
 
-#define PWM_DRIVERS_COUNT 7
+#define PWM_DRIVERS_COUNT 13
 #define PWM_COUNT 16
 
 
-
-#define ENC_MUX_INPUT_PIN 4
-#define SW_MUX_INPUT_PIN 3
-
-#define SW_ENC8_INPUT_PIN 5
-#define ENC_ENC8A_INPUT_PIN 6
-#define ENC_ENC8B_INPUT_PIN 7
 
 #define CHECKBIT(n, x)      ((n >> x) & 1)
 #define SETBIT(n, x)        (n |=  (1L << x))
