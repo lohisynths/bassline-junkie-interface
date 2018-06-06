@@ -21,6 +21,18 @@
 #define CLEARBIT(n, x)      (n &= ~(1L << x))
 #define TOGGLEBIT(n, x)     (n ^= (1 << x))
 
+#ifdef DEBUG
+#define DEBUG_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
+#else
+#define  DEBUG_LOG(f_, ...) void( ( (f_), ##__VA_ARGS__ ) )
+#endif
+
+#ifdef VERBOSE
+#define VERBOSE_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
+#else
+#define  VERBOSE_LOG(f_, ...) void( ( (f_), ##__VA_ARGS__ ) )
+#endif
+
 
 
 #endif /* SRC_UTILS_H_ */

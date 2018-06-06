@@ -76,6 +76,9 @@ public:
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
+
+		midi.send_cc(index+(current_instance * OSC_KNOB_COUNT), value, 0);
+
 	}
 
 	void select_OSC(uint8_t index) {

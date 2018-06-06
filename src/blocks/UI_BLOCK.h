@@ -13,18 +13,6 @@
 #include "../Knob.h"
 #include "../Button.h"
 
-#ifdef DEBUG
-#define DEBUG_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
-#else
-#define  DEBUG_LOG(f_, ...) void( ( (f_), ##__VA_ARGS__ ) )
-#endif
-
-
-#ifdef VERBOSE
-#define VERBOSE_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
-#else
-#define  VERBOSE_LOG(f_, ...) void( ( (f_), ##__VA_ARGS__ ) )
-#endif
 
 
 struct knob_data {
