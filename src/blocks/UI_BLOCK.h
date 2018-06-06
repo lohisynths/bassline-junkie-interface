@@ -8,10 +8,10 @@
 #ifndef SRC_ADSRCTL_H_
 #define SRC_ADSRCTL_H_
 
-#include "utils.h"
+#include "../utils.h"
 
-#include "Knob.h"
-#include "Button.h"
+#include "../Knob.h"
+#include "../Button.h"
 
 #ifdef DEBUG
 #define DEBUG_LOG(f_, ...) printf((f_), ##__VA_ARGS__)

@@ -3,11 +3,11 @@
 #include "src/Mux.h"
 #include "src/Pwm.h"
 #include "src/Knob.h"
-#include "src/UI_BLOCK.h"
-#include "src/ADSR.h"
-#include "src/OSC.h"
-#include "src/MOD.h"
-#include "src/LFO.h"
+
+#include "src/blocks/ADSR.h"
+#include "src/blocks/OSC.h"
+#include "src/blocks/MOD.h"
+#include "src/blocks/LFO.h"
 
 
 
