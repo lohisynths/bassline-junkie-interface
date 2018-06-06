@@ -18,7 +18,8 @@
 // 14   - env button  1
 // 15   - env button  0
 
-Mux::Mux() : mux_adr(PB_5, PB_4, PB_10, PA_8) {
+// PB_13, PB_14
+Mux::Mux() : mux_adr(PB_5, PB_4, PB_10, PA_8), mux_raw(PB_2, PB_1, PB_15) {
 
 }
 
@@ -53,7 +54,11 @@ void Mux::update() {
 			else
 				CLEARBIT(mux_data[mux_nr], (i));
 		}
+
 	}
+
+	mux_data[MUX_COUNT] = mux_raw;
+
 }
 
 uint16_t *Mux::get(uint8_t index) {

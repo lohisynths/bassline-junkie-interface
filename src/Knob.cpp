@@ -46,7 +46,10 @@ knob_msg Knob::update() {
 
 	knob_msg ret;
 
+
 	bool sw = CHECKBIT(*m_mux_data, m_mux_index);
+
+
 
 	if (last_sw != sw) {
 		ret.switch_changed = true;

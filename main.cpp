@@ -7,6 +7,7 @@
 #include "src/ADSR.h"
 #include "src/OSC.h"
 #include "src/MOD.h"
+#include "src/LFO.h"
 
 
 
@@ -16,12 +17,14 @@ int main() {
 	ADSR adsr;
 	OSC osc;
 	MOD mod;
+	LFO lfo;
 
 	leds.init();
 	mux.init();
-	adsr.init(&mux, &leds);
-	osc.init(&mux, &leds);
-	mod.init(&mux, &leds);
+//	adsr.init(&mux, &leds);
+//	osc.init(&mux, &leds);
+//	mod.init(&mux, &leds);
+	lfo.init(&mux, &leds);
 
 	bool rap=false;
 
@@ -29,12 +32,21 @@ int main() {
 		for(int i=0; i < MUX_COUNT; i++) {
 			mux.update();
 		}
-		//mux.print_bit(3, 2);
-		//mux.print(2);
+		static int j=0;
+		if(!rap) {
+			j++;
+			if(j>32) j=0;
+		}
 
-		adsr.update();
-		osc.update();
-		mod.update();
+
+//		leds.set(8*16+j, (rap^=1)*1024);
+		//mux.print_bit(4, 0);
+		//mux.print(4);
+
+	//	adsr.update();
+	//	osc.update();
+	//	mod.update();
+		lfo.update();
 	}
 }
 

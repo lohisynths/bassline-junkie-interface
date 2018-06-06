@@ -34,13 +34,13 @@ public:
 
 private:
 
-	uint16_t mux_data[MUX_COUNT];
+	uint16_t mux_data[MUX_COUNT+1];
 
 	DigitalIn *mux[MUX_COUNT];
 
 	BusOut mux_adr;
 
-
+	BusIn mux_raw;
 };
 
 #endif /* SRC_MUX_H_ */
