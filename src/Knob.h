@@ -24,7 +24,8 @@ public:
 
 	virtual ~Knob();
 	knob_msg update();
-	void init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data)	;
+
+	void init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data, uint16_t max_val, uint8_t leds_count);
 
 	void reset(int16_t mux_data);
 
@@ -35,6 +36,7 @@ public:
 	void set_value(int16_t val);
 
 	bool get_sw_state();
+	uint16_t get_max(){return knob_max_val;};
 
 
 private:
@@ -51,6 +53,8 @@ private:
 	uint16_t led_last = 0;
 	uint16_t last_sw = 1;
 
+	uint16_t knob_max_val = 0;
+	uint16_t knob_leds_count = 0;
 
 	/////////////////////
 	// mux and pwm registers bit numbers

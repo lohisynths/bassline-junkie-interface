@@ -35,7 +35,7 @@ public:
 
 	void init_internal(Pwm &leds, knob_data knobdata[KNOB_COUNT], sw_data swdata[BUTTON_COUNT]) {
 		for (int i = 0; i < KNOB_COUNT; i++) {
-			knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data);
+			knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data, 64, 10);
 		}
 		for (int i = 0; i < BUTTON_COUNT; i++) {
 			sw[i].init(swdata[i].sw_first_led,  swdata[i].sw_first_mux_adr, leds, *swdata[i].sw_mux_data);

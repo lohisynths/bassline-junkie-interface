@@ -27,10 +27,27 @@ public:
 
 	char const *NAME = "FLT";
 
+	void init_internal(Pwm &leds, knob_data knobdata[FLT_KNOB_COUNT], sw_data swdata[FLT_BUTTON_COUNT]) {
+		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
+			Knob *knob = get_knobs();
+			if(i == 0) {
+				knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data, 119, 12);
+				// cutoff frequency knob
+			} else {
+				knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data, 64, 10);
+			}
+
+		}
+		for (int i = 0; i < FLT_BUTTON_COUNT; i++) {
+			Button *sw = get_sw();
+			sw[i].init(swdata[i].sw_first_led,  swdata[i].sw_first_mux_adr, leds, *swdata[i].sw_mux_data);
+		}
+	};
+
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
 		knob_data FLT_ctl[FLT_KNOB_COUNT] = {
-				FLT_FIRST_ENC_LED +  2, 4,  mux->get(3),
+				FLT_FIRST_ENC_LED + 0 , 4,  mux->get(3),
 				FLT_FIRST_ENC_LED + 16, 7,  mux->get(3)
 		};
 
@@ -73,12 +90,23 @@ public:
 		Knob *knob = get_knobs();
 		int16_t actual_value = knob[index].get_value();
 
-		int led_nr = actual_value / 7;
-		knob[index].led_on(led_nr, led_bright);
+
+		if(index == 0) {
+			int led_nr = actual_value / 10;
+			knob[index].led_on(led_nr, led_bright);
+			// resonance cutoff - one knob per function
+			midi->send_cc(FLT_MIDI_OFFSET+index, value, 0);
+			// cutoff frequency knob
+		} else {
+			int led_nr = actual_value / 7;
+			knob[index].led_on(led_nr, led_bright);
+			// resonance cutoff - one knob per function
+			midi->send_cc(FLT_MIDI_OFFSET+index, value*2, 0);
+		}
 
 
-		// resonance cutoff - one knob per function
-		midi->send_cc(FLT_MIDI_OFFSET+index, value, 0);
+
+
 
 	}
 

@@ -78,7 +78,7 @@ public:
 		knob[index].led_on(led_nr, led_bright);
 
 		// OSC_KNOB_COUNT+1 - fine / octave detune - double knob function
-		midi->send_cc(1+index+(current_instance * (OSC_KNOB_COUNT+1)), value, 0);
+		midi->send_cc(1+index+(current_instance * (OSC_KNOB_COUNT+1)), value*2, 0);
 	}
 
 	void select_OSC(uint8_t index) {

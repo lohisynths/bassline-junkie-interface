@@ -19,10 +19,10 @@ MIDI *midi_glob;
 void do_message(MIDIMessage msg) {
     switch (msg.type()) {
         case MIDIMessage::NoteOnType:
-        	midi_glob->send_note(msg.key(), msg.velocity() , 0 );
+        	midi_glob->send_note_on(msg.key(), msg.velocity() , 0 );
             break;
         case MIDIMessage::NoteOffType:
-        	midi_glob->send_note(msg.key(), msg.velocity() , 0 );
+        	midi_glob->send_note_off(msg.key(), msg.velocity() , 0 );
             break;
     }
 }
@@ -55,13 +55,12 @@ int main() {
 		for(int i=0; i < MUX_COUNT; i++) {
 			mux.update();
 		}
-		static int j=0;
-		if(!rap) {
-			j++;
-			if(j>32) j=0;
-		}
 
-
+		//		static int j=0;
+//		if(!rap) {
+//			j++;
+//			if(j>10000) j=0;
+//		}
 //		leds.set(9*16+j, (rap^=1)*1024);
 		//mux.print_bit(4, 0);
 		//mux.print(3);

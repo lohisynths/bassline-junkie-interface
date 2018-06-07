@@ -24,7 +24,9 @@ Knob::Knob() {
 Knob::~Knob() {
 }
 
-void Knob::init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data) {
+void Knob::init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data, uint16_t max_val, uint8_t leds_count) {
+	knob_leds_count = leds_count;
+	knob_max_val = max_val;
 
 	leds = &pwm;
 	m_mux_data = &mux_data;
@@ -66,7 +68,7 @@ knob_msg Knob::update() {
 				encoder_value--;
 
 		} else {
-			if (encoder_value < 63)
+			if (encoder_value < knob_max_val)
 				encoder_value++;
 		}
 
@@ -90,7 +92,7 @@ bool Knob::get_sw_state(){
 }
 
 void Knob::led_on(size_t led_nr, int16_t bright) {
-	led_nr = 9 - led_nr;
+	led_nr = (knob_leds_count-1) - led_nr;
 	led_nr += m_first_led;
 	leds->set(led_last, 0);
 	leds->set(led_nr, bright);
