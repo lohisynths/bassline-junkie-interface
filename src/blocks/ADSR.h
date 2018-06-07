@@ -26,6 +26,7 @@
 #define ADSR_BUTTON_COUNT			(4)
 #define ADSR_COUNT					(3)
 
+#define ADSR_MIDI_OFFSET			(18)
 
 class ADSR : public UI_BLOCK<ADSR_KNOB_COUNT, ADSR_BUTTON_COUNT, ADSR_COUNT> {
 public:
@@ -90,6 +91,9 @@ public:
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
+
+		// attack decay sustain release - one knob per function
+		midi.send_cc(ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT), value, 0);
 	}
 
 	void select_adsr(uint8_t index) {

@@ -15,21 +15,26 @@ MIDI::MIDI() : pc(PA_9, PA_10, 115200) {}
 MIDI::~MIDI() {}
 
 ssize_t MIDI::raspi_usart_write(const void* buffer, size_t length) {
-    const char* ptr = (const char*)buffer;
-    const char* end = ptr + length;
+    const uint8_t* ptr = (const uint8_t*)buffer;
+    const uint8_t* end = ptr + length;
 
     while (ptr != end) {
-        if (pc.putc(*ptr++) == EOF) {
+    	uint8_t data = *ptr++;
+        if (pc.putc(data) == EOF) {
             break;
         }
     }
-    return ptr - (const char*)buffer;
+    return ptr - (const uint8_t*)buffer;
 }
 
-void MIDI::send_cc(uint8_t CC, uint8_t val, uint8_t channel) {
-	MIDIMessage msg = MIDIMessage::ControlChange(CC, val, channel);
-	raspi_usart_write(msg.data, msg.length);
-	show_message(msg);
+void MIDI::send_cc(uint8_t control, uint8_t value, uint8_t channel) {
+	uint8_t msg[3];
+    msg[0] = 0xB0 | (channel & 0x0F);
+    msg[1] = control & 0x7F;
+    msg[2] = value & 0x7F;
+
+   	raspi_usart_write(msg, sizeof(msg));
+	//show_message(msg);
 }
 
 
