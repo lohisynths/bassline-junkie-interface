@@ -18,6 +18,7 @@
 
 #define LFO_FIRST_BUTTON_LED		(LFO_FIRST_ENC_LED+10)
 
+#define LFO_MIDI_OFFSET				(36)
 
 class LFO : public UI_BLOCK<LFO_KNOB_COUNT, LFO_BUTTON_COUNT, LFO_COUNT> {
 public:
@@ -87,6 +88,17 @@ public:
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
+
+		/*
+		LFO_OFFSET 36	0 + LFO_PARAMS*0	36	LFO 0 SHAPE
+			1 + LFO_PARAMS*0	37	LFO 0 FREQ
+			0 + LFO_PARAMS*1	38	LFO 1 SHAPE
+			1 + LFO_PARAMS*1	39	LFO 1 FREQ
+			0 + LFO_PARAMS*2	40	LFO 2 SHAPE
+			1 + LFO_PARAMS*2	41	LFO 2 FREQ
+		*/
+		// controll only frequency of every LFO
+		midi.send_cc(LFO_MIDI_OFFSET+index+ 1 + (current_instance*2), value, 0);
 	}
 
 	void select_LFO(uint8_t index) {
@@ -130,6 +142,20 @@ public:
 
 			LFO_shape[current_instance] = index;
 			DEBUG_LOG("%s %d SHAPE %d\r\n", NAME, current_instance, index);
+
+
+			/*
+			LFO_OFFSET 36
+				0 + LFO_PARAMS*0	36	LFO 0 SHAPE
+				1 + LFO_PARAMS*0	37	LFO 0 FREQ
+				0 + LFO_PARAMS*1	38	LFO 1 SHAPE
+				1 + LFO_PARAMS*1	39	LFO 1 FREQ
+				0 + LFO_PARAMS*2	40	LFO 2 SHAPE
+				1 + LFO_PARAMS*2	41	LFO 2 FREQ
+			*/
+			// controll only frequency of every LFO
+			midi.send_cc(LFO_MIDI_OFFSET + (current_instance*2), index*24, 0);
+
 		}
 	}
 

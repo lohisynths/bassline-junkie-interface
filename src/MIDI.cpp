@@ -34,6 +34,7 @@ void MIDI::send_cc(uint8_t control, uint8_t value, uint8_t channel) {
     msg[2] = value & 0x7F;
 
    	raspi_usart_write(msg, sizeof(msg));
+	//DEBUG_LOG("CC :%d, velocity: %d, \r\n", control, value);
 	//show_message(msg);
 }
 

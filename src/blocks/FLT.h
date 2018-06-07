@@ -18,6 +18,8 @@
 
 #define FLT_FIRST_BUTTON_LED		(FLT_FIRST_ENC_LED+28)
 
+#define FLT_MIDI_OFFSET				(32)
+
 
 class FLT : public UI_BLOCK<FLT_KNOB_COUNT, FLT_BUTTON_COUNT, FLT_COUNT> {
 public:
@@ -73,6 +75,11 @@ public:
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
+
+
+		// resonance cutoff - one knob per function
+		midi.send_cc(FLT_MIDI_OFFSET+index, value, 0);
+
 	}
 
 	void select_MODE(uint8_t index) {
