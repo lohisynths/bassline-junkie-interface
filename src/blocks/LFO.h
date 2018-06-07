@@ -26,8 +26,8 @@ public:
 
 	char const *NAME = "LFO";
 
-	void init(Mux *mux, Pwm *leds) {
-
+	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
+		midi = midi_;
 		knob_data LFO_ctl[LFO_KNOB_COUNT] = {
 				LFO_FIRST_ENC_LED +  0, 0,  mux->get(4)
 		};
@@ -98,7 +98,7 @@ public:
 			1 + LFO_PARAMS*2	41	LFO 2 FREQ
 		*/
 		// controll only frequency of every LFO
-		midi.send_cc(LFO_MIDI_OFFSET+index+ 1 + (current_instance*2), value, 0);
+		midi->send_cc(LFO_MIDI_OFFSET+index+ 1 + (current_instance*2), value, 0);
 	}
 
 	void select_LFO(uint8_t index) {
@@ -154,7 +154,7 @@ public:
 				1 + LFO_PARAMS*2	41	LFO 2 FREQ
 			*/
 			// controll only frequency of every LFO
-			midi.send_cc(LFO_MIDI_OFFSET + (current_instance*2), index*24, 0);
+			midi->send_cc(LFO_MIDI_OFFSET + (current_instance*2), index*24, 0);
 
 		}
 	}
@@ -167,6 +167,7 @@ private:
 	int led_bright = 256;
 	int sw_bright = 1024;
 	uint8_t current_instance = 0;
+	MIDI *midi;
 
 
 };

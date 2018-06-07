@@ -25,8 +25,8 @@ public:
 
 	char const *NAME = "MOD";
 
-	void init(Mux *mux, Pwm *leds) {
-
+	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
+		midi = midi_;
 		knob_data MOD_ctl[MOD_KNOB_COUNT] = {
 				MOD_FIRST_ENC_LED +  0, 0,  mux->get(2)
 		};
@@ -104,6 +104,7 @@ private:
 	int led_bright = 256;
 	int sw_bright = 1024;
 	uint8_t current_instance = 0;
+	MIDI *midi;
 
 
 };

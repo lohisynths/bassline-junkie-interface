@@ -27,8 +27,8 @@ public:
 
 	char const *NAME = "FLT";
 
-	void init(Mux *mux, Pwm *leds) {
-
+	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
+		midi = midi_;
 		knob_data FLT_ctl[FLT_KNOB_COUNT] = {
 				FLT_FIRST_ENC_LED +  2, 4,  mux->get(3),
 				FLT_FIRST_ENC_LED + 16, 7,  mux->get(3)
@@ -78,7 +78,7 @@ public:
 
 
 		// resonance cutoff - one knob per function
-		midi.send_cc(FLT_MIDI_OFFSET+index, value, 0);
+		midi->send_cc(FLT_MIDI_OFFSET+index, value, 0);
 
 	}
 
@@ -100,6 +100,7 @@ private:
 
 	int led_bright = 256;
 	int sw_bright = 1024;
+	MIDI *midi;
 
 };
 

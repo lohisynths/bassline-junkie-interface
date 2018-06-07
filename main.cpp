@@ -5,7 +5,6 @@
 #include "src/Knob.h"
 
 #include "src/MIDI.h"
-static MIDI midi;
 
 #include "src/blocks/ADSR.h"
 #include "src/blocks/OSC.h"
@@ -14,8 +13,25 @@ static MIDI midi;
 #include "src/blocks/FLT.h"
 
 
+#include "USBMIDI.h"
+MIDI *midi_glob;
+
+void do_message(MIDIMessage msg) {
+    switch (msg.type()) {
+        case MIDIMessage::NoteOnType:
+        	midi_glob->send_note(msg.key(), msg.velocity() , 0 );
+            break;
+        case MIDIMessage::NoteOffType:
+        	midi_glob->send_note(msg.key(), msg.velocity() , 0 );
+            break;
+    }
+}
 
 int main() {
+	USBMIDI midi_usb;
+	MIDI midi;
+	midi_glob = &midi;
+	
 	Pwm leds;
 	Mux mux;
 	ADSR adsr;
@@ -26,14 +42,15 @@ int main() {
 
 	leds.init();
 	mux.init();
-	adsr.init(&mux, &leds);
-	osc.init(&mux, &leds);
-	mod.init(&mux, &leds);
-	lfo.init(&mux, &leds);
-	filter.init(&mux, &leds);
+
+	adsr.init(&mux, &leds, &midi);
+	osc.init(&mux, &leds, &midi);
+	mod.init(&mux, &leds, &midi);
+	lfo.init(&mux, &leds, &midi);
+	filter.init(&mux, &leds, &midi);
+	midi_usb.attach(do_message);         // call back for messages received
 
 	bool rap=false;
-
 	while(1) {
 		for(int i=0; i < MUX_COUNT; i++) {
 			mux.update();

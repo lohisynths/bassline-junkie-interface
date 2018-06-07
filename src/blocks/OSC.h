@@ -25,8 +25,8 @@ public:
 
 	char const *NAME = "OSC";
 
-	void init(Mux *mux, Pwm *leds) {
-
+	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
+		midi = midi_;
 		knob_data OSC_ctl[OSC_KNOB_COUNT] = {
 				OSC_FIRST_ENC_LED + 48, 12, mux->get(1),
 				OSC_FIRST_ENC_LED + 30, 9,  mux->get(1),
@@ -78,7 +78,7 @@ public:
 		knob[index].led_on(led_nr, led_bright);
 
 		// OSC_KNOB_COUNT+1 - fine / octave detune - double knob function
-		midi.send_cc(1+index+(current_instance * (OSC_KNOB_COUNT+1)), value, 0);
+		midi->send_cc(1+index+(current_instance * (OSC_KNOB_COUNT+1)), value, 0);
 	}
 
 	void select_OSC(uint8_t index) {
@@ -108,6 +108,7 @@ private:
 	int led_bright = 256;
 	int sw_bright = 1024;
 	uint8_t current_instance = 0;
+	MIDI *midi;
 
 
 };

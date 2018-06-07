@@ -18,8 +18,8 @@ public:
 	virtual ~MIDI();
 
 	void send_cc(uint8_t CC, uint8_t val, uint8_t channel);
-
-
+	void send_note(uint8_t key, uint8_t velocity, uint8_t channel);
+	void putc(uint8_t key);
 
 private:
 	Serial pc;

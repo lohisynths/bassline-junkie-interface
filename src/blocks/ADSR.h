@@ -37,8 +37,8 @@ public:
 		ADSR0, ADSR1, ADSR2, LOOP
 	};
 
-	void init(Mux *mux, Pwm *leds) {
-
+	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
+		midi = midi_;
 		knob_data adsr_ctl[ADSR_KNOB_COUNT] = {
 				ADSR_FIRST_ENC_LED + 30, ADSR_FIRST_ENC_MUX_ADR + 9, mux->get(0),
 				ADSR_FIRST_ENC_LED + 20, ADSR_FIRST_ENC_MUX_ADR + 6, mux->get(0),
@@ -93,7 +93,7 @@ public:
 		knob[index].led_on(led_nr, led_bright);
 
 		// attack decay sustain release - one knob per function
-		midi.send_cc(ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT), value, 0);
+		midi->send_cc(ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT), value, 0);
 	}
 
 	void select_adsr(uint8_t index) {
@@ -140,7 +140,7 @@ private:
 	int led_bright = 256;
 	int sw_bright = 1024;
 	uint8_t current_instance = 0;
-
+	MIDI *midi;
 
 };
 

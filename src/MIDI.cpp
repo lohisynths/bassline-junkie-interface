@@ -27,6 +27,23 @@ ssize_t MIDI::raspi_usart_write(const void* buffer, size_t length) {
     return ptr - (const uint8_t*)buffer;
 }
 
+void MIDI::putc(uint8_t key) {
+	pc.putc(key);
+   	DEBUG_LOG("putc %d\r\n", key);
+	//show_message(msg);
+}
+
+void MIDI::send_note(uint8_t key, uint8_t velocity, uint8_t channel) {
+	uint8_t msg[3];
+    msg[0] = 0x90 | (channel & 0x0F);
+    msg[1] = key & 0x7F;
+    msg[2] = velocity & 0x7F;
+
+   	raspi_usart_write(msg, sizeof(msg));
+   	DEBUG_LOG("CC :%d, velocity: %d, \r\n", key, velocity);
+	//show_message(msg);
+}
+
 void MIDI::send_cc(uint8_t control, uint8_t value, uint8_t channel) {
 	uint8_t msg[3];
     msg[0] = 0xB0 | (channel & 0x0F);
