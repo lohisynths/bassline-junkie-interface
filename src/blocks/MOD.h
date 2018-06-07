@@ -18,6 +18,7 @@
 
 #define MOD_FIRST_BUTTON_LED		(MOD_FIRST_ENC_LED+10)
 
+#define MOD_MIDI_OFFSET 			(96)
 
 class MOD : public UI_BLOCK<MOD_KNOB_COUNT, MOD_BUTTON_COUNT, MOD_COUNT> {
 public:
@@ -32,12 +33,13 @@ public:
 		};
 
 		sw_data MOD_ctl_sw[MOD_BUTTON_COUNT] = {
-				MOD_FIRST_BUTTON_LED,   3, 	mux->get(2),
-				MOD_FIRST_BUTTON_LED+1, 4,	mux->get(2),
-				MOD_FIRST_BUTTON_LED+2, 5,  mux->get(2),
-				MOD_FIRST_BUTTON_LED+3, 6, 	mux->get(2),
+				MOD_FIRST_BUTTON_LED+5, 8,  mux->get(2),
 				MOD_FIRST_BUTTON_LED+4, 7,	mux->get(2),
-				MOD_FIRST_BUTTON_LED+5, 8,  mux->get(2)
+				MOD_FIRST_BUTTON_LED+3, 6, 	mux->get(2),
+				MOD_FIRST_BUTTON_LED+2, 5,  mux->get(2),
+				MOD_FIRST_BUTTON_LED+1, 4,	mux->get(2),
+				MOD_FIRST_BUTTON_LED,   3, 	mux->get(2)
+
 		};
 		init_internal(*leds, MOD_ctl, MOD_ctl_sw);
 		Button *sw = get_sw();
@@ -75,6 +77,8 @@ public:
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
+
+		midi->send_cc(MOD_MIDI_OFFSET+current_instance + (mod_dest*MOD_COUNT), value, 0);
 	}
 
 	void select_MOD(uint8_t index) {
@@ -98,6 +102,12 @@ public:
 		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
 	};
 
+	void select_MOD_dest(int index) {
+		if(index > -1) {
+			mod_dest = index;
+		}
+	}
+
 private:
 	int16_t MOD_val[MOD_COUNT][MOD_KNOB_COUNT]={};
 
@@ -106,6 +116,7 @@ private:
 	uint8_t current_instance = 0;
 	MIDI *midi;
 
+	uint8_t mod_dest = 0;
 
 };
 

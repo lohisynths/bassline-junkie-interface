@@ -64,12 +64,17 @@ int main() {
 //		leds.set(9*16+j, (rap^=1)*1024);
 		//mux.print_bit(4, 0);
 		//mux.print(3);
+		int ret = osc.update();
+
+		if (ret > -1) {
+			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
+			printf("wcisniety %d\r\n", ret);
+		}
 
 		adsr.update();
-		osc.update();
-		mod.update();
 		lfo.update();
 		filter.update();
+		mod.update();
 	}
 }
 

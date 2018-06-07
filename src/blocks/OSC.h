@@ -102,6 +102,8 @@ public:
 		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
 	};
 
+	uint8_t get_current_osc() { return current_instance; };
+
 private:
 	int16_t OSC_val[OSC_COUNT][OSC_KNOB_COUNT]={};
 

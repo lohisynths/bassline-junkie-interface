@@ -13,8 +13,6 @@
 #include "../Knob.h"
 #include "../Button.h"
 
-
-
 struct knob_data {
 	uint8_t knobs_first_led;
 	uint8_t knobs_first_mux_adr;
@@ -27,18 +25,22 @@ struct sw_data {
 	uint16_t *sw_mux_data;
 };
 
-template <uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t COUNT>
+template<uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t COUNT>
 class UI_BLOCK {
 public:
-	UI_BLOCK(){};
+	UI_BLOCK() {};
 	virtual ~UI_BLOCK(){};
 
-	void init_internal(Pwm &leds, knob_data knobdata[KNOB_COUNT], sw_data swdata[BUTTON_COUNT]) {
+	void init_internal(Pwm &leds, knob_data knobdata[KNOB_COUNT],
+			sw_data swdata[BUTTON_COUNT]) {
 		for (int i = 0; i < KNOB_COUNT; i++) {
-			knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data, 64, 10);
+			knob[i].init(knobdata[i].knobs_first_led,
+					knobdata[i].knobs_first_mux_adr, leds,
+					*knobdata[i].knobs_mux_data, 64, 10);
 		}
 		for (int i = 0; i < BUTTON_COUNT; i++) {
-			sw[i].init(swdata[i].sw_first_led,  swdata[i].sw_first_mux_adr, leds, *swdata[i].sw_mux_data);
+			sw[i].init(swdata[i].sw_first_led, swdata[i].sw_first_mux_adr, leds,
+					*swdata[i].sw_mux_data);
 		}
 	};
 
@@ -52,32 +54,35 @@ public:
 		}
 	};
 
-	void update_knobs() {
+	int update_knobs() {
+		int ret_val = -1;
 		for (uint8_t i = 0; i < KNOB_COUNT; i++) {
 			knob_msg ret = knob[i].update();
 			if (ret.switch_changed) {
-				knob_sw_changed(i, !knob[i].get_sw_state());
+				bool state = !knob[i].get_sw_state();
+				knob_sw_changed(i, state);
+				if (state) {
+					ret_val = i;
+				}
 			}
 			if (ret.value_changed) {
 				knob_val_changed(i, knob[i].get_value());
 			}
 		}
+		return ret_val;
 	}
 
-	void update() {
+	int update() {
 		update_buttons();
-		update_knobs();
-	};
-
+		return update_knobs();
+	}
 
 	virtual void button_changed(uint8_t index, bool state) = 0;
 	virtual void knob_sw_changed(uint8_t index, bool state) = 0;
 	virtual void knob_val_changed(uint8_t index, int value) = 0;
 
-	Button *get_sw(){return sw;};
+	Button *get_sw(){return sw;} ;
 	Knob *get_knobs(){return knob;};
-
-
 
 private:
 	Knob knob[KNOB_COUNT];
