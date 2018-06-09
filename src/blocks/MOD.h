@@ -78,7 +78,13 @@ public:
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
 
-		midi->send_cc(MOD_MIDI_OFFSET+current_instance + (mod_dest*MOD_COUNT), value, 0);
+		int16_t tmp = (value*2);
+		if(tmp < 1)
+			tmp=1;
+		if(tmp > 127)
+			tmp = 127;
+
+		midi->send_cc(current_instance + (mod_dest*MOD_COUNT), (tmp), 2);
 	}
 
 	void select_MOD(uint8_t index) {

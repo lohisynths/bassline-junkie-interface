@@ -61,6 +61,8 @@
 #define PCA9685_SUBADR3 0x4
 
 #define PCA9685_MODE1 0x0
+#define PCA9685_MODE2 0x1
+
 #define PCA9685_PRESCALE 0xFE
 
 #define LED0_ON_L 0x6
@@ -81,6 +83,9 @@ public:
     void frequencyI2C(int freq);
     void begin(void); //Initialize the controller
     void reset(void); //Reset the controller
+
+    void setOpenDrain(bool enable);
+
     void setPrescale(uint8_t prescale);//setPrescale(prescale)
     /** Set prescale
      *

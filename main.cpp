@@ -56,16 +56,16 @@ int main() {
 			mux.update();
 		}
 
-		//		static int j=0;
-//		if(!rap) {
-//			j++;
-//			if(j>10000) j=0;
-//		}
-//		leds.set(9*16+j, (rap^=1)*1024);
+		static int j=6;
+		if(!rap) {
+			j++;
+			if(j>32) j=0;
+		}
+		wait(0.1);
+		leds.set(11*16+j, (rap^=1)*1024);
 		//mux.print_bit(4, 0);
 		//mux.print(3);
 		int ret = osc.update();
-
 		if (ret > -1) {
 			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
 			printf("wcisniety %d\r\n", ret);
@@ -73,7 +73,14 @@ int main() {
 
 		adsr.update();
 		lfo.update();
-		filter.update();
+		ret = filter.update();
+		if (ret > -1) {
+			mod.select_MOD_dest(ret+15);
+			printf("wcisniety %d\r\n", ret);
+		}
+
+
+
 		mod.update();
 	}
 }

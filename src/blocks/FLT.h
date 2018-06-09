@@ -95,13 +95,19 @@ public:
 			int led_nr = actual_value / 10;
 			knob[index].led_on(led_nr, led_bright);
 			// resonance cutoff - one knob per function
-			midi->send_cc(FLT_MIDI_OFFSET+index, value, 0);
+			midi->send_cc(FLT_MIDI_OFFSET+index, value, 1);
 			// cutoff frequency knob
 		} else {
 			int led_nr = actual_value / 7;
 			knob[index].led_on(led_nr, led_bright);
 			// resonance cutoff - one knob per function
-			midi->send_cc(FLT_MIDI_OFFSET+index, value*2, 0);
+			int16_t tmp = (value*2);
+			if(tmp < 1)
+				tmp=1;
+			if(tmp > 127)
+				tmp = 127;
+
+			midi->send_cc(FLT_MIDI_OFFSET+index, (tmp), 1);
 		}
 
 

@@ -26,8 +26,11 @@ void Pwm::init() {
 	{
 		pwm[i].set_address(dupa[i]);
 		pwm[i].begin();
+		pwm[i].setOpenDrain(false);
 	}
 
+	pwm[11].setOpenDrain(true);
+	pwm[12].setOpenDrain(true);
 
 	clear();
 	update_all();

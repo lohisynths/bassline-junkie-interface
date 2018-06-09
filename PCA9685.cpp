@@ -64,6 +64,23 @@ void PCA9685::reset(void)
 {
     write8(PCA9685_MODE1, 0x0);
 }
+
+void PCA9685::setOpenDrain(bool enable) {
+    	uint8_t oldmode = read8(PCA9685_MODE2);
+    	if(!enable) {
+        	//uint8_t newmode = CLEAR_BIT(oldmode, 4); // sleep
+        	uint8_t newmode = CLEAR_BIT(oldmode, 1);
+        	newmode = CLEAR_BIT(newmode, 2);
+        	newmode = SET_BIT(newmode, 4);
+        	write8(PCA9685_MODE2, 0x04);
+    	} else {
+        	uint8_t newmode = SET_BIT(oldmode, 1);
+        	newmode = SET_BIT(newmode, 2);
+        	newmode = SET_BIT(newmode, 4);
+        	write8(PCA9685_MODE2, 0x13);
+    	}
+}
+
 void PCA9685::setPrescale(uint8_t prescale) {
     uint8_t oldmode = read8(PCA9685_MODE1);
     uint8_t newmode = (oldmode&0x7F) | 0x10; // sleep

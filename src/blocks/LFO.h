@@ -98,7 +98,14 @@ public:
 			1 + LFO_PARAMS*2	41	LFO 2 FREQ
 		*/
 		// controll only frequency of every LFO
-		midi->send_cc(LFO_MIDI_OFFSET+index+ 1 + (current_instance*2), value*2, 0);
+		int16_t tmp = (value*2);
+		if(tmp < 1)
+			tmp=1;
+		if(tmp > 127)
+			tmp = 127;
+
+
+		midi->send_cc(LFO_MIDI_OFFSET+index+ 1 + (current_instance*2), tmp, 1);
 	}
 
 	void select_LFO(uint8_t index) {
@@ -154,7 +161,7 @@ public:
 				1 + LFO_PARAMS*2	41	LFO 2 FREQ
 			*/
 			// controll only frequency of every LFO
-			midi->send_cc(LFO_MIDI_OFFSET + (current_instance*2), index*24, 0);
+			midi->send_cc(LFO_MIDI_OFFSET + (current_instance*2), index*24, 1);
 
 		}
 	}
