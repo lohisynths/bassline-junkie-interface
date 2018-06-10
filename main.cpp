@@ -11,6 +11,7 @@
 #include "src/blocks/MOD.h"
 #include "src/blocks/LFO.h"
 #include "src/blocks/FLT.h"
+#include "src/blocks/PRESET.h"
 
 
 #include "USBMIDI.h"
@@ -24,6 +25,8 @@ void do_message(MIDIMessage msg) {
         case MIDIMessage::NoteOffType:
         	midi_glob->send_note_off(msg.key(), msg.velocity() , 0 );
             break;
+        default:
+			printf("midi err \r\n");
     }
 }
 
@@ -39,6 +42,7 @@ int main() {
 	MOD mod;
 	LFO lfo;
 	FLT filter;
+	PRESET display;
 
 	leds.init();
 	mux.init();
@@ -49,6 +53,7 @@ int main() {
 	lfo.init(&mux, &leds, &midi);
 	filter.init(&mux, &leds, &midi);
 	midi_usb.attach(do_message);         // call back for messages received
+	display.init(&mux, &leds, &midi);
 
 	bool rap=false;
 	while(1) {
@@ -61,10 +66,15 @@ int main() {
 			j++;
 			if(j>32) j=0;
 		}
-		wait(0.1);
-		leds.set(11*16+j, (rap^=1)*1024);
-		//mux.print_bit(4, 0);
-		//mux.print(3);
+		//wait(0.1);
+		//leds.set(11*16+j, (rap^=1)*1024);
+
+
+		//mux.print_bit(4, 7);
+		//mux.print_bit(4, 8);
+
+		//mux.print(4);
+
 		int ret = osc.update();
 		if (ret > -1) {
 			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
@@ -79,6 +89,7 @@ int main() {
 			printf("wcisniety %d\r\n", ret);
 		}
 
+		display.update();
 
 
 		mod.update();

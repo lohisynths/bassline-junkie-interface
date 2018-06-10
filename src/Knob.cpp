@@ -38,9 +38,6 @@ void Knob::init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_da
 	encoder.update();
 
 	encoder.set(0);
-	led_on(0, 512);
-
-
 }
 
 

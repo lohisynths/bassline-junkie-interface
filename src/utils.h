@@ -24,13 +24,13 @@
 #ifdef DEBUG
 #define DEBUG_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
 #else
-#define  DEBUG_LOG(f_, ...) void( ( (f_), ##__VA_ARGS__ ) )
+#define  DEBUG_LOG(f_, ...)  (void)0
 #endif
 
 #ifdef VERBOSE
 #define VERBOSE_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
 #else
-#define  VERBOSE_LOG(f_, ...) void( ( (f_), ##__VA_ARGS__ ) )
+#define  VERBOSE_LOG(f_, ...)  (void)0
 #endif
 
 

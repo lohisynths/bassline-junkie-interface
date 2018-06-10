@@ -18,8 +18,15 @@
 // 14   - env button  1
 // 15   - env button  0
 
-// PB_13, PB_14
-Mux::Mux() : mux_adr(PB_5, PB_4, PB_10, PA_8), mux_raw(PB_2, PB_1, PB_15) {
+// PB_2, PB_1, PB_15 - LFO knob
+
+// PH_1, PC_2, PC_3, PC_0, PC_1, PH_0
+//mux_raw(PB_2, PB_1, PB_15, /**/  PH_1, PC_2, PC_3, PC_0, PC_1, PH_0) {
+	//mux_raw(PB_2, PB_1, PB_15, PB_14, PB_13) {
+
+Mux::Mux() : mux_adr(PB_5, PB_4, PB_10, PA_8),
+
+	mux_raw(PB_2, PB_1, PB_15, /**/  PB_13, PC_2, PC_3, PC_0, PC_1, PB_14) {
 
 }
 
