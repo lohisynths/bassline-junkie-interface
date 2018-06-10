@@ -13,6 +13,7 @@
 #include "src/blocks/FLT.h"
 #include "src/blocks/PRESET.h"
 
+#include <algorithm>
 
 #include "USBMIDI.h"
 MIDI *midi_glob;
@@ -30,7 +31,35 @@ void do_message(MIDIMessage msg) {
     }
 }
 
+struct preset {
+	OSC::osc_preset osc_preset;
+	ADSR::adsr_preset adsr_preset;
+};
+
+preset SynthPreset = {
+	.osc_preset = {{
+		{63, 0, 0, 0, 63},
+		{63, 0, 63, 0, 63},
+		{0, 63, 0, 0, 63}
+	}},
+	.adsr_preset = {{
+		{0, 32, 64, 0, 1},
+		{0, 32, 64, 0, 1},
+		{0, 32, 64, 0, 1}
+	}}
+};
+
+#include "src/EEPROM.h"
+
 int main() {
+
+	auto lolo = sizeof(SynthPreset);
+
+	EEPROM eeprom;
+	eeprom.erase();
+	eeprom.write();
+	eeprom.read();
+
 	USBMIDI midi_usb;
 	MIDI midi;
 	midi_glob = &midi;
@@ -54,6 +83,9 @@ int main() {
 	filter.init(&mux, &leds, &midi);
 	midi_usb.attach(do_message);         // call back for messages received
 	display.init(&mux, &leds, &midi);
+
+	osc.set_preset(SynthPreset.osc_preset);
+	adsr.set_preset(SynthPreset.adsr_preset);
 
 	bool rap=false;
 	while(1) {
@@ -89,7 +121,25 @@ int main() {
 			printf("wcisniety %d\r\n", ret);
 		}
 
-		display.update();
+		ret = display.update();
+		if (ret > -1) {
+			OSC::osc_preset osc_preset = osc.get_preset();
+			ADSR::adsr_preset adsr_preset = adsr.get_preset();
+
+		    std::copy(osc_preset.begin(), osc_preset.end(), SynthPreset.osc_preset.begin());
+		    std::copy(adsr_preset.begin(), adsr_preset.end(), SynthPreset.adsr_preset.begin());
+
+			for (int i = 0; i < OSC_COUNT; i++) {
+				for (int j = 0; j < OSC_KNOB_COUNT; j++) {
+					printf("OSC %d PARAM %d val: %d\r\n", i, j, SynthPreset.osc_preset[i][j]);
+				}
+			}
+			for (int i = 0; i < ADSR_COUNT; i++) {
+				for (int j = 0; j < ADSR_PARAM_NR; j++) {
+					printf("ADSR %d PARAM %d val: %d\r\n", i, j, SynthPreset.adsr_preset[i][j]);
+				}
+			}
+		}
 
 
 		mod.update();

@@ -21,6 +21,7 @@
 
 class OSC : public UI_BLOCK<OSC_KNOB_COUNT, OSC_BUTTON_COUNT, OSC_COUNT> {
 public:
+	typedef std::array<std::array<int, OSC_KNOB_COUNT>, OSC_COUNT> osc_preset;
 	~OSC(){};
 
 	char const *NAME = "OSC";
@@ -72,12 +73,13 @@ public:
 
 		Knob *knob = get_knobs();
 		int16_t actual_value = knob[index].get_value();
-		OSC_val[current_instance][index] = actual_value;
+
+		// OSC_KNOB_COUNT+1 - fine / octave detune - double knob function
+		param_values[current_instance][index] = actual_value;
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
 
-		// OSC_KNOB_COUNT+1 - fine / octave detune - double knob function
 		int16_t tmp = (value*2);
 		if(tmp < 1)
 			tmp=1;
@@ -92,14 +94,17 @@ public:
 
 		sw[index].set_led_val(sw_bright);
 
-		// get button number of button from current OSC and turn led off
-		sw[current_instance].set_led_val(0);
+		if(index != current_instance) {
+			// get button number of button from current OSC and turn led off
+			sw[current_instance].set_led_val(0);
+			current_instance = index;
+		}
 
-		current_instance = index;
+
 
 		for (int i = 0; i < OSC_KNOB_COUNT; i++) {
 			Knob *knob = get_knobs();
-			knob[i].set_value(OSC_val[current_instance][i]);
+			knob[i].set_value(param_values[current_instance][i]);
 
 			int led_nr = knob[i].get_value() / 7;
 			knob[i].led_on(led_nr, led_bright);
@@ -110,9 +115,20 @@ public:
 
 	uint8_t get_current_osc() { return current_instance; };
 
-private:
-	int16_t OSC_val[OSC_COUNT][OSC_KNOB_COUNT]={};
+	void set_preset(osc_preset input) {
+		for (int i = 0; i < OSC_COUNT; i++) {
+			for (int j = 0; j < OSC_KNOB_COUNT; j++) {
+				param_values[i][j] = input[i][j];
+			}
+		}
+		select_OSC(current_instance);
+	};
 
+	osc_preset &get_preset() {
+		return param_values;
+	}
+
+private:
 	int led_bright = 256;
 	int sw_bright = 1024;
 	uint8_t current_instance = 0;

@@ -12,6 +12,8 @@
 
 #include "../Knob.h"
 #include "../Button.h"
+#include "../Button.h"
+#include <array>
 
 struct knob_data {
 	uint8_t knobs_first_led;
@@ -83,6 +85,7 @@ public:
 
 	Button *get_sw(){return sw;} ;
 	Knob *get_knobs(){return knob;};
+	std::array<std::array<int, KNOB_COUNT>, COUNT> param_values = {};
 
 private:
 	Knob knob[KNOB_COUNT];

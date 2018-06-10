@@ -28,8 +28,15 @@
 
 #define ADSR_MIDI_OFFSET			(18)
 
+// ADSR_KNOB_COUNT+1 (1 = loop)
+#define ADSR_PARAM_NR (ADSR_KNOB_COUNT+1)
+
 class ADSR : public UI_BLOCK<ADSR_KNOB_COUNT, ADSR_BUTTON_COUNT, ADSR_COUNT> {
 public:
+
+	typedef std::array<std::array<int, ADSR_PARAM_NR>, ADSR_COUNT> adsr_preset;
+	adsr_preset knobs_values = {0};
+
 	~ADSR(){};
 
 	char const *NAME = "ADSR";
@@ -87,7 +94,7 @@ public:
 
 		Knob *knob = get_knobs();
 		int16_t actual_value = knob[index].get_value();
-		adsr_val[current_instance][index] = actual_value;
+		knobs_values[current_instance][index] = actual_value;
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
@@ -107,31 +114,32 @@ public:
 
 		sw[index].set_led_val(sw_bright);
 
-		// get button number of button from current adsr and turn led off
-		sw[current_instance].set_led_val(0);
-
-		current_instance = index;
+		if(index != current_instance) {
+			// get button number of button from current adsr and turn led off
+			sw[current_instance].set_led_val(0);
+			current_instance = index;
+		}
 
 		for (int i = 0; i < ADSR_KNOB_COUNT; i++) {
 			Knob *knob = get_knobs();
-			knob[i].set_value(adsr_val[current_instance][i]);
+			knob[i].set_value(knobs_values[current_instance][i]);
 
 			int led_nr = knob[i].get_value() / 7;
 			knob[i].led_on(led_nr, led_bright);
 		}
 
-		sw[LOOP].set_led_val(adsr_loop[current_instance] * sw_bright);
+		sw[LOOP].set_led_val(knobs_values[current_instance][ADSR_PARAM_NR-1] * sw_bright);
 
 		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
 	};
 
 	void select_loop(uint8_t index, bool loop) {
-		adsr_loop[current_instance] ^= 1;
+		knobs_values[current_instance][ADSR_PARAM_NR-1] ^= 1;
 		Button *sw = get_sw();
-		sw[index].set_led_val(adsr_loop[current_instance] * sw_bright);
+		sw[index].set_led_val(knobs_values[current_instance][ADSR_PARAM_NR-1] * sw_bright);
 
 		DEBUG_LOG("%s %d ", NAME, current_instance);
-		if (adsr_loop[current_instance]) {
+		if (knobs_values[current_instance][ADSR_PARAM_NR-1]) {
 			DEBUG_LOG("LOOP ON\r\n");
 		} else {
 			DEBUG_LOG("LOOP OFF\r\n");
@@ -139,10 +147,22 @@ public:
 	}
 
 
-private:
-	bool adsr_loop[ADSR_COUNT]={};
-	int16_t adsr_val[ADSR_COUNT][ADSR_KNOB_COUNT]={};
 
+	void set_preset(adsr_preset input) {
+
+		for (int i = 0; i < ADSR_COUNT; i++) {
+			for (int j = 0; j < ADSR_PARAM_NR; j++) {
+					knobs_values[i][j] = input[i][j];
+			}
+		}
+		select_adsr(current_instance);
+	};
+
+	adsr_preset &get_preset() {
+		return knobs_values;
+	}
+
+private:
 	int led_bright = 256;
 	int sw_bright = 1024;
 	uint8_t current_instance = 0;

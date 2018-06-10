@@ -124,8 +124,6 @@ public:
 	MIDI *m_midi;
 	Pwm *m_leds;
 	Mux *m_mux;
-	Knob knob;
-
 
 };
 

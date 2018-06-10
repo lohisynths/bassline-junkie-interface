@@ -84,7 +84,7 @@ public:
 
 		Knob *knob = get_knobs();
 		int16_t actual_value = knob[index].get_value();
-		LFO_val[current_instance][index] = actual_value;
+		param_values[current_instance][index] = actual_value;
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
@@ -129,7 +129,7 @@ public:
 
 		for (int i = 0; i < LFO_KNOB_COUNT; i++) {
 			Knob *knob = get_knobs();
-			knob[i].set_value(LFO_val[current_instance][i]);
+			knob[i].set_value(param_values[current_instance][i]);
 
 			int led_nr = knob[i].get_value() / 7;
 			knob[i].led_on(led_nr, led_bright);
@@ -141,11 +141,13 @@ public:
 	};
 
 	void select_shape(uint8_t index) {
+
+		Button *sw = get_sw();
+		sw[index+LFO_COUNT].set_led_val(sw_bright);
+		// get button number of button from current LFO and turn led off
+		sw[LFO_shape[current_instance]+LFO_COUNT].set_led_val(0);
+
 		if(LFO_shape[current_instance] != index) {
-			Button *sw = get_sw();
-			sw[index+LFO_COUNT].set_led_val(sw_bright);
-			// get button number of button from current LFO and turn led off
-			sw[LFO_shape[current_instance]+LFO_COUNT].set_led_val(0);
 
 			LFO_shape[current_instance] = index;
 			DEBUG_LOG("%s %d SHAPE %d\r\n", NAME, current_instance, index);
@@ -168,7 +170,6 @@ public:
 
 
 private:
-	int16_t LFO_val[LFO_COUNT][LFO_KNOB_COUNT]={};
 	int16_t LFO_shape[LFO_COUNT]={};
 
 	int led_bright = 256;

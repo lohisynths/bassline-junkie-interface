@@ -44,6 +44,7 @@ public:
 		init_internal(*leds, MOD_ctl, MOD_ctl_sw);
 		Button *sw = get_sw();
 		sw[current_instance].set_led_val(sw_bright);
+		select_MOD(current_instance);
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
@@ -73,7 +74,7 @@ public:
 
 		Knob *knob = get_knobs();
 		int16_t actual_value = knob[index].get_value();
-		MOD_val[current_instance][index] = actual_value;
+		param_values[current_instance][index] = actual_value;
 
 		int led_nr = actual_value / 7;
 		knob[index].led_on(led_nr, led_bright);
@@ -92,14 +93,16 @@ public:
 
 		sw[index].set_led_val(sw_bright);
 
-		// get button number of button from current MOD and turn led off
-		sw[current_instance].set_led_val(0);
+		if(index != current_instance) {
+			// get button number of button from current MOD and turn led off
+			sw[current_instance].set_led_val(0);
+			current_instance = index;
+		}
 
-		current_instance = index;
 
 		for (int i = 0; i < MOD_KNOB_COUNT; i++) {
 			Knob *knob = get_knobs();
-			knob[i].set_value(MOD_val[current_instance][i]);
+			knob[i].set_value(param_values[current_instance][i]);
 
 			int led_nr = knob[i].get_value() / 7;
 			knob[i].led_on(led_nr, led_bright);
@@ -115,7 +118,6 @@ public:
 	}
 
 private:
-	int16_t MOD_val[MOD_COUNT][MOD_KNOB_COUNT]={};
 
 	int led_bright = 256;
 	int sw_bright = 1024;
