@@ -1,4 +1,0 @@
-[ui]
-ignore.local = .hg/hgignore
-[paths]
-default = http://mbed.org/teams/ST/code/STM32_USBDevice_Serial/
