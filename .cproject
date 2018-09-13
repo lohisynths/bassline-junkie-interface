@@ -7,6 +7,12 @@
             			
             <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.toolchain.gnu.cross.base.1360509625" moduleId="org.eclipse.cdt.core.settings" name="Default">
                 				
+                <macros>
+                    					
+                    <stringMacro name="MBED_ROOT" type="VALUE_TEXT" value="/home/alax/git/nucleo_mbed/mbed-os/BUILD/mbed"/>
+                    				
+                </macros>
+                				
                 <externalSettings/>
                 				
                 <extensions>
@@ -29,7 +35,7 @@
             			
             <storageModule moduleId="cdtBuildSystem" version="4.0.0">
                 				
-                <configuration artifactName="${ProjName}" buildProperties="" description="" id="cdt.managedbuild.toolchain.gnu.cross.base.1360509625" name="Default" parent="org.eclipse.cdt.build.core.emptycfg">
+                <configuration artifactName="${ProjName}" buildProperties="" description="" id="cdt.managedbuild.toolchain.gnu.cross.base.1360509625" name="Default" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=" parent="org.eclipse.cdt.build.core.emptycfg">
                     					
                     <folderInfo id="cdt.managedbuild.toolchain.gnu.cross.base.1360509625.713766329" name="/" resourcePath="">
                         						
@@ -41,7 +47,7 @@
                             							
                             <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1921836824" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
                             							
-                            <builder id="cdt.managedbuild.builder.gnu.cross.1344441273" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+                            <builder buildPath="${workspace_loc:/bassline_junkie-interface}/BUILD" id="cdt.managedbuild.builder.gnu.cross.1344441273" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.builder.gnu.cross"/>
                             							
                             <tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.852814682" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
                                 								
@@ -51,11 +57,35 @@
                             							
                             <tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.269534140" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
                                 								
-                                <option id="gnu.cpp.compiler.option.preprocessor.def.994690314" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.compiler.option.preprocessor.def.994690314" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
                                     									
                                     <listOptionValue builtIn="false" value="DEVICE_SERIAL=1"/>
                                     									
                                     <listOptionValue builtIn="false" value="DEVICE_SERIAL_ASYNCH=1"/>
+                                    								
+                                </option>
+                                								
+                                <option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.compiler.option.include.paths.1220878401" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;../${MBED_ROOT}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${MBED_ROOT}/hal&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${MBED_ROOT}/platform&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${MBED_ROOT}/TARGET_NUCLEO_F411RE/&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${MBED_ROOT}/TARGET_NUCLEO_F411RE/TARGET_STM&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${MBED_ROOT}/TARGET_NUCLEO_F411RE/TARGET_STM/TARGET_STM32F4&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${MBED_ROOT}/TARGET_NUCLEO_F411RE/TARGET_STM/TARGET_STM32F4/device&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${MBED_ROOT}/TARGET_NUCLEO_F411RE/TARGET_STM/TARGET_STM32F4/TARGET_STM32F411xE&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${MBED_ROOT}/TARGET_NUCLEO_F411RE/TARGET_STM/TARGET_STM32F4/TARGET_STM32F411xE/device&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${MBED_ROOT}/TARGET_NUCLEO_F411RE/TARGET_STM/TARGET_STM32F4/TARGET_STM32F411xE/TARGET_NUCLEO_F411RE&quot;"/>
                                     								
                                 </option>
                                 								
@@ -107,7 +137,15 @@
     	
     <storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
     	
-    <storageModule moduleId="refreshScope"/>
+    <storageModule moduleId="refreshScope" versionNumber="2">
+        		
+        <configuration configurationName="Default">
+            			
+            <resource resourceType="PROJECT" workspacePath="/bassline_junkie-interface"/>
+            		
+        </configuration>
+        	
+    </storageModule>
     	
     <storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
     	
