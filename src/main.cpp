@@ -38,6 +38,12 @@ struct preset {
 
 void print_preset(preset &input){
 
+	uint32_t *data = (uint32_t *)&input;
+	for(int i=0; i < sizeof(preset)/4; i++) {
+		  uint32_t ret = data[i];
+		  DEBUG_LOG("preset data. nr %lu : %d\r\n", i, ret);
+	}
+
 	for (int i = 0; i < OSC_COUNT; i++) {
 		for (int j = 0; j < OSC_KNOB_COUNT; j++) {
 			DEBUG_LOG("OSC %d PARAM %d val: %d\r\n", i, j, input.osc_preset[i][j]);
@@ -71,7 +77,6 @@ void save_preset_eeprom(EEPROM &eeprom, preset &input){
 	for(int i=0; i < sizeof(preset)/4; i++) {
 		  uint32_t ret = data[i];
 		  eeprom.writeEEPROMWord(i*4, ret);
-		  DEBUG_LOG("write nr %lu : %d\r\n", i, ret);
 	}
 }
 
@@ -80,7 +85,7 @@ int main() {
 	EEPROM eeprom;
 	preset SynthPreset = {0};
 	load_preset_eeprom(eeprom, SynthPreset);
-	print_preset(SynthPreset);
+	//print_preset(SynthPreset);
 
 	USBMIDI midi_usb;
 	MIDI midi;
