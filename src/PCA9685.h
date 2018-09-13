@@ -106,14 +106,12 @@ public:
      */
     void set_address(uint8_t addr) {_i2caddr=addr;}
 
-    void i2c_probe();
-
-
+    static int *i2c_probe();
 
 private:
     void write8(uint8_t address, uint8_t data);
     char read8(char address);
-    int _i2caddr;
+    int _i2caddr=0;
 };
 
 #endif

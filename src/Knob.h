@@ -32,7 +32,11 @@ public:
 
 	void led_on(size_t led_nr, int16_t bright);
 
+	void set_leds(int16_t value);
+
 	int16_t get_value();
+	int16_t get_value_scaled();
+
 	void set_value(int16_t val);
 
 	bool get_sw_state();
@@ -56,6 +60,8 @@ private:
 	uint16_t knob_max_val = 0;
 	uint16_t knob_leds_count = 0;
 
+	float divider;
+	float val_divider;
 	/////////////////////
 	// mux and pwm registers bit numbers
 	uint8_t m_first_led = 0;

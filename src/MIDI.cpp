@@ -40,7 +40,7 @@ void MIDI::send_note_on(uint8_t key, uint8_t velocity, uint8_t channel) {
     msg[2] = velocity & 0x7F;
 
    	raspi_usart_write(msg, sizeof(msg));
-   	DEBUG_LOG("CC :%d, velocity: %d, \r\n", key, velocity);
+   	DEBUG_LOG("NOTE_ON :%d, velocity: %d, \r\n", key, velocity);
 	//show_message(msg);
 }
 
@@ -51,7 +51,7 @@ void MIDI::send_note_off(uint8_t key, uint8_t velocity, uint8_t channel) {
     msg[2] = velocity & 0x7F;
 
    	raspi_usart_write(msg, sizeof(msg));
-   	DEBUG_LOG("CC :%d, velocity: %d, \r\n", key, velocity);
+   	DEBUG_LOG("NOTE_OFF :%d, velocity: %d, \r\n", key, velocity);
 	//show_message(msg);
 }
 

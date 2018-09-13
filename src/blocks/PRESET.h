@@ -20,7 +20,9 @@
 #define PRESET_FIRST_ENC_LED			(11*16)
 #define SEGMENTS						(8)
 
-class PRESET : public UI_BLOCK<PRESET_KNOB_COUNT, PRESET_BUTTON_COUNT, PRESET_COUNT> {
+#define PRESET_PARAM_COUNT				(PRESET_KNOB_COUNT)
+
+class PRESET : public UI_BLOCK<PRESET_KNOB_COUNT, PRESET_BUTTON_COUNT, PRESET_PARAM_COUNT, PRESET_COUNT> {
 public:
 	PRESET(){};
 	virtual ~PRESET(){};
@@ -29,13 +31,15 @@ public:
 
 	void button_changed(uint8_t index, bool state) {};
 
+	void select_instance(uint8_t index) {};
+
 	void init_internal(Pwm &leds, knob_data knobdata[PRESET_KNOB_COUNT], sw_data swdata[PRESET_BUTTON_COUNT]) {
 		for (int i = 0; i < PRESET_KNOB_COUNT; i++) {
-			Knob *knob = get_knobs();
+			auto &knob = get_knobs();
 			knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data, 127, 10);
 		}
 		for (int i = 0; i < PRESET_BUTTON_COUNT; i++) {
-			Button *sw = get_sw();
+			auto &sw = get_sw();
 			sw[i].init(swdata[i].sw_first_led,  swdata[i].sw_first_mux_adr, leds, *swdata[i].sw_mux_data);
 		}
 	};
@@ -48,10 +52,13 @@ public:
 			DEBUG_LOG("released\r\n");
 	}
 
-	void knob_val_changed(uint8_t index, int value) {
-		uint8_t first_nr  = value % 10;
-		uint8_t second_nr = (value / 10) % 10;
-		uint8_t third_nr  = value / 100;
+	void knob_val_changed(uint8_t index) {
+		auto &knob = get_knobs();
+		int16_t value_scaled = knob[index].get_value_scaled();
+
+		uint8_t first_nr  = value_scaled % 10;
+		uint8_t second_nr = (value_scaled / 10) % 10;
+		uint8_t third_nr  = value_scaled / 100;
 
 		DEBUG_LOG("%s %d %d %d\r\n", NAME,  third_nr, second_nr, first_nr);
 

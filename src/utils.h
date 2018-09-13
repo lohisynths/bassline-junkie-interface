@@ -27,12 +27,6 @@
 #define  DEBUG_LOG(f_, ...)  (void)0
 #endif
 
-#ifdef VERBOSE
-#define VERBOSE_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
-#else
-#define  VERBOSE_LOG(f_, ...)  (void)0
-#endif
-
 
 
 #endif /* SRC_UTILS_H_ */

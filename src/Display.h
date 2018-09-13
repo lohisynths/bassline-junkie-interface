@@ -19,7 +19,7 @@ public:
 
 	void init(uint8_t led_index, Pwm &pwm) {
 		index = led_index;
-		m_leds = pwm;
+		m_leds = &pwm;
 	}
 
 	void set(uint8_t input) {

@@ -27,9 +27,11 @@ struct sw_data {
 	uint16_t *sw_mux_data;
 };
 
-template<uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t COUNT>
+template<uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t PARAM_COUNT, uint8_t COUNT>
 class UI_BLOCK {
 public:
+	typedef std::array<std::array<int, COUNT>, PARAM_COUNT> preset;
+
 	UI_BLOCK() {};
 	virtual ~UI_BLOCK(){};
 
@@ -68,7 +70,7 @@ public:
 				}
 			}
 			if (ret.value_changed) {
-				knob_val_changed(i, knob[i].get_value());
+				knob_val_changed(i);
 			}
 		}
 		return ret_val;
@@ -79,17 +81,24 @@ public:
 		return update_knobs();
 	}
 
+	void set_preset(preset input) {
+		memcpy(&knob_values, &input, sizeof(input));
+		select_instance(current_instance);
+	};
+
 	virtual void button_changed(uint8_t index, bool state) = 0;
 	virtual void knob_sw_changed(uint8_t index, bool state) = 0;
-	virtual void knob_val_changed(uint8_t index, int value) = 0;
+	virtual void knob_val_changed(uint8_t index) = 0;
+	virtual void select_instance(uint8_t index) = 0;
 
-	Button *get_sw(){return sw;} ;
-	Knob *get_knobs(){return knob;};
-	std::array<std::array<int, KNOB_COUNT>, COUNT> param_values = {};
+	std::array<Button, BUTTON_COUNT> &get_sw(){return sw;} ;
+	std::array<Knob, KNOB_COUNT> &get_knobs(){return knob;};
+	std::array<std::array<int, COUNT>, PARAM_COUNT> knob_values = {};
+	uint8_t current_instance = 0;
 
 private:
-	Knob knob[KNOB_COUNT];
-	Button sw[BUTTON_COUNT];
+	std::array<Knob, KNOB_COUNT> knob;
+	std::array<Button, BUTTON_COUNT> sw;
 
 };
 

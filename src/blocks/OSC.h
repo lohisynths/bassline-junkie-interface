@@ -18,10 +18,18 @@
 
 #define OSC_FIRST_BUTTON_LED		(6*16+(12))
 
+enum OSC_PARAMS {
+	OSC_PITCH,
+	OSC_SIN,
+	OSC_SAW,
+	OSC_SQR,
+	OSC_RND,
+	OSC_PARAM_COUNT
+};
 
-class OSC : public UI_BLOCK<OSC_KNOB_COUNT, OSC_BUTTON_COUNT, OSC_COUNT> {
+class OSC : public UI_BLOCK<OSC_KNOB_COUNT, OSC_BUTTON_COUNT, OSC_PARAM_COUNT, OSC_COUNT> {
 public:
-	typedef std::array<std::array<int, OSC_KNOB_COUNT>, OSC_COUNT> osc_preset;
+	typedef std::array<std::array<int, OSC_COUNT>, OSC_PARAM_COUNT> osc_preset;
 	~OSC(){};
 
 	char const *NAME = "OSC";
@@ -42,56 +50,40 @@ public:
 				OSC_FIRST_BUTTON_LED,   15,   mux->get(1)
 		};
 		init_internal(*leds, OSC_ctl, OSC_ctl_sw);
-		Button *sw = get_sw();
+		auto &sw = get_sw();
 		sw[current_instance].set_led_val(sw_bright);
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
 		DEBUG_LOG("%s %d button switch %d", NAME, current_instance, index);
-		if (state)
-			DEBUG_LOG(" pushed\r\n");
-		else
-			DEBUG_LOG(" released\r\n");
+		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
 
 		if (state) {
 			if (index != current_instance) {
-				select_OSC(index);
+				select_instance(index);
 			}
 		}
 	};
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
 		DEBUG_LOG("%s %d encoder switch %d ", NAME, current_instance, index);
-		if (state)
-			DEBUG_LOG("pushed\r\n");
-		else
-			DEBUG_LOG("released\r\n");
+		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
 	}
 
-	virtual void knob_val_changed(uint8_t index, int value) {
-		DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value);
+	virtual void knob_val_changed(uint8_t index) {
+		auto &knob = get_knobs();
+		int16_t value_scaled = knob[index].get_value_scaled();
 
-		Knob *knob = get_knobs();
-		int16_t actual_value = knob[index].get_value();
+		DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value_scaled);
 
-		// OSC_KNOB_COUNT+1 - fine / octave detune - double knob function
-		param_values[current_instance][index] = actual_value;
+		knob[index].set_leds(value_scaled);
+		knob_values[current_instance][index] = value_scaled;
 
-		int led_nr = actual_value / 7;
-		knob[index].led_on(led_nr, led_bright);
-
-		int16_t tmp = (value*2);
-		if(tmp < 1)
-			tmp=1;
-		if(tmp > 127)
-			tmp = 127;
-
-		midi->send_cc(1+index+(current_instance * (OSC_KNOB_COUNT+1)), tmp, 1);
+		midi->send_cc(1+index+(current_instance * (OSC_KNOB_COUNT+1)), value_scaled, 1);
 	}
 
-	void select_OSC(uint8_t index) {
-		Button *sw = get_sw();
-
+	void select_instance(uint8_t index) {
+		auto &sw = get_sw();
 		sw[index].set_led_val(sw_bright);
 
 		if(index != current_instance) {
@@ -100,14 +92,11 @@ public:
 			current_instance = index;
 		}
 
-
-
 		for (int i = 0; i < OSC_KNOB_COUNT; i++) {
-			Knob *knob = get_knobs();
-			knob[i].set_value(param_values[current_instance][i]);
-
-			int led_nr = knob[i].get_value() / 7;
-			knob[i].led_on(led_nr, led_bright);
+			auto &knob = get_knobs();
+			uint8_t val = knob_values[current_instance][i];
+			knob[i].set_value(val);
+			knob[i].set_leds(val);
 		}
 
 		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
@@ -116,22 +105,17 @@ public:
 	uint8_t get_current_osc() { return current_instance; };
 
 	void set_preset(osc_preset input) {
-		for (int i = 0; i < OSC_COUNT; i++) {
-			for (int j = 0; j < OSC_KNOB_COUNT; j++) {
-				param_values[i][j] = input[i][j];
-			}
-		}
-		select_OSC(current_instance);
+		memcpy(&knob_values, &input, sizeof(input));
+		select_instance(current_instance);
 	};
 
 	osc_preset &get_preset() {
-		return param_values;
+		return knob_values;
 	}
 
 private:
 	int led_bright = 256;
 	int sw_bright = 1024;
-	uint8_t current_instance = 0;
 	MIDI *midi;
 
 

@@ -9,7 +9,7 @@
 #define SRC_MIDI_H_
 
 #include "mbed.h"
-#include "USBDevice/USBMIDI/MIDIMessage.h"
+#include "MIDIMessage.h"
 
 
 class MIDI {

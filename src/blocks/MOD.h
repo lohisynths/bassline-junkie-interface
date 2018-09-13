@@ -20,11 +20,17 @@
 
 #define MOD_MIDI_OFFSET 			(96)
 
-class MOD : public UI_BLOCK<MOD_KNOB_COUNT, MOD_BUTTON_COUNT, MOD_COUNT> {
+
+#define MOD_PARAM_COUNT 			(MOD_KNOB_COUNT)
+
+
+class MOD : public UI_BLOCK<MOD_KNOB_COUNT, MOD_BUTTON_COUNT, MOD_PARAM_COUNT, MOD_COUNT> {
 public:
 	~MOD(){};
 
 	char const *NAME = "MOD";
+
+	void select_instance(uint8_t index){};
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
@@ -42,17 +48,14 @@ public:
 
 		};
 		init_internal(*leds, MOD_ctl, MOD_ctl_sw);
-		Button *sw = get_sw();
+		auto &sw = get_sw();
 		sw[current_instance].set_led_val(sw_bright);
 		select_MOD(current_instance);
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
 		DEBUG_LOG("%s %d button switch %d", NAME, current_instance, index);
-		if (state)
-			DEBUG_LOG(" pushed\r\n");
-		else
-			DEBUG_LOG(" released\r\n");
+		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
 
 		if (state) {
 			if (index != current_instance) {
@@ -63,33 +66,22 @@ public:
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
 		DEBUG_LOG("%s %d encoder switch %d ", NAME, current_instance, index);
-		if (state)
-			DEBUG_LOG("pushed\r\n");
-		else
-			DEBUG_LOG("released\r\n");
+		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
 	}
 
-	virtual void knob_val_changed(uint8_t index, int value) {
-		DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value);
+	virtual void knob_val_changed(uint8_t index) {
+		auto &knob = get_knobs();
+		int16_t value_scaled = knob[index].get_value_scaled();
 
-		Knob *knob = get_knobs();
-		int16_t actual_value = knob[index].get_value();
-		param_values[current_instance][index] = actual_value;
+		DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value_scaled);
 
-		int led_nr = actual_value / 7;
-		knob[index].led_on(led_nr, led_bright);
+		knob[index].set_leds(value_scaled);
 
-		int16_t tmp = (value*2);
-		if(tmp < 1)
-			tmp=1;
-		if(tmp > 127)
-			tmp = 127;
-
-		midi->send_cc(current_instance + (mod_dest*MOD_COUNT), (tmp), 2);
+		midi->send_cc(current_instance + (mod_dest*MOD_COUNT), (value_scaled), 2);
 	}
 
 	void select_MOD(uint8_t index) {
-		Button *sw = get_sw();
+		auto &sw = get_sw();
 
 		sw[index].set_led_val(sw_bright);
 
@@ -99,10 +91,9 @@ public:
 			current_instance = index;
 		}
 
-
 		for (int i = 0; i < MOD_KNOB_COUNT; i++) {
-			Knob *knob = get_knobs();
-			knob[i].set_value(param_values[current_instance][i]);
+			auto &knob = get_knobs();
+			knob[i].set_value(knob_values[current_instance][i]);
 
 			int led_nr = knob[i].get_value() / 7;
 			knob[i].led_on(led_nr, led_bright);

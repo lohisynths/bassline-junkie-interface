@@ -8,7 +8,7 @@
 #ifndef SRC_PWM_H_
 #define SRC_PWM_H_
 
-#include "../PCA9685.h"
+#include "PCA9685.h"
 #include "utils.h"
 
 class Pwm {
@@ -17,14 +17,14 @@ public:
 	virtual ~Pwm();
 
 	void set(size_t led, uint16_t val);
+	void set(const uint16_t input[PWM_DRIVERS_COUNT * PWM_COUNT]);
+	const uint16_t *get();
+
 	void init();
 	void update_all();
 	void clear();
 
 	PCA9685	 pwm[PWM_DRIVERS_COUNT];
-
-	uint8_t twbrbackup=0;
-
 
 };
 

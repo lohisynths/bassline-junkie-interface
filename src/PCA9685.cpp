@@ -1,22 +1,21 @@
 #include "PCA9685.h"
 #include "mbed.h"
-PCA9685::PCA9685() : _i2caddr(0) {}
 
 static I2C i2c(I2C_SDA, I2C_SCL); // sda, scl
+static int addr_found[128]={};
 
+PCA9685::PCA9685() : _i2caddr(0) {}
 
-extern int dupa[];
-extern int count_;
-
-void PCA9685::i2c_probe()
+int *PCA9685::i2c_probe()
 {
+	int count_=0;
+
     printf("Searching for I2C devices...\n");
 
-    int *tab = dupa;
+    int *tab = addr_found;
     int count = 0;
     for (int address=4; address<256; address+=2) {
         if (!i2c.write(address, NULL, 0)) { // 0 returned is ok
-
             printf(" - I2C device found at address 0x%02X\r\n", address);
             *tab = address;
             tab++;
@@ -26,6 +25,7 @@ void PCA9685::i2c_probe()
     count_ = count;
 
     printf("%d devices found\r\n", count);
+    return addr_found;
 }
 
 
@@ -33,8 +33,8 @@ void PCA9685::begin(void)
 {
     reset();
 
-    setPrescale(121);     // set 20ms for generic servos
-    frequencyI2C(400000); //400kHz fast I2C comunication
+    setPrescale(64);
+    frequencyI2C(800000);
 
 }
 

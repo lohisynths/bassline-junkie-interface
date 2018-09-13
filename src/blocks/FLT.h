@@ -20,16 +20,37 @@
 
 #define FLT_MIDI_OFFSET				(32)
 
+enum FLT_PARAMS {
+	FLT_FREQ,
+	FLT_RES,
+	FLT_PARAM_COUNT
+};
 
-class FLT : public UI_BLOCK<FLT_KNOB_COUNT, FLT_BUTTON_COUNT, FLT_COUNT> {
+class FLT : public UI_BLOCK<FLT_KNOB_COUNT, FLT_BUTTON_COUNT, FLT_PARAM_COUNT, FLT_COUNT> {
 public:
 	~FLT(){};
 
 	char const *NAME = "FLT";
 
+	typedef std::array<std::array<int, FLT_COUNT>, FLT_PARAM_COUNT> flt_preset;
+
+	flt_preset &get_preset() {
+		return knob_values;
+	}
+
+	void select_instance(uint8_t index) {
+		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
+			auto &knob = get_knobs();
+			knob[i].set_value(knob_values[0][i]);
+			knob_val_changed(i);
+		}
+		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
+	};
+
+
 	void init_internal(Pwm &leds, knob_data knobdata[FLT_KNOB_COUNT], sw_data swdata[FLT_BUTTON_COUNT]) {
 		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
-			Knob *knob = get_knobs();
+			auto &knob = get_knobs();
 			if(i == 0) {
 				knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data, 119, 12);
 				// cutoff frequency knob
@@ -39,7 +60,7 @@ public:
 
 		}
 		for (int i = 0; i < FLT_BUTTON_COUNT; i++) {
-			Button *sw = get_sw();
+			auto &sw = get_sw();
 			sw[i].init(swdata[i].sw_first_led,  swdata[i].sw_first_mux_adr, leds, *swdata[i].sw_mux_data);
 		}
 	};
@@ -58,7 +79,7 @@ public:
 
 		};
 		init_internal(*leds, FLT_ctl, FLT_ctl_sw);
-		Button *sw = get_sw();
+		auto &sw = get_sw();
 		sw[FLT_mode].set_led_val(sw_bright);
 	}
 
@@ -78,46 +99,22 @@ public:
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
 		DEBUG_LOG("%s encoder switch %d ", NAME, index);
-		if (state)
-			DEBUG_LOG("pushed\r\n");
-		else
-			DEBUG_LOG("released\r\n");
+		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
 	}
 
-	virtual void knob_val_changed(uint8_t index, int value) {
-		DEBUG_LOG("%s value %d changed %d\r\n", NAME, index, value);
+	virtual void knob_val_changed(uint8_t index) {
+		auto &knob = get_knobs();
+		int16_t value_scaled = knob[index].get_value_scaled();
+		DEBUG_LOG("%s value %d changed %d\r\n", NAME, index, value_scaled);
 
-		Knob *knob = get_knobs();
-		int16_t actual_value = knob[index].get_value();
+		knob[index].set_leds(value_scaled);
+		knob_values[0][index] = value_scaled;
 
-
-		if(index == 0) {
-			int led_nr = actual_value / 10;
-			knob[index].led_on(led_nr, led_bright);
-			// resonance cutoff - one knob per function
-			midi->send_cc(FLT_MIDI_OFFSET+index, value, 1);
-			// cutoff frequency knob
-		} else {
-			int led_nr = actual_value / 7;
-			knob[index].led_on(led_nr, led_bright);
-			// resonance cutoff - one knob per function
-			int16_t tmp = (value*2);
-			if(tmp < 1)
-				tmp=1;
-			if(tmp > 127)
-				tmp = 127;
-
-			midi->send_cc(FLT_MIDI_OFFSET+index, (tmp), 1);
-		}
-
-
-
-
-
+		midi->send_cc(FLT_MIDI_OFFSET+index, (value_scaled), 1);
 	}
 
 	void select_MODE(uint8_t index) {
-		Button *sw = get_sw();
+		auto &sw = get_sw();
 
 		sw[index].set_led_val(sw_bright);
 
@@ -132,7 +129,6 @@ public:
 private:
 	int16_t FLT_mode={};
 
-	int led_bright = 256;
 	int sw_bright = 1024;
 	MIDI *midi;
 
