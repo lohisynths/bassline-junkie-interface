@@ -32,12 +32,12 @@ public:
 
 	void led_on(size_t led_nr, int16_t bright);
 
-	void set_leds(int16_t value);
+	void set_leds(uint16_t value);
 
 	int16_t get_value();
 	int16_t get_value_scaled();
 
-	void set_value(int16_t val);
+	void set_value(uint16_t val);
 
 	bool get_sw_state();
 	uint16_t get_max(){return knob_max_val;};

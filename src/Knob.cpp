@@ -86,7 +86,7 @@ int16_t Knob::get_value_scaled(){
 	return encoder_value * val_divider;
 }
 
-void Knob::set_value(int16_t val){
+void Knob::set_value(uint16_t val){
 	encoder_value = val / val_divider;
 }
 
@@ -101,7 +101,7 @@ void Knob::led_on(size_t led_nr, int16_t bright) {
 	leds->set(led_nr, bright);
 	led_last = led_nr;
 }
-void Knob::set_leds(int16_t value) {
+void Knob::set_leds(uint16_t value) {
 	int led_bright = 256;
 	int led_nr = value * divider;
 	led_on(led_nr, led_bright);

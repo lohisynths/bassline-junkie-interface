@@ -27,7 +27,10 @@ public:
 	PRESET(){};
 	virtual ~PRESET(){};
 
-	char const *NAME = "PRESET";
+	virtual const char* get_name()
+	{
+	    return "PRESET";
+	}
 
 	void button_changed(uint8_t index, bool state) {};
 
@@ -45,22 +48,16 @@ public:
 	};
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
-		DEBUG_LOG("%s %d encoder switch %d ", NAME, current_instance, index);
-		if (state)
-			DEBUG_LOG("pushed\r\n");
-		else
-			DEBUG_LOG("released\r\n");
+
 	}
 
-	void knob_val_changed(uint8_t index) {
-		auto &knob = get_knobs();
-		int16_t value_scaled = knob[index].get_value_scaled();
+	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
 
 		uint8_t first_nr  = value_scaled % 10;
 		uint8_t second_nr = (value_scaled / 10) % 10;
 		uint8_t third_nr  = value_scaled / 100;
 
-		DEBUG_LOG("%s %d %d %d\r\n", NAME,  third_nr, second_nr, first_nr);
+		DEBUG_LOG("%s %d %d %d\r\n", get_name(),  third_nr, second_nr, first_nr);
 
 		//set_all(first_nr*128);
 

@@ -30,7 +30,10 @@ class LFO : public UI_BLOCK<LFO_KNOB_COUNT, LFO_BUTTON_COUNT, LFO_PARAM_COUNT, L
 public:
 	~LFO(){};
 
-	char const *NAME = "LFO";
+	virtual const char* get_name()
+	{
+	    return "LFO";
+	}
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
@@ -54,9 +57,6 @@ public:
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
-		DEBUG_LOG("%s %d button switch %d", NAME, current_instance, index);
-		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
-
 		if (state) {
 			if (index < LFO_COUNT) {
 				if (index != current_instance) {
@@ -69,16 +69,10 @@ public:
 	};
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
-		DEBUG_LOG("%s %d encoder switch %d ", NAME, current_instance, index);
-		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
+
 	}
 
-	virtual void knob_val_changed(uint8_t index) {
-		auto &knob = get_knobs();
-		int16_t value_scaled = knob[index].get_value_scaled();
-
-		DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value_scaled);
-
+	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
 		knob[index].set_leds(value_scaled);
 		knob_values[current_instance][index] = value_scaled;
 
@@ -119,7 +113,7 @@ public:
 			knob[i].led_on(led_nr, led_bright);
 		}
 
-		DEBUG_LOG("%s %d SELECTED, SHAPE %d\r\n", NAME, index, LFO_shape[current_instance]);
+		DEBUG_LOG("%s %d SELECTED, SHAPE %d\r\n", get_name(), index, LFO_shape[current_instance]);
 	};
 
 	void select_shape(uint8_t index) {
@@ -131,7 +125,7 @@ public:
 		if(LFO_shape[current_instance] != index) {
 
 			LFO_shape[current_instance] = index;
-			DEBUG_LOG("%s %d SHAPE %d\r\n", NAME, current_instance, index);
+			DEBUG_LOG("%s %d SHAPE %d\r\n", get_name(), current_instance, index);
 
 			/*
 			LFO_OFFSET 36
@@ -151,9 +145,9 @@ public:
 		for (int i = 0; i < LFO_KNOB_COUNT; i++) {
 				auto &knob = get_knobs();
 				knob[i].set_value(knob_values[0][i]);
-				knob_val_changed(i);
+				knob_val_changed(i, knob_values[0][i]);
 		}
-		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
+		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
 
 private:

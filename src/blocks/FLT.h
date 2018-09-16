@@ -30,7 +30,10 @@ class FLT : public UI_BLOCK<FLT_KNOB_COUNT, FLT_BUTTON_COUNT, FLT_PARAM_COUNT, F
 public:
 	~FLT(){};
 
-	char const *NAME = "FLT";
+	virtual const char* get_name()
+	{
+	    return "FLT";
+	}
 
 	typedef std::array<std::array<int, FLT_COUNT>, FLT_PARAM_COUNT> flt_preset;
 
@@ -42,9 +45,9 @@ public:
 		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
 			auto &knob = get_knobs();
 			knob[i].set_value(knob_values[i][0]);
-			knob_val_changed(i);
+			knob_val_changed(i, knob_values[i][0]);
 		}
-		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
+		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
 
 
@@ -83,12 +86,6 @@ public:
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
-		DEBUG_LOG("%s button switch %d", NAME, index);
-		if (state)
-			DEBUG_LOG(" pushed\r\n");
-		else
-			DEBUG_LOG(" released\r\n");
-
 		if (state) {
 			if (index != FLT_mode) {
 				select_MODE(index);
@@ -97,15 +94,10 @@ public:
 	};
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
-		DEBUG_LOG("%s encoder switch %d ", NAME, index);
-		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
+
 	}
 
-	virtual void knob_val_changed(uint8_t index) {
-		auto &knob = get_knobs();
-		int16_t value_scaled = knob[index].get_value_scaled();
-		DEBUG_LOG("%s value %d changed %d\r\n", NAME, index, value_scaled);
-
+	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
 		knob[index].set_leds(value_scaled);
 		knob_values[index][0] = value_scaled;
 
@@ -122,7 +114,7 @@ public:
 
 		FLT_mode = index;
 
-		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
+		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
 
 private:

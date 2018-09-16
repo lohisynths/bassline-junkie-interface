@@ -53,6 +53,8 @@ public:
 			bool ret = sw[i].update();
 			if (ret) {
 				bool pushed = !sw[i].get();
+				DEBUG_LOG("%s %d button switch %d", get_name(), current_instance, i);
+				DEBUG_LOG( (pushed) ? " pushed\r\n" : " released\r\n" );
 				button_changed(i, pushed);
 			}
 		}
@@ -64,13 +66,17 @@ public:
 			knob_msg ret = knob[i].update();
 			if (ret.switch_changed) {
 				bool state = !knob[i].get_sw_state();
+				DEBUG_LOG("%s %d encoder switch %d ", get_name(), current_instance, i);
+				DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
 				knob_sw_changed(i, state);
 				if (state) {
 					ret_val = i;
 				}
 			}
 			if (ret.value_changed) {
-				knob_val_changed(i);
+				DEBUG_LOG("%s %d value %d changed %d\r\n", get_name(), current_instance, i, knob[i].get_value_scaled());
+
+				knob_val_changed(i, knob[i].get_value_scaled());
 			}
 		}
 		return ret_val;
@@ -88,7 +94,7 @@ public:
 
 	virtual void button_changed(uint8_t index, bool state) = 0;
 	virtual void knob_sw_changed(uint8_t index, bool state) = 0;
-	virtual void knob_val_changed(uint8_t index) = 0;
+	virtual void knob_val_changed(uint8_t index, uint16_t value) = 0;
 	virtual void select_instance(uint8_t index) = 0;
 
 	std::array<Button, BUTTON_COUNT> &get_sw(){return sw;} ;
@@ -96,10 +102,14 @@ public:
 	std::array<std::array<int, COUNT>, PARAM_COUNT> knob_values = {};
 	uint8_t current_instance = 0;
 
+	virtual const char* get_name() = 0;
+
+	std::array<Knob, KNOB_COUNT> knob;
+
+
 	int led_bright = 256;
 	int sw_bright = 1024;
 private:
-	std::array<Knob, KNOB_COUNT> knob;
 	std::array<Button, BUTTON_COUNT> sw;
 
 };

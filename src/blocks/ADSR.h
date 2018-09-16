@@ -36,7 +36,11 @@ public:
 
 	~ADSR(){};
 
-	char const *NAME = "ADSR";
+	virtual const char* get_name()
+	{
+	    return "ADSR";
+	}
+
 	enum ADSR_BUTTONS {
 		ADSR0, ADSR1, ADSR2, LOOP
 	};
@@ -60,9 +64,6 @@ public:
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
-		DEBUG_LOG("%s %d button switch %d", NAME, current_instance, index);
-		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
-
 		if (state) {
 			if (index != LOOP) {
 				if (index != current_instance) {
@@ -75,17 +76,11 @@ public:
 	};
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
-		DEBUG_LOG("%s %d encoder switch %d ", NAME, current_instance, index);
-		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
 
 	}
 
-	virtual void knob_val_changed(uint8_t index) {
-		auto &knob = get_knobs();
-		int16_t value_scaled = knob[index].get_value_scaled();
-		DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value_scaled);
-
-		knob[index].set_leds(value_scaled);
+	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
+		knob[index].set_leds(knob[index].get_value_scaled());
 		knob_values[index][current_instance] = value_scaled;
 
 		int midi_nr = ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT);
@@ -109,7 +104,7 @@ public:
 			knob[i].set_leds(val);
 		}
 		sw[LOOP].set_led_val(knob_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
-		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
+		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
 
 	void select_loop(uint8_t index, bool loop) {
@@ -117,7 +112,7 @@ public:
 		auto &sw = get_sw();
 		sw[index].set_led_val(knob_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
 
-		DEBUG_LOG("%s %d ", NAME, current_instance);
+		DEBUG_LOG("%s %d ", get_name(), current_instance);
 
 		bool LOOP = knob_values[ADSR_PARAM_NR-1][current_instance];
 		if (LOOP) {

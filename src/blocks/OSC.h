@@ -34,7 +34,10 @@ public:
 	typedef std::array<std::array<int, OSC_COUNT>, OSC_PARAM_COUNT> osc_preset;
 	~OSC(){};
 
-	char const *NAME = "OSC";
+	virtual const char* get_name()
+	{
+	    return "OSC";
+	}
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
@@ -56,9 +59,6 @@ public:
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
-		DEBUG_LOG("%s %d button switch %d", NAME, current_instance, index);
-		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
-
 		if (state) {
 			if (index != current_instance) {
 				select_instance(index);
@@ -67,15 +67,10 @@ public:
 	};
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
-		DEBUG_LOG("%s %d encoder switch %d ", NAME, current_instance, index);
-		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
+
 	}
 
-	virtual void knob_val_changed(uint8_t index) {
-		auto &knob = get_knobs();
-		int16_t value_scaled = knob[index].get_value_scaled();
-
-		DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value_scaled);
+	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
 
 		knob[index].set_leds(value_scaled);
 		knob_values[index][current_instance] = value_scaled;
@@ -101,7 +96,7 @@ public:
 			knob[i].set_leds(val);
 		}
 
-		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
+		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
 
 	uint8_t get_current_osc() { return current_instance; };
