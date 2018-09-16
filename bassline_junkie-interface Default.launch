@@ -49,7 +49,7 @@
     <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="BUILD/bin/blink_NUCLEO_L411RE"/>
     <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="bassline_junkie-interface"/>
     <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
-    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="cdt.managedbuild.toolchain.gnu.cross.base.799678976"/>
+    <stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="cdt.managedbuild.toolchain.gnu.cross.base.1360509625"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/bassline_junkie-interface"/>
     </listAttribute>
