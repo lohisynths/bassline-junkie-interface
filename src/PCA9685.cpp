@@ -1,5 +1,6 @@
 #include "PCA9685.h"
 #include "mbed.h"
+#include "utils.h"
 
 static I2C i2c(I2C_SDA, I2C_SCL); // sda, scl
 static int addr_found[128]={};
@@ -10,13 +11,13 @@ int *PCA9685::i2c_probe()
 {
 	int count_=0;
 
-    printf("Searching for I2C devices...\n");
+	DEBUG_LOG("Searching for I2C devices...\n");
 
     int *tab = addr_found;
     int count = 0;
     for (int address=4; address<256; address+=2) {
         if (!i2c.write(address, NULL, 0)) { // 0 returned is ok
-            printf(" - I2C device found at address 0x%02X\r\n", address);
+        	DEBUG_LOG(" - I2C device found at address 0x%02X\r\n", address);
             *tab = address;
             tab++;
             count++;
@@ -24,7 +25,7 @@ int *PCA9685::i2c_probe()
     }
     count_ = count;
 
-    printf("%d devices found\r\n", count);
+    DEBUG_LOG("%d devices found\r\n", count);
     return addr_found;
 }
 

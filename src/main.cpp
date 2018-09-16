@@ -46,17 +46,17 @@ void print_preset(preset &input){
 
 	for (int i = 0; i < OSC_COUNT; i++) {
 		for (int j = 0; j < OSC_KNOB_COUNT; j++) {
-			DEBUG_LOG("OSC %d PARAM %d val: %d\r\n", i, j, input.osc_preset[i][j]);
+			DEBUG_LOG("OSC %d PARAM %d val: %d\r\n", j, i, input.osc_preset[j][i]);
 		}
 	}
 	for (int i = 0; i < ADSR_COUNT; i++) {
 		for (int j = 0; j < ADSR_PARAM_NR; j++) {
-			DEBUG_LOG("ADSR %d PARAM %d val: %d\r\n", i, j, input.adsr_preset[i][j]);
+			DEBUG_LOG("ADSR %d PARAM %d val: %d\r\n", j, i, input.adsr_preset[j][i]);
 		}
 	}
 	for (int i = 0; i < FLT_COUNT; i++) {
 		for (int j = 0; j < FLT_PARAM_COUNT; j++) {
-			DEBUG_LOG("FLT %d PARAM %d val: %d\r\n", i, j, input.flt_preset[i][j]);
+			DEBUG_LOG("FLT %d PARAM %d val: %d\r\n", j, i, input.flt_preset[j][i]);
 		}
 	}
 }
@@ -154,7 +154,7 @@ int main() {
 
 			save_preset_eeprom(eeprom, SynthPreset);
 
-			//print_preset(SynthPreset);
+			print_preset(SynthPreset);
 
 			if(clear) {
 				leds.set(tmp1);
