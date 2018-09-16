@@ -138,6 +138,9 @@ public:
 	}
 
 	void select_instance(uint8_t index) {
+		select_LFO(current_instance);
+		select_shape(LFO_shape[current_instance]);
+
 		for (int i = 0; i < LFO_KNOB_COUNT; i++) {
 				auto &knob = get_knobs();
 				knob[i].set_value(knob_values[0][i]);

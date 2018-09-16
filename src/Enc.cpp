@@ -38,7 +38,7 @@ int16_t Enc::get(){
 
 // https://www.allaboutcircuits.com/projects/how-to-use-a-rotary-encoder-in-a-mcu-based-project/
 bool Enc::update() {
-	curModeA = CHECKBIT(*mux_data, bit_a+1);
+	curModeA = CHECKBIT(*mux_data, (bit_a+1));
 	curModeB = CHECKBIT(*mux_data, bit_a);
 	// utility variables
 	bool change=0;

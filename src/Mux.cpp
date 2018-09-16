@@ -80,7 +80,7 @@ void Mux::print_bit(uint8_t mux_index, uint8_t pin) {
 void Mux::print(uint8_t mux_nr) {
 	printf("mux %d ", mux_nr);
 	for (uint8_t i = 0; i < 16; i++) {
-		printf("%u", CHECKBIT(mux_data[mux_nr], 15-i));
+		printf("%u", CHECKBIT(mux_data[mux_nr], (15-i)));
 		//printf(" ");
 	}
 	printf("\r\n");
@@ -91,7 +91,7 @@ void Mux::print() {
 	for(uint8_t mux_nr=0; mux_nr<MUX_COUNT; mux_nr++) {
 		printf("mux %d ", mux_nr);
 		for (uint8_t i = 0; i < 16; i++) {
-			printf("%u", CHECKBIT(mux_data[mux_nr], 15-i));
+			printf("%u", CHECKBIT(mux_data[mux_nr], (15-i)));
 			//printf(" ");
 		}
 		printf("\r\n");

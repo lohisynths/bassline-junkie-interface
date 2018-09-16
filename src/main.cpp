@@ -39,24 +39,24 @@ struct preset {
 void print_preset(preset &input){
 
 	uint32_t *data = (uint32_t *)&input;
-	for(int i=0; i < sizeof(preset)/4; i++) {
-		  uint32_t ret = data[i];
-		  DEBUG_LOG("preset data. nr %lu : %d\r\n", i, ret);
+	for(size_t i=0; i < sizeof(preset)/4; i++) {
+		uint32_t ret = data[i];
+		DEBUG_LOG("preset data nr %zd : %lu\r\n", i, ret);
 	}
 
-	for (int i = 0; i < OSC_COUNT; i++) {
+	for (size_t i = 0; i < OSC_COUNT; i++) {
 		for (int j = 0; j < OSC_KNOB_COUNT; j++) {
-			DEBUG_LOG("OSC %d PARAM %d val: %d\r\n", j, i, input.osc_preset[j][i]);
+			DEBUG_LOG("OSC %zd PARAM %d val: %d\r\n", j, i, input.osc_preset[j][i]);
 		}
 	}
-	for (int i = 0; i < ADSR_COUNT; i++) {
+	for (size_t i = 0; i < ADSR_COUNT; i++) {
 		for (int j = 0; j < ADSR_PARAM_NR; j++) {
-			DEBUG_LOG("ADSR %d PARAM %d val: %d\r\n", j, i, input.adsr_preset[j][i]);
+			DEBUG_LOG("ADSR %zd PARAM %d val: %d\r\n", j, i, input.adsr_preset[j][i]);
 		}
 	}
-	for (int i = 0; i < FLT_COUNT; i++) {
+	for (size_t i = 0; i < FLT_COUNT; i++) {
 		for (int j = 0; j < FLT_PARAM_COUNT; j++) {
-			DEBUG_LOG("FLT %d PARAM %d val: %d\r\n", j, i, input.flt_preset[j][i]);
+			DEBUG_LOG("FLT %zd PARAM %d val: %d\r\n", j, i, input.flt_preset[j][i]);
 		}
 	}
 }
@@ -64,9 +64,9 @@ void print_preset(preset &input){
 
 void load_preset_eeprom(EEPROM &eeprom, preset &input){
 	uint32_t *output_data = (uint32_t *)&input;
-	for(int i=0; i < sizeof(preset)/4; i++) {
+	for(size_t i=0; i < sizeof(preset)/4; i++) {
 		  uint32_t ret = eeprom.readEEPROMWord(i*4);
-		  DEBUG_LOG("read nr %lu : %d\r\n", i, ret);
+		  DEBUG_LOG("read nr %zu : %lu\r\n", i, ret);
 		  output_data[i] = ret;
 	}
 }
@@ -74,7 +74,7 @@ void load_preset_eeprom(EEPROM &eeprom, preset &input){
 void save_preset_eeprom(EEPROM &eeprom, preset &input){
 	eeprom.erase(sizeof(preset));
 	uint32_t *data = (uint32_t *)&input;
-	for(int i=0; i < sizeof(preset)/4; i++) {
+	for(size_t i=0; i < sizeof(preset)/4; i++) {
 		  uint32_t ret = data[i];
 		  eeprom.writeEEPROMWord(i*4, ret);
 	}
@@ -150,11 +150,9 @@ int main() {
 		    std::copy(adsr_preset.begin(), adsr_preset.end(), SynthPreset.adsr_preset.begin());
 		    std::copy(flt_preset.begin(), flt_preset.end(), SynthPreset.flt_preset.begin());
 
-			uint32_t *presecik = (uint32_t *)&SynthPreset;
-
 			save_preset_eeprom(eeprom, SynthPreset);
 
-			print_preset(SynthPreset);
+			//print_preset(SynthPreset);
 
 			if(clear) {
 				leds.set(tmp1);

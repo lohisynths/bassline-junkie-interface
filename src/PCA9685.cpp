@@ -9,8 +9,6 @@ PCA9685::PCA9685() : _i2caddr(0) {}
 
 int *PCA9685::i2c_probe()
 {
-	int count_=0;
-
 	DEBUG_LOG("Searching for I2C devices...\n");
 
     int *tab = addr_found;
@@ -23,7 +21,6 @@ int *PCA9685::i2c_probe()
             count++;
         }
     }
-    count_ = count;
 
     DEBUG_LOG("%d devices found\r\n", count);
     return addr_found;
@@ -71,13 +68,17 @@ void PCA9685::setOpenDrain(bool enable) {
     	if(!enable) {
         	//uint8_t newmode = CLEAR_BIT(oldmode, 4); // sleep
         	uint8_t newmode = CLEAR_BIT(oldmode, 1);
-        	newmode = CLEAR_BIT(newmode, 2);
-        	newmode = SET_BIT(newmode, 4);
+        	uint8_t tmp = newmode;
+        	newmode = CLEAR_BIT(tmp, 2);
+        	tmp = newmode;
+        	newmode = SET_BIT(tmp, 4);
         	write8(PCA9685_MODE2, 0x04);
     	} else {
         	uint8_t newmode = SET_BIT(oldmode, 1);
-        	newmode = SET_BIT(newmode, 2);
-        	newmode = SET_BIT(newmode, 4);
+        	uint8_t tmp = newmode;
+        	newmode = SET_BIT(tmp, 2);
+        	tmp = newmode;
+        	newmode = SET_BIT(tmp, 4);
         	write8(PCA9685_MODE2, 0x13);
     	}
 }

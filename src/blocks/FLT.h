@@ -42,6 +42,15 @@ public:
 	}
 
 	void select_instance(uint8_t index) {
+		auto &sw = get_sw();
+		sw[index].set_led_val(sw_bright);
+
+		if(index != current_instance) {
+			// get button number of button from current OSC and turn led off
+			sw[current_instance].set_led_val(0);
+			current_instance = index;
+		}
+
 		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
 			auto &knob = get_knobs();
 			knob[i].set_value(knob_values[i][0]);
@@ -49,7 +58,6 @@ public:
 		}
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
-
 
 	void init_internal(Pwm &leds, knob_data knobdata[FLT_KNOB_COUNT], sw_data swdata[FLT_BUTTON_COUNT]) {
 		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
@@ -87,8 +95,8 @@ public:
 
 	virtual void button_changed(uint8_t index, bool state) {
 		if (state) {
-			if (index != FLT_mode) {
-				select_MODE(index);
+			if (index != current_instance) {
+				select_instance(index);
 			}
 		}
 	};
@@ -101,23 +109,7 @@ public:
 		return FLT_MIDI_OFFSET+index;
 	}
 
-	void select_MODE(uint8_t index) {
-		auto &sw = get_sw();
-
-		sw[index].set_led_val(sw_bright);
-
-		// get button number of button from current FLT and turn led off
-		sw[FLT_mode].set_led_val(0);
-
-		FLT_mode = index;
-
-		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
-	};
-
 private:
-	int16_t FLT_mode={};
-
-	int sw_bright = 1024;
 
 };
 
