@@ -20,17 +20,13 @@
 
 #define MOD_MIDI_OFFSET 			(96)
 
-
 #define MOD_PARAM_COUNT 			(MOD_KNOB_COUNT)
-
 
 class MOD : public UI_BLOCK<MOD_KNOB_COUNT, MOD_BUTTON_COUNT, MOD_PARAM_COUNT, MOD_COUNT> {
 public:
 	~MOD(){};
 
 	char const *NAME = "MOD";
-
-	void select_instance(uint8_t index){};
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
@@ -48,9 +44,7 @@ public:
 
 		};
 		init_internal(*leds, MOD_ctl, MOD_ctl_sw);
-		auto &sw = get_sw();
-		sw[current_instance].set_led_val(sw_bright);
-		select_MOD(current_instance);
+		select_instance(current_instance);
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
@@ -59,7 +53,7 @@ public:
 
 		if (state) {
 			if (index != current_instance) {
-				select_MOD(index);
+				select_instance(index);
 			}
 		}
 	};
@@ -77,10 +71,11 @@ public:
 
 		knob[index].set_leds(value_scaled);
 
-		midi->send_cc(current_instance + (mod_dest*MOD_COUNT), (value_scaled), 2);
+		int midi_nr = current_instance + (mod_dest*MOD_COUNT);
+		midi->send_cc(midi_nr, (value_scaled), 2);
 	}
 
-	void select_MOD(uint8_t index) {
+	void select_instance(uint8_t index) {
 		auto &sw = get_sw();
 
 		sw[index].set_led_val(sw_bright);
@@ -111,9 +106,6 @@ public:
 
 private:
 
-	int led_bright = 256;
-	int sw_bright = 1024;
-	uint8_t current_instance = 0;
 	MIDI *midi;
 
 	uint8_t mod_dest = 0;

@@ -20,7 +20,6 @@
 
 #define LFO_MIDI_OFFSET				(36)
 
-
 enum LFO_PARAMS {
 	LFO_FREQ,
 	LFO_PARAM_COUNT
@@ -51,8 +50,7 @@ public:
 				LFO_FIRST_BUTTON_LED,   9, 	 mux->get(2),
 		};
 		init_internal(*leds, LFO_ctl, LFO_ctl_sw);
-		auto &sw = get_sw();
-		sw[current_instance].set_led_val(sw_bright);
+		select_instance(current_instance);
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
@@ -92,8 +90,8 @@ public:
 			0 + LFO_PARAMS*2	40	LFO 2 SHAPE
 			1 + LFO_PARAMS*2	41	LFO 2 FREQ
 		*/
-
-		midi->send_cc(LFO_MIDI_OFFSET+index+ 1 + (current_instance*2), value_scaled, 1);
+		int midi_nr = LFO_MIDI_OFFSET+index+ 1 + (current_instance*2);
+		midi->send_cc(midi_nr, value_scaled, 1);
 	}
 
 	void select_LFO(uint8_t index) {
@@ -161,8 +159,6 @@ public:
 private:
 	int16_t LFO_shape[LFO_COUNT]={};
 
-	int led_bright = 256;
-	int sw_bright = 1024;
 	uint8_t current_instance = 0;
 	MIDI *midi;
 };

@@ -16,6 +16,11 @@ target_compile_options(blink_NUCLEO_L411RE
 		-fno-exceptions -fno-rtti --include ${CMAKE_SOURCE_DIR}/mbed_config.h
 )
 
+target_include_directories(blink_NUCLEO_L411RE
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 target_compile_features(blink_NUCLEO_L411RE PRIVATE cxx_std_11)
 
 set(CMAKE_C_FLAGS "-include ${PROJECT_SOURCE_DIR}/mbed_config.h")

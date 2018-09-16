@@ -8,11 +8,11 @@
 #ifndef SRC_ADSRCTL_H_
 #define SRC_ADSRCTL_H_
 
-#include "../utils.h"
+#include "utils.h"
 
-#include "../Knob.h"
-#include "../Button.h"
-#include "../Button.h"
+#include "Knob.h"
+#include "Button.h"
+#include "Button.h"
 #include <array>
 
 struct knob_data {
@@ -96,6 +96,8 @@ public:
 	std::array<std::array<int, COUNT>, PARAM_COUNT> knob_values = {};
 	uint8_t current_instance = 0;
 
+	int led_bright = 256;
+	int sw_bright = 1024;
 private:
 	std::array<Knob, KNOB_COUNT> knob;
 	std::array<Button, BUTTON_COUNT> sw;

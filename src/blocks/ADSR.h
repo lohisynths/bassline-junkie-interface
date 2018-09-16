@@ -8,7 +8,6 @@
 #ifndef SRC_ADSR_H_
 #define SRC_ADSR_H_
 
-
 #include "UI_BLOCK.h"
 
 #define ADSR_KNOB_COUNT				(4)
@@ -16,15 +15,8 @@
 #define ADSR_COUNT					(3)
 
 #define ADSR_FIRST_ENC_LED			(0)
-#define ADSR_FIRST_ENC_MUX_ADR		(0)
 
 #define ADSR_FIRST_BUTTON_LED		(ADSR_KNOB_COUNT*10)
-#define ADSR_FIRST_BUTTON_MUX_ADR	(ADSR_KNOB_COUNT*ADSR_COUNT)
-
-
-#define ADSR_KNOB_COUNT				(4)
-#define ADSR_BUTTON_COUNT			(4)
-#define ADSR_COUNT					(3)
 
 #define ADSR_MIDI_OFFSET			(18)
 
@@ -52,20 +44,19 @@ public:
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
 		knob_data adsr_ctl[ADSR_KNOB_COUNT] = {
-				ADSR_FIRST_ENC_LED + 30, ADSR_FIRST_ENC_MUX_ADR + 9, mux->get(0),
-				ADSR_FIRST_ENC_LED + 20, ADSR_FIRST_ENC_MUX_ADR + 6, mux->get(0),
-				ADSR_FIRST_ENC_LED + 10, ADSR_FIRST_ENC_MUX_ADR + 3, mux->get(0),
-				ADSR_FIRST_ENC_LED +  0, ADSR_FIRST_ENC_MUX_ADR + 0, mux->get(0)
+				ADSR_FIRST_ENC_LED + 30, 9, mux->get(0),
+				ADSR_FIRST_ENC_LED + 20, 6, mux->get(0),
+				ADSR_FIRST_ENC_LED + 10, 3, mux->get(0),
+				ADSR_FIRST_ENC_LED +  0, 0, mux->get(0)
 		};
 		sw_data adsr_ctl_sw[ADSR_BUTTON_COUNT] = {
-				ADSR_FIRST_BUTTON_LED+3, ADSR_FIRST_BUTTON_MUX_ADR + 3, mux->get(0),
-				ADSR_FIRST_BUTTON_LED+2, ADSR_FIRST_BUTTON_MUX_ADR + 2, mux->get(0),
-				ADSR_FIRST_BUTTON_LED+1, ADSR_FIRST_BUTTON_MUX_ADR + 1, mux->get(0),
-				ADSR_FIRST_BUTTON_LED,   ADSR_FIRST_BUTTON_MUX_ADR,     mux->get(0)
+				ADSR_FIRST_BUTTON_LED+3, 15, mux->get(0),
+				ADSR_FIRST_BUTTON_LED+2, 14, mux->get(0),
+				ADSR_FIRST_BUTTON_LED+1, 13, mux->get(0),
+				ADSR_FIRST_BUTTON_LED,   12, mux->get(0)
 		};
 		init_internal(*leds, adsr_ctl, adsr_ctl_sw);
-		auto &sw = get_sw();
-		sw[current_instance].set_led_val(sw_bright);
+		select_instance(current_instance);
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
@@ -73,12 +64,12 @@ public:
 		DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
 
 		if (state) {
-			if (index == LOOP) {
-				select_loop(index, state);
-			} else {
+			if (index != LOOP) {
 				if (index != current_instance) {
 					select_instance(index);
 				}
+			} else {
+				select_loop(index, state);
 			}
 		}
 	};
@@ -95,9 +86,10 @@ public:
 		DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value_scaled);
 
 		knob[index].set_leds(value_scaled);
-		knob_values[current_instance][index] = value_scaled;
+		knob_values[index][current_instance] = value_scaled;
 
-		midi->send_cc(ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT), value_scaled, 1);
+		int midi_nr = ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT);
+		midi->send_cc(midi_nr, value_scaled, 1);
 	}
 
 	void select_instance(uint8_t index) {
@@ -123,11 +115,11 @@ public:
 	void select_loop(uint8_t index, bool loop) {
 		knob_values[ADSR_PARAM_NR-1][current_instance] ^= 1;
 		auto &sw = get_sw();
-		sw[index].set_led_val(knob_values[current_instance][ADSR_PARAM_NR-1] * sw_bright);
+		sw[index].set_led_val(knob_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
 
 		DEBUG_LOG("%s %d ", NAME, current_instance);
 
-		bool LOOP = knob_values[current_instance][ADSR_PARAM_NR-1];
+		bool LOOP = knob_values[ADSR_PARAM_NR-1][current_instance];
 		if (LOOP) {
 			DEBUG_LOG("LOOP ON\r\n");
 		} else {
@@ -140,8 +132,6 @@ public:
 	}
 
 private:
-	int led_bright = 256;
-	int sw_bright = 1024;
 	MIDI *midi;
 };
 

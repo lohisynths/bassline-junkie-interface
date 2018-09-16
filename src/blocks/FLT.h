@@ -79,8 +79,7 @@ public:
 
 		};
 		init_internal(*leds, FLT_ctl, FLT_ctl_sw);
-		auto &sw = get_sw();
-		sw[FLT_mode].set_led_val(sw_bright);
+		select_instance(current_instance);
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {

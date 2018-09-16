@@ -8,10 +8,10 @@
 #ifndef SRC_BLOCKS_PRESET_H_
 #define SRC_BLOCKS_PRESET_H_
 
-#include "../utils.h"
+#include "utils.h"
 
-#include "../Knob.h"
-#include "../Button.h"
+#include "Knob.h"
+#include "Button.h"
 
 #define PRESET_KNOB_COUNT				(1)
 #define PRESET_BUTTON_COUNT				(0)
@@ -126,8 +126,6 @@ public:
 	}
 	int last_led = PRESET_FIRST_ENC_LED;
 
-	int led_bright = 1024;
-	uint8_t current_instance = 0;
 	MIDI *m_midi;
 	Pwm *m_leds;
 	Mux *m_mux;

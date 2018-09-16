@@ -18,6 +18,8 @@
 
 #define OSC_FIRST_BUTTON_LED		(6*16+(12))
 
+#define OSC_MIDI_OFFSET 			(1)
+
 enum OSC_PARAMS {
 	OSC_PITCH,
 	OSC_SIN,
@@ -50,8 +52,7 @@ public:
 				OSC_FIRST_BUTTON_LED,   15,   mux->get(1)
 		};
 		init_internal(*leds, OSC_ctl, OSC_ctl_sw);
-		auto &sw = get_sw();
-		sw[current_instance].set_led_val(sw_bright);
+		select_instance(current_instance);
 	}
 
 	virtual void button_changed(uint8_t index, bool state) {
@@ -79,7 +80,8 @@ public:
 		knob[index].set_leds(value_scaled);
 		knob_values[index][current_instance] = value_scaled;
 
-		midi->send_cc(1+index+(current_instance * (OSC_KNOB_COUNT+1)), value_scaled, 1);
+		int midi_nr = OSC_MIDI_OFFSET+index+(current_instance * (OSC_KNOB_COUNT+1));
+		midi->send_cc(midi_nr, value_scaled, 1);
 	}
 
 	void select_instance(uint8_t index) {
@@ -114,11 +116,8 @@ public:
 	}
 
 private:
-	int led_bright = 256;
-	int sw_bright = 1024;
+
 	MIDI *midi;
-
-
 };
 
 
