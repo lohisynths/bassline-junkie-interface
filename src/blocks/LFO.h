@@ -72,20 +72,16 @@ public:
 
 	}
 
-	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
-		knob[index].set_leds(value_scaled);
-		knob_values[current_instance][index] = value_scaled;
-
-		/*
-		LFO_OFFSET 36	0 + LFO_PARAMS*0	36	LFO 0 SHAPE
-			1 + LFO_PARAMS*0	37	LFO 0 FREQ
-			0 + LFO_PARAMS*1	38	LFO 1 SHAPE
-			1 + LFO_PARAMS*1	39	LFO 1 FREQ
-			0 + LFO_PARAMS*2	40	LFO 2 SHAPE
-			1 + LFO_PARAMS*2	41	LFO 2 FREQ
-		*/
-		int midi_nr = LFO_MIDI_OFFSET+index+ 1 + (current_instance*2);
-		midi->send_cc(midi_nr, value_scaled, 1);
+	/*
+	LFO_OFFSET 36	0 + LFO_PARAMS*0	36	LFO 0 SHAPE
+		1 + LFO_PARAMS*0	37	LFO 0 FREQ
+		0 + LFO_PARAMS*1	38	LFO 1 SHAPE
+		1 + LFO_PARAMS*1	39	LFO 1 FREQ
+		0 + LFO_PARAMS*2	40	LFO 2 SHAPE
+		1 + LFO_PARAMS*2	41	LFO 2 FREQ
+	*/
+	uint8_t get_midi_nr(uint8_t index) {
+		return LFO_MIDI_OFFSET+index+ 1 + (current_instance*2);
 	}
 
 	void select_LFO(uint8_t index) {
@@ -154,7 +150,6 @@ private:
 	int16_t LFO_shape[LFO_COUNT]={};
 
 	uint8_t current_instance = 0;
-	MIDI *midi;
 };
 
 

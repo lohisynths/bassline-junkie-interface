@@ -79,12 +79,8 @@ public:
 
 	}
 
-	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
-		knob[index].set_leds(knob[index].get_value_scaled());
-		knob_values[index][current_instance] = value_scaled;
-
-		int midi_nr = ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT);
-		midi->send_cc(midi_nr, value_scaled, 1);
+	uint8_t get_midi_nr(uint8_t index) {
+		return ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT);
 	}
 
 	void select_instance(uint8_t index) {
@@ -127,7 +123,7 @@ public:
 	}
 
 private:
-	MIDI *midi;
+
 };
 
 #endif /* SRC_ADSR_H_ */

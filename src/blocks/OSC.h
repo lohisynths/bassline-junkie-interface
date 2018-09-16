@@ -70,13 +70,8 @@ public:
 
 	}
 
-	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
-
-		knob[index].set_leds(value_scaled);
-		knob_values[index][current_instance] = value_scaled;
-
-		int midi_nr = OSC_MIDI_OFFSET+index+(current_instance * (OSC_KNOB_COUNT+1));
-		midi->send_cc(midi_nr, value_scaled, 1);
+	uint8_t get_midi_nr(uint8_t index) {
+		return OSC_MIDI_OFFSET+index+(current_instance * (OSC_KNOB_COUNT+1));
 	}
 
 	void select_instance(uint8_t index) {
@@ -112,7 +107,6 @@ public:
 
 private:
 
-	MIDI *midi;
 };
 
 

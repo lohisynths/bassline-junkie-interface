@@ -36,6 +36,10 @@ public:
 
 	void select_instance(uint8_t index) {};
 
+	uint8_t get_midi_nr(uint8_t index) {
+		return 0;
+	}
+
 	void init_internal(Pwm &leds, knob_data knobdata[PRESET_KNOB_COUNT], sw_data swdata[PRESET_BUTTON_COUNT]) {
 		for (int i = 0; i < PRESET_KNOB_COUNT; i++) {
 			auto &knob = get_knobs();
@@ -51,7 +55,7 @@ public:
 
 	}
 
-	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
+	void knob_val_changed(uint8_t index, uint16_t value_scaled) {
 
 		uint8_t first_nr  = value_scaled % 10;
 		uint8_t second_nr = (value_scaled / 10) % 10;
@@ -101,29 +105,19 @@ public:
 	}
 
 
-	void init(Mux *mux, Pwm *leds, MIDI *midi) {
-
-
+	void init(Mux *mux, Pwm *leds, MIDI *m_midi) {
 		m_mux = mux;
 		m_leds = leds;
-		m_midi = midi;
+		midi = m_midi;
 
 		knob_data PRESET_ctl[PRESET_KNOB_COUNT] = {0, 6, mux->get(4) };
 
 		sw_data PRESET_ctl_sw[PRESET_BUTTON_COUNT];// = {
 
 		init_internal(*leds, PRESET_ctl, PRESET_ctl_sw);
-
-
-
-	//	knob.init(led_index, mux_index, *m_leds, *m_mux->get(2), max_val, leds_count);
-
-
-
 	}
 	int last_led = PRESET_FIRST_ENC_LED;
 
-	MIDI *m_midi;
 	Pwm *m_leds;
 	Mux *m_mux;
 
