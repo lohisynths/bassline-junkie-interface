@@ -112,16 +112,16 @@ public:
 
 		for (int i = 0; i < ADSR_KNOB_COUNT; i++) {
 			auto &knob = get_knobs();
-			uint8_t val = knob_values[current_instance][i];
+			uint8_t val = knob_values[i][current_instance];
 			knob[i].set_value(val);
 			knob[i].set_leds(val);
 		}
-		sw[LOOP].set_led_val(knob_values[current_instance][ADSR_PARAM_NR-1] * sw_bright);
+		sw[LOOP].set_led_val(knob_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
 		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
 	};
 
 	void select_loop(uint8_t index, bool loop) {
-		knob_values[current_instance][ADSR_PARAM_NR-1] ^= 1;
+		knob_values[ADSR_PARAM_NR-1][current_instance] ^= 1;
 		auto &sw = get_sw();
 		sw[index].set_led_val(knob_values[current_instance][ADSR_PARAM_NR-1] * sw_bright);
 

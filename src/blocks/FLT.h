@@ -41,7 +41,7 @@ public:
 	void select_instance(uint8_t index) {
 		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
 			auto &knob = get_knobs();
-			knob[i].set_value(knob_values[0][i]);
+			knob[i].set_value(knob_values[i][0]);
 			knob_val_changed(i);
 		}
 		DEBUG_LOG("%s %d SELECTED\r\n", NAME, index);
@@ -108,7 +108,7 @@ public:
 		DEBUG_LOG("%s value %d changed %d\r\n", NAME, index, value_scaled);
 
 		knob[index].set_leds(value_scaled);
-		knob_values[0][index] = value_scaled;
+		knob_values[index][0] = value_scaled;
 
 		midi->send_cc(FLT_MIDI_OFFSET+index, (value_scaled), 1);
 	}

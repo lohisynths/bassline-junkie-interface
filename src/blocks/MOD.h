@@ -93,9 +93,10 @@ public:
 
 		for (int i = 0; i < MOD_KNOB_COUNT; i++) {
 			auto &knob = get_knobs();
-			knob[i].set_value(knob_values[current_instance][i]);
+			knob[i].set_value(knob_values[i][current_instance]);
 
-			int led_nr = knob[i].get_value() / 7;
+			int led_nr = knob[i].get_value();
+			led_nr = led_nr/ 7;
 			knob[i].led_on(led_nr, led_bright);
 		}
 

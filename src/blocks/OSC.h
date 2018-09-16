@@ -77,7 +77,7 @@ public:
 		DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value_scaled);
 
 		knob[index].set_leds(value_scaled);
-		knob_values[current_instance][index] = value_scaled;
+		knob_values[index][current_instance] = value_scaled;
 
 		midi->send_cc(1+index+(current_instance * (OSC_KNOB_COUNT+1)), value_scaled, 1);
 	}
@@ -94,7 +94,7 @@ public:
 
 		for (int i = 0; i < OSC_KNOB_COUNT; i++) {
 			auto &knob = get_knobs();
-			uint8_t val = knob_values[current_instance][i];
+			uint8_t val = knob_values[i][current_instance];
 			knob[i].set_value(val);
 			knob[i].set_leds(val);
 		}
