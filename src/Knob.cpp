@@ -17,6 +17,7 @@ void Knob::init(knob_init_map config) {
 	memcpy(&knob_config, &config, sizeof(knob_init_map));
 
 	encoder.init(*knob_config.mux_raw_data, knob_config.mux_first_bit+1);
+	encoder.update();
 	encoder.set(0);
 	encoder.update();
 
