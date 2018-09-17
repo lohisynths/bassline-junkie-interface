@@ -9,6 +9,9 @@
 #define SRC_UTILS_H_
 
 #define DEBUG
+//#define DEBUG_BUTTON
+//#define DEBUG_KNOB
+//#define DEBUG_PCA9685
 
 
 #define PWM_DRIVERS_COUNT 13
@@ -28,6 +31,11 @@
 #define  DEBUG_LOG(f_, ...)  (void)0
 #endif
 
+#ifdef DEBUG_PCA9685
+#define DEBUG_PCA9685_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
+#else
+#define  DEBUG_PCA9685_LOG(f_, ...)  (void)0
+#endif
 
 
 #endif /* SRC_UTILS_H_ */

@@ -8,11 +8,6 @@
 #include "Button.h"
 #include <string>
 
-struct sw_map {
-	uint8_t led;
-	uint8_t sw_bit;
-};
-
 Button::Button() {
 
 }
@@ -53,13 +48,13 @@ void Button::print_config(button_init_map config) {
     // uncomment '#define DEBUG_KNOB in Knob.h' for debug prints
 #ifdef DEBUG_BUTTON
 	std::string sep("\r\n");
-	std::string out(std::string("config: ") + sep +
+	std::string out(sep + std::string("button config: ") + sep +
 			"mux                 " + std::to_string((uint32_t)config.mux) + sep +
 			"mux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
 			"mux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
 			"leds                " + std::to_string((uint32_t)config.leds) + sep +
 			"max_led_value       " + std::to_string(config.max_led_value) + sep +
-			"first_pwm_output    " + std::to_string(config.first_pwm_output));
+			"first_pwm_output    " + std::to_string(config.first_pwm_output) + sep);
 	DEBUG_LOG("%s\r\n", out.c_str());
 #endif
 }

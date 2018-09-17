@@ -8,8 +8,6 @@
 #ifndef SRC_BUTTON_H_
 #define SRC_BUTTON_H_
 
-#define DEBUG_BUTTON
-
 #include "mbed.h"
 #include "Pwm.h"
 #include "Mux.h"

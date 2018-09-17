@@ -8,8 +8,6 @@
 #ifndef SRC_KNOB_H_
 #define SRC_KNOB_H_
 
-//#define DEBUG_KNOB
-
 #include "mbed.h"
 #include "Pwm.h"
 #include "Mux.h"

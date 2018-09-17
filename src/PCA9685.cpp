@@ -9,20 +9,20 @@ PCA9685::PCA9685() : _i2caddr(0) {}
 
 int *PCA9685::i2c_probe()
 {
-	DEBUG_LOG("Searching for I2C devices...\n");
+	DEBUG_PCA9685_LOG("Searching for I2C devices...\n");
 
     int *tab = addr_found;
     int count = 0;
     for (int address=4; address<256; address+=2) {
         if (!i2c.write(address, NULL, 0)) { // 0 returned is ok
-        	DEBUG_LOG(" - I2C device found at address 0x%02X\r\n", address);
+        	DEBUG_PCA9685_LOG(" - I2C device found at address 0x%02X\r\n", address);
             *tab = address;
             tab++;
             count++;
         }
     }
 
-    DEBUG_LOG("%d devices found\r\n", count);
+    DEBUG_PCA9685_LOG("%d devices found\r\n", count);
     return addr_found;
 }
 

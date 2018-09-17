@@ -81,7 +81,7 @@ void Knob::print_config(knob_init_map config) {
     // uncomment '#define DEBUG_KNOB in Knob.h' for debug prints
 #ifdef DEBUG_KNOB
 	std::string sep("\r\n");
-	std::string out(std::string("config: ") + sep +
+	std::string out(sep + std::string("knob config: ") + sep +
 			"mux                 " + std::to_string((uint32_t)config.mux) + sep +
 			"mux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
 			"mux_first_bit       " + std::to_string(config.mux_first_bit) + sep +

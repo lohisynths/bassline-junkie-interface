@@ -81,6 +81,9 @@ void do_message(MIDIMessage msg) {
 //}
 
 int main() {
+	DEBUG_LOG("\r\n\r\n----*******--******----\r\n");
+	DEBUG_LOG("****BASSLINE-JUNKIE****\r\n");
+	DEBUG_LOG("''**   SIEMANKO    **''\r\n\r\n");
 
 	EEPROM eeprom;
 //	preset SynthPreset = {0};
