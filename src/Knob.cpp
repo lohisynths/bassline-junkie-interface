@@ -80,14 +80,16 @@ void Knob::set_leds(uint16_t value) {
 void Knob::print_config(knob_init_map config) {
     // uncomment '#define DEBUG_KNOB in Knob.h' for debug prints
 #ifdef DEBUG_KNOB
-	std::string sep(" ");
-	std::string out(std::string("knob configuration ") +
-			"led_count " + std::to_string(knob_config.total_led_count) + sep +
-			"knob_max_val " + std::to_string(knob_config.knob_max_val) + sep +
-			"leds " + std::to_string((uint32_t)knob_config.leds) + sep +
-			"mux_raw_data " + std::to_string((uint32_t)knob_config.mux_raw_data) + sep +
-			"first_led " + std::to_string(knob_config.first_led_number) + sep +
-			"enc_bit " + std::to_string(config.mux_first_bit) + sep);
-	DEBUG("%s\r\n", out.c_str());
+	std::string sep("\r\n");
+	std::string out(std::string("config: ") + sep +
+			"mux                 " + std::to_string((uint32_t)config.mux) + sep +
+			"mux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
+			"mux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
+			"knob_max_val        " + std::to_string(config.knob_max_val) + sep +
+			"leds                " + std::to_string((uint32_t)config.leds) + sep +
+			"max_led_value       " + std::to_string(config.max_led_value) + sep +
+			"first_pwm_output    " + std::to_string(config.first_pwm_output) + sep +
+			"total_led_count     " + std::to_string(config.total_led_count) + sep);
+	DEBUG_LOG("%s\r\n", out.c_str());
 #endif
 }

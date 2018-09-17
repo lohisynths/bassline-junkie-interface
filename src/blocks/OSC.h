@@ -51,15 +51,15 @@ public:
 
 		knob_config knob_ctrl={
 			Knob::knob_init_map{mux, mux->get(1),(uint8_t)12, knob_max_val, leds,
-					(uint8_t)(OSC_FIRST_ENC_LED + 48),knob_led_count,knob_val_max_val},
+				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 48),knob_led_count},
 			Knob::knob_init_map{mux, mux->get(1),(uint8_t)9, knob_max_val, leds,
-					(uint8_t)(OSC_FIRST_ENC_LED +  30),knob_led_count,knob_val_max_val},
+				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 30),knob_led_count},
 			Knob::knob_init_map{mux, mux->get(1),(uint8_t)6, knob_max_val, leds,
-					(uint8_t)(OSC_FIRST_ENC_LED +  20),knob_led_count,knob_val_max_val},
+				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 20),knob_led_count},
 			Knob::knob_init_map{mux, mux->get(1),(uint8_t)3, knob_max_val, leds,
-					(uint8_t)(OSC_FIRST_ENC_LED +  10),knob_led_count,knob_val_max_val},
+				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 10),knob_led_count},
 			Knob::knob_init_map{mux, mux->get(1),(uint8_t)0, knob_max_val, leds,
-					(uint8_t)(OSC_FIRST_ENC_LED +  0), knob_led_count,knob_val_max_val}
+				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 0),knob_led_count},
 		};
 
 
