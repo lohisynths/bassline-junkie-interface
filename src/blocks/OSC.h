@@ -20,6 +20,10 @@
 
 #define OSC_MIDI_OFFSET 			(1)
 
+const uint8_t OSC_KNOB_LED_COUNT =	(10);
+
+
+
 enum OSC_PARAMS {
 	OSC_PITCH,
 	OSC_SIN,
@@ -31,7 +35,6 @@ enum OSC_PARAMS {
 
 class OSC : public UI_BLOCK<OSC_KNOB_COUNT, OSC_BUTTON_COUNT, OSC_PARAM_COUNT, OSC_COUNT> {
 public:
-	typedef std::array<std::array<int, OSC_COUNT>, OSC_PARAM_COUNT> osc_preset;
 	~OSC(){};
 
 	virtual const char* get_name()
@@ -41,20 +44,41 @@ public:
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
-		knob_data OSC_ctl[OSC_KNOB_COUNT] = {
-				OSC_FIRST_ENC_LED + 48, 12, mux->get(1),
-				OSC_FIRST_ENC_LED + 30, 9,  mux->get(1),
-				OSC_FIRST_ENC_LED + 20, 6,  mux->get(1),
-				OSC_FIRST_ENC_LED + 10, 3,  mux->get(1),
-				OSC_FIRST_ENC_LED +  0, 0,  mux->get(1)
+
+		uint8_t knob_led_count = OSC_KNOB_LED_COUNT;
+		uint8_t knob_val_max_val = KNOB_MAX_LED_VAL;
+		uint8_t knob_max_val = 64;
+
+		knob_config knob_ctrl={
+			Knob::knob_map{mux,(uint8_t)1,(uint8_t)12, knob_max_val, leds,
+					(uint8_t)(OSC_FIRST_ENC_LED + 48),knob_led_count,knob_val_max_val},
+			Knob::knob_map{mux,(uint8_t)1,(uint8_t)9, knob_max_val, leds,
+					(uint8_t)(OSC_FIRST_ENC_LED +  30),knob_led_count,knob_val_max_val},
+			Knob::knob_map{mux,(uint8_t)1,(uint8_t)6, knob_max_val, leds,
+					(uint8_t)(OSC_FIRST_ENC_LED +  20),knob_led_count,knob_val_max_val},
+			Knob::knob_map{mux,(uint8_t)1,(uint8_t)3, knob_max_val, leds,
+					(uint8_t)(OSC_FIRST_ENC_LED +  10),knob_led_count,knob_val_max_val},
+			Knob::knob_map{mux,(uint8_t)1,(uint8_t)0, knob_max_val, leds,
+					(uint8_t)(OSC_FIRST_ENC_LED +  0), knob_led_count,knob_val_max_val}
 		};
+
+
+		init_internal(knob_ctrl);
+
+//		knob_data OSC_ctl[OSC_KNOB_COUNT] = {
+//				OSC_FIRST_ENC_LED + 48, 12, mux->get(1),
+//				OSC_FIRST_ENC_LED + 30, 9,  mux->get(1),
+//				OSC_FIRST_ENC_LED + 20, 6,  mux->get(1),
+//				OSC_FIRST_ENC_LED + 10, 3,  mux->get(1),
+//				OSC_FIRST_ENC_LED +  0, 0,  mux->get(1)
+//		};
 
 		sw_data OSC_ctl_sw[OSC_BUTTON_COUNT] = {
 				OSC_FIRST_BUTTON_LED+2, 3, 	  mux->get(3),
 				OSC_FIRST_BUTTON_LED+1, 2,	  mux->get(3),
 				OSC_FIRST_BUTTON_LED,   15,   mux->get(1)
 		};
-		init_internal(*leds, OSC_ctl, OSC_ctl_sw);
+		//init_internal(*leds, OSC_ctl, OSC_ctl_sw);
 		select_instance(current_instance);
 	}
 
@@ -96,12 +120,12 @@ public:
 
 	uint8_t get_current_osc() { return current_instance; };
 
-	void set_preset(osc_preset input) {
+	void set_preset(preset input) {
 		memcpy(&knob_values, &input, sizeof(input));
 		select_instance(current_instance);
 	};
 
-	osc_preset &get_preset() {
+	preset &get_preset() {
 		return knob_values;
 	}
 

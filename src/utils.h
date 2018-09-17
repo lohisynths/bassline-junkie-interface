@@ -14,6 +14,7 @@
 #define PWM_DRIVERS_COUNT 13
 #define PWM_COUNT 16
 
+#define KNOB_MAX_LED_VAL 			(255)
 
 
 #define CHECKBIT(n, x)      ((n >> x) & 1)

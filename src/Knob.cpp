@@ -8,23 +8,41 @@
 #include "Knob.h"
 #include "utils.h"
 
-struct knob_map {
-	uint8_t enc_bit;
-	uint8_t first_led;
-	uint8_t sw_bit;
-};
-
-
-Knob::Knob() {
-
-
-
-}
-
 Knob::~Knob() {
 }
+#include <string>
+
+
+void Knob::init(knob_map config) {
+	knob_leds_count = config.led_count;
+	knob_max_val = config.knob_max_val;
+	leds = config.leds;
+
+	m_mux_index = config.enc_bit;
+	m_mux_data = config.mux->get(config.mux_nr);
+	m_first_led = config.first_led;
+
+	encoder.init(*m_mux_data, m_mux_index+1);
+	encoder.update();
+	encoder.set(0);
+
+	divider = (float)(knob_leds_count-1) / 127.;
+	val_divider = 127. / (float)knob_max_val ;
+
+	std::string sep(" ");
+	std::string out(
+			std::to_string(knob_leds_count) + sep +
+			std::to_string(knob_max_val) + sep +
+			std::to_string((uint32_t)leds) + sep +
+			std::to_string((uint32_t)m_mux_data) + sep +
+			std::to_string(m_first_led) + sep +
+			std::to_string(m_mux_index) + sep);
+	printf("%s\r\n", out.c_str());
+}
+
 
 void Knob::init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data, uint16_t max_val, uint8_t leds_count) {
+
 	knob_leds_count = leds_count;
 	knob_max_val = max_val;
 
@@ -40,6 +58,16 @@ void Knob::init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_da
 	encoder.set(0);
 	divider = (float)(knob_leds_count-1) / 127.;
 	val_divider = 127. / (float)knob_max_val ;
+
+	std::string sep(" ");
+	std::string out(
+			std::to_string(knob_leds_count) + sep +
+			std::to_string(knob_max_val) + sep +
+			std::to_string((uint32_t)leds) + sep +
+			std::to_string((uint32_t)m_mux_data) + sep +
+			std::to_string(m_first_led) + sep +
+			std::to_string(m_mux_index) + sep);
+	printf("%s\r\n", out.c_str());
 }
 
 

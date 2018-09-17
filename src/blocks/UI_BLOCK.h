@@ -15,11 +15,11 @@
 #include "Button.h"
 #include <array>
 
-struct knob_data {
-	uint8_t knobs_first_led;
-	uint8_t knobs_first_mux_adr;
-	uint16_t *knobs_mux_data;
-};
+//struct knob_data {
+//	uint8_t knobs_first_led;
+//	uint8_t knobs_first_mux_adr;
+//	uint16_t *knobs_mux_data;
+//};
 
 struct sw_data {
 	uint8_t sw_first_led;
@@ -31,22 +31,33 @@ template<uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t PARAM_COUNT, uint8_t 
 class UI_BLOCK {
 public:
 	typedef std::array<std::array<int, COUNT>, PARAM_COUNT> preset;
+	typedef std::array<Knob::knob_map, KNOB_COUNT> knob_config;
 
 	UI_BLOCK() {};
 	virtual ~UI_BLOCK(){};
 
-	void init_internal(Pwm &leds, knob_data knobdata[KNOB_COUNT],
-			sw_data swdata[BUTTON_COUNT]) {
+	void init_internal(knob_config &knob_settings) {
 		for (int i = 0; i < KNOB_COUNT; i++) {
-			knob[i].init(knobdata[i].knobs_first_led,
-					knobdata[i].knobs_first_mux_adr, leds,
-					*knobdata[i].knobs_mux_data, 64, 10);
+			knob[i].init(knob_settings[i]);
 		}
 		for (int i = 0; i < BUTTON_COUNT; i++) {
-			sw[i].init(swdata[i].sw_first_led, swdata[i].sw_first_mux_adr, leds,
-					*swdata[i].sw_mux_data);
+			//sw[i].init(swdata[i].sw_first_led, swdata[i].sw_first_mux_adr, leds,
+			//		*swdata[i].sw_mux_data);
 		}
-	};
+	}
+
+//	void init_internal(Pwm &leds, knob_data knobdata[KNOB_COUNT],
+//			sw_data swdata[BUTTON_COUNT]) {
+//		for (int i = 0; i < KNOB_COUNT; i++) {
+//			knob[i].init(knobdata[i].knobs_first_led,
+//					knobdata[i].knobs_first_mux_adr, leds,
+//					*knobdata[i].knobs_mux_data, 64, 10);
+//		}
+//		for (int i = 0; i < BUTTON_COUNT; i++) {
+//			sw[i].init(swdata[i].sw_first_led, swdata[i].sw_first_mux_adr, leds,
+//					*swdata[i].sw_mux_data);
+//		}
+//	};
 
 	void update_buttons() {
 		for (int i = 0; i < BUTTON_COUNT; i++) {
@@ -83,7 +94,7 @@ public:
 	}
 
 	int update() {
-		update_buttons();
+		//update_buttons();
 		return update_knobs();
 	}
 

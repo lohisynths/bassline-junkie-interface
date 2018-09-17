@@ -10,6 +10,7 @@
 
 #include "mbed.h"
 #include "Pwm.h"
+#include "Mux.h"
 #include "Enc.h"
 
 
@@ -18,14 +19,38 @@ struct knob_msg{
 	bool switch_changed = false;
 };
 
+
+
+
+
+
+
+
+
+
 class Knob {
 public:
-	Knob();
+
+	struct knob_map {
+		Mux *mux;
+		uint8_t mux_nr;
+		uint8_t enc_bit;
+		uint16_t knob_max_val;
+
+		Pwm *leds;
+		uint8_t first_led;
+		uint8_t led_count;
+		uint8_t led_max_val;
+	};
+
 
 	virtual ~Knob();
 	knob_msg update();
 
 	void init(uint8_t led_index, uint8_t mux_index, Pwm &pwm, uint16_t &mux_data, uint16_t max_val, uint8_t leds_count);
+
+	void init(knob_map config);
+
 
 	void reset(int16_t mux_data);
 
