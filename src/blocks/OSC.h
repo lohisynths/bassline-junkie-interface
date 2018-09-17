@@ -23,7 +23,6 @@
 #define OSC_KNOB_LED_COUNT 			(10)
 
 
-
 enum OSC_PARAMS {
 	OSC_PITCH,
 	OSC_SIN,
@@ -35,6 +34,7 @@ enum OSC_PARAMS {
 
 class OSC : public UI_BLOCK<OSC_KNOB_COUNT, OSC_BUTTON_COUNT, OSC_PARAM_COUNT, OSC_COUNT> {
 public:
+	OSC(){};
 	~OSC(){};
 
 	virtual const char* get_name()
@@ -48,29 +48,22 @@ public:
 		uint8_t knob_led_count = OSC_KNOB_LED_COUNT;
 		uint8_t knob_val_max_val = KNOB_MAX_LED_VAL;
 		uint8_t knob_max_val = 64;
+		uint8_t button_val_max_val = KNOB_MAX_LED_VAL;
 
 		knob_config knob_ctrl={
-			Knob::knob_init_map{mux, mux->get(1),(uint8_t)12, knob_max_val, leds,
-				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 48),knob_led_count},
-			Knob::knob_init_map{mux, mux->get(1),(uint8_t)9, knob_max_val, leds,
-				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 30),knob_led_count},
-			Knob::knob_init_map{mux, mux->get(1),(uint8_t)6, knob_max_val, leds,
-				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 20),knob_led_count},
-			Knob::knob_init_map{mux, mux->get(1),(uint8_t)3, knob_max_val, leds,
-				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 10),knob_led_count},
-			Knob::knob_init_map{mux, mux->get(1),(uint8_t)0, knob_max_val, leds,
-				knob_val_max_val, (uint8_t)(OSC_FIRST_ENC_LED + 0),knob_led_count},
+			Knob::knob_init_map{mux, mux->get(1), 12,knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 48),knob_led_count},
+			Knob::knob_init_map{mux, mux->get(1), 9, knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 30),knob_led_count},
+			Knob::knob_init_map{mux, mux->get(1), 6, knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 20),knob_led_count},
+			Knob::knob_init_map{mux, mux->get(1), 3, knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 10),knob_led_count},
+			Knob::knob_init_map{mux, mux->get(1), 0, knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 0) ,knob_led_count}
 		};
 
+		button_config button_ctrl={
+			Button::button_init_map{mux, mux->get(3),3, leds, button_val_max_val, (OSC_FIRST_BUTTON_LED+2)},
+			Button::button_init_map{mux, mux->get(3),2, leds, button_val_max_val, (OSC_FIRST_BUTTON_LED+1)},
+			Button::button_init_map{mux, mux->get(1),15, leds,button_val_max_val, (OSC_FIRST_BUTTON_LED)}};
 
-		init_internal(knob_ctrl);
-
-		sw_data OSC_ctl_sw[OSC_BUTTON_COUNT] = {
-				OSC_FIRST_BUTTON_LED+2, 3, 	  mux->get(3),
-				OSC_FIRST_BUTTON_LED+1, 2,	  mux->get(3),
-				OSC_FIRST_BUTTON_LED,   15,   mux->get(1)
-		};
-		//init_internal(*leds, OSC_ctl, OSC_ctl_sw);
+		init_internal(knob_ctrl, button_ctrl);
 		select_instance(current_instance);
 	}
 
@@ -106,7 +99,6 @@ public:
 			knob[i].set_value(val);
 			knob[i].set_leds(val);
 		}
-
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
 

@@ -12,31 +12,24 @@
 
 #include "Knob.h"
 #include "Button.h"
-#include "Button.h"
 #include <array>
-
-struct sw_data {
-	uint8_t sw_first_led;
-	uint8_t sw_first_mux_adr;
-	uint16_t *sw_mux_data;
-};
 
 template<uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t PARAM_COUNT, uint8_t COUNT>
 class UI_BLOCK {
 public:
 	typedef std::array<std::array<int, COUNT>, PARAM_COUNT> preset;
 	typedef std::array<Knob::knob_init_map, KNOB_COUNT> knob_config;
+	typedef std::array<Button::button_init_map, BUTTON_COUNT> button_config;
 
 	UI_BLOCK() {};
 	virtual ~UI_BLOCK(){};
 
-	void init_internal(knob_config &knob_settings) {
+	void init_internal(knob_config &knob_settings, button_config &button_config) {
 		for (int i = 0; i < KNOB_COUNT; i++) {
 			knob[i].init(knob_settings[i]);
 		}
 		for (int i = 0; i < BUTTON_COUNT; i++) {
-			//sw[i].init(swdata[i].sw_first_led, swdata[i].sw_first_mux_adr, leds,
-			//		*swdata[i].sw_mux_data);
+			sw[i].init(button_config[i]);
 		}
 	}
 
@@ -74,7 +67,7 @@ public:
 	}
 
 	int update() {
-		//update_buttons();
+		update_buttons();
 		return update_knobs();
 	}
 
