@@ -15,12 +15,6 @@
 #include "Button.h"
 #include <array>
 
-//struct knob_data {
-//	uint8_t knobs_first_led;
-//	uint8_t knobs_first_mux_adr;
-//	uint16_t *knobs_mux_data;
-//};
-
 struct sw_data {
 	uint8_t sw_first_led;
 	uint8_t sw_first_mux_adr;
@@ -31,7 +25,7 @@ template<uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t PARAM_COUNT, uint8_t 
 class UI_BLOCK {
 public:
 	typedef std::array<std::array<int, COUNT>, PARAM_COUNT> preset;
-	typedef std::array<Knob::knob_map, KNOB_COUNT> knob_config;
+	typedef std::array<Knob::knob_init_map, KNOB_COUNT> knob_config;
 
 	UI_BLOCK() {};
 	virtual ~UI_BLOCK(){};
@@ -45,19 +39,6 @@ public:
 			//		*swdata[i].sw_mux_data);
 		}
 	}
-
-//	void init_internal(Pwm &leds, knob_data knobdata[KNOB_COUNT],
-//			sw_data swdata[BUTTON_COUNT]) {
-//		for (int i = 0; i < KNOB_COUNT; i++) {
-//			knob[i].init(knobdata[i].knobs_first_led,
-//					knobdata[i].knobs_first_mux_adr, leds,
-//					*knobdata[i].knobs_mux_data, 64, 10);
-//		}
-//		for (int i = 0; i < BUTTON_COUNT; i++) {
-//			sw[i].init(swdata[i].sw_first_led, swdata[i].sw_first_mux_adr, leds,
-//					*swdata[i].sw_mux_data);
-//		}
-//	};
 
 	void update_buttons() {
 		for (int i = 0; i < BUTTON_COUNT; i++) {
@@ -74,9 +55,9 @@ public:
 	int update_knobs() {
 		int ret_val = -1;
 		for (uint8_t i = 0; i < KNOB_COUNT; i++) {
-			knob_msg ret = knob[i].update();
+			Knob::knob_msg ret = knob[i].update();
 			if (ret.switch_changed) {
-				bool state = !knob[i].get_sw_state();
+				bool state = !knob[i].get_switch_state();
 				DEBUG_LOG("%s %d encoder switch %d ", get_name(), current_instance, i);
 				DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
 				knob_sw_changed(i, state);
@@ -85,9 +66,8 @@ public:
 				}
 			}
 			if (ret.value_changed) {
-				DEBUG_LOG("%s %d value %d changed %d\r\n", get_name(), current_instance, i, knob[i].get_value_scaled());
-
-				knob_val_changed(i, knob[i].get_value_scaled());
+				DEBUG_LOG("%s %d value %d changed %d\r\n", get_name(), current_instance, i, knob[i].get_knob_value());
+				knob_val_changed(i, knob[i].get_knob_value());
 			}
 		}
 		return ret_val;
@@ -115,21 +95,19 @@ public:
 
 	std::array<Button, BUTTON_COUNT> &get_sw(){return sw;} ;
 	std::array<Knob, KNOB_COUNT> &get_knobs(){return knob;};
-	std::array<std::array<int, COUNT>, PARAM_COUNT> knob_values = {};
 	uint8_t current_instance = 0;
 
 	virtual const char* get_name() = 0;
 	virtual uint8_t get_midi_nr(uint8_t index) = 0;
 
-	std::array<Knob, KNOB_COUNT> knob;
-
-
-	int led_bright = 256;
-	int sw_bright = 1024;
 	MIDI *midi;
+	int sw_bright = 1024;
+	std::array<Button, BUTTON_COUNT> sw;
+	preset knob_values = {};
 
 private:
-	std::array<Button, BUTTON_COUNT> sw;
+	std::array<Knob, KNOB_COUNT> knob;
+	int led_bright = 256;
 
 };
 
