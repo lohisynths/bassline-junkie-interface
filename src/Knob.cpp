@@ -1,8 +1,10 @@
-/*
- * Knob.cpp
+/**
+ * @file Knob.cpp
+ * Knob main class
  *
- *  Created on: Nov 1, 2017
- *      Author: alax
+ * @brief Core class for controlling user interface input and ouput
+ * @author lohi
+ * @version 0
  */
 
 #include "Knob.h"
@@ -21,8 +23,10 @@ void Knob::init(knob_init_map config) {
 	encoder.set(0);
 	encoder.update();
 
-	divider = (float)(knob_config.total_led_count-1) / 127.;
-	val_divider = 127. / (float)knob_config.knob_max_val ;
+
+
+	encoder_max_to_127_divider = (float)(knob_config.total_led_count-1) / 127.;
+	encoder_2_midi_mult = 127. / (float)knob_config.encoder_max_value ;
 
 	print_config(config);
 }
@@ -44,7 +48,7 @@ Knob::knob_msg Knob::update() {
 			if (encoder_value != 0)
 				encoder_value--;
 		} else {
-			if (encoder_value < knob_config.knob_max_val)
+			if (encoder_value < knob_config.encoder_max_value)
 				encoder_value++;
 		}
 		encoder_value_last = enc;
@@ -53,12 +57,21 @@ Knob::knob_msg Knob::update() {
 	return ret;
 }
 
+/** @brief Function for setting knob value.<br>
+   0-127 will be converted to 0-encoder_max_value from config.<br><br>
+
+   used the most from void select_instance(uint8_t index) function
+
+   @param[in]     val value, scaled from 0-127
+   @param[out]    void Description of second function argument.
+   @return No returning value.
+ */
 void Knob::set_value(uint16_t val){
-	encoder_value = val / val_divider;
+	encoder_value = val / encoder_2_midi_mult;
 }
 
 uint16_t Knob::get_knob_value(){
-	return encoder_value * val_divider;
+	return encoder_value * encoder_2_midi_mult;
 }
 
 bool Knob::get_switch_state(){
@@ -74,7 +87,7 @@ void Knob::led_on_last_off(size_t led_nr, int16_t bright) {
 }
 void Knob::set_leds(uint16_t value) {
 	int led_bright = 256;
-	int led_nr = value * divider;
+	int led_nr = value * encoder_max_to_127_divider;
 	led_on_last_off(led_nr, led_bright);
 }
 
@@ -86,7 +99,7 @@ void Knob::print_config(knob_init_map config) {
 			"mux                 " + std::to_string((uint32_t)config.mux) + sep +
 			"mux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
 			"mux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
-			"knob_max_val        " + std::to_string(config.knob_max_val) + sep +
+			"encoder_max_value   " + std::to_string(config.encoder_max_value) + sep +
 			"leds                " + std::to_string((uint32_t)config.leds) + sep +
 			"max_led_value       " + std::to_string(config.max_led_value) + sep +
 			"first_pwm_output    " + std::to_string(config.first_pwm_output) + sep +

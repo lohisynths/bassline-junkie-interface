@@ -8,7 +8,7 @@
 #include "EEPROM.h"
 
 #include "blocks/OSC.h"
-//#include "blocks/ADSR.h"
+#include "blocks/ADSR.h"
 //#include "blocks/MOD.h"
 //#include "blocks/LFO.h"
 //#include "blocks/FLT.h"
@@ -97,7 +97,7 @@ int main() {
 
 	Pwm leds;
 	Mux mux;
-	//ADSR adsr;
+	ADSR adsr;
 	OSC osc;
 	//MOD mod;
 	//LFO lfo;
@@ -107,7 +107,7 @@ int main() {
 	leds.init();
 	mux.init();
 
-	//adsr.init(&mux, &leds, &midi);
+	adsr.init(&mux, &leds, &midi);
 	osc.init(&mux, &leds, &midi);
 	//mod.init(&mux, &leds, &midi);
 	//lfo.init(&mux, &leds, &midi);
@@ -136,7 +136,7 @@ int main() {
 //			DEBUG_LOG("wcisniety %d\r\n", ret);
 //		}
 //
-//		//adsr.update();
+		adsr.update();
 //		//lfo.update();
 //		//ret = filter.update();
 //		if (ret > -1) {

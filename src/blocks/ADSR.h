@@ -47,19 +47,26 @@ public:
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
-		knob_data adsr_ctl[ADSR_KNOB_COUNT] = {
-				ADSR_FIRST_ENC_LED + 30, 9, mux->get(0),
-				ADSR_FIRST_ENC_LED + 20, 6, mux->get(0),
-				ADSR_FIRST_ENC_LED + 10, 3, mux->get(0),
-				ADSR_FIRST_ENC_LED +  0, 0, mux->get(0)
+		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
+		uint8_t knob_val_max_val = KNOB_MAX_LED_VAL;
+		uint8_t knob_max_val = 64;
+		uint8_t button_val_max_val = KNOB_MAX_LED_VAL;
+
+		knob_config knob_ctrl={
+			Knob::knob_init_map{mux, mux->get(0), 9, knob_max_val, leds, knob_val_max_val, (ADSR_FIRST_ENC_LED + 30), knob_led_count},
+			Knob::knob_init_map{mux, mux->get(0), 6, knob_max_val, leds, knob_val_max_val, (ADSR_FIRST_ENC_LED + 20), knob_led_count},
+			Knob::knob_init_map{mux, mux->get(0), 3, knob_max_val, leds, knob_val_max_val, (ADSR_FIRST_ENC_LED + 10), knob_led_count},
+			Knob::knob_init_map{mux, mux->get(0), 0, knob_max_val, leds, knob_val_max_val, (ADSR_FIRST_ENC_LED + 0),  knob_led_count},
 		};
-		sw_data adsr_ctl_sw[ADSR_BUTTON_COUNT] = {
-				ADSR_FIRST_BUTTON_LED+3, 15, mux->get(0),
-				ADSR_FIRST_BUTTON_LED+2, 14, mux->get(0),
-				ADSR_FIRST_BUTTON_LED+1, 13, mux->get(0),
-				ADSR_FIRST_BUTTON_LED,   12, mux->get(0)
+
+		button_config button_ctrl={
+			Button::button_init_map{mux, mux->get(0), 15, leds, button_val_max_val, (ADSR_FIRST_BUTTON_LED+3)},
+			Button::button_init_map{mux, mux->get(0), 14, leds, button_val_max_val, (ADSR_FIRST_BUTTON_LED+2)},
+			Button::button_init_map{mux, mux->get(0), 13, leds, button_val_max_val, (ADSR_FIRST_BUTTON_LED+1)},
+			Button::button_init_map{mux, mux->get(0), 12, leds, button_val_max_val, (ADSR_FIRST_BUTTON_LED+0)}
 		};
-		init_internal(*leds, adsr_ctl, adsr_ctl_sw);
+
+		init_internal(knob_ctrl, button_ctrl);
 		select_instance(current_instance);
 	}
 

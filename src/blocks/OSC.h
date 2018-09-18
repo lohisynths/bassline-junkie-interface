@@ -20,8 +20,6 @@
 
 #define OSC_MIDI_OFFSET 			(1)
 
-#define OSC_KNOB_LED_COUNT 			(10)
-
 
 enum OSC_PARAMS {
 	OSC_PITCH,
@@ -45,7 +43,7 @@ public:
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
 
-		uint8_t knob_led_count = OSC_KNOB_LED_COUNT;
+		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
 		uint8_t knob_val_max_val = KNOB_MAX_LED_VAL;
 		uint8_t knob_max_val = 64;
 		uint8_t button_val_max_val = KNOB_MAX_LED_VAL;
