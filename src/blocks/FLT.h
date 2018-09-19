@@ -52,7 +52,8 @@ public:
 		}
 
 		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
-			uint8_t val = knob_values[i][current_instance];
+			// knob_values[i][0] as filter for now has only one instance
+			uint8_t val = knob_values[i][0];
 			knob_val_changed(i, val, true);
 		}
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
