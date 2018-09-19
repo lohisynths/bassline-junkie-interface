@@ -1,6 +1,6 @@
 /*! \file Button.cpp
  *  \brief Source file for Button class.
- *    Main interface for reading switch data and controlling it's illumination.
+ *   Main class for reading switch state and illumination control.
  *  \author lohi-synths
  *  \version 0.0
  *  \date Nov 1 2017
@@ -11,6 +11,7 @@
 
 void Button::init(button_init_map button_configuration) {
 	memcpy(&button_config, &button_configuration, sizeof(button_configuration));
+    // uncomment '#define DEBUG_KNOB in utils.h.h' for debug prints
 	print_config(button_config);
 }
 
@@ -33,7 +34,6 @@ void Button::set_led_val(uint16_t brightness) {
 }
 
 void Button::print_config(button_init_map config) {
-    // uncomment '#define DEBUG_KNOB in Knob.h' for debug prints
 #ifdef DEBUG_BUTTON
 	std::string sep("\r\n");
 	std::string out(sep + std::string("button config: ") + sep +

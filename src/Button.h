@@ -17,7 +17,7 @@
  *  \brief Button class - Interface for illuminated switches.
  *
  *   Button means real user interface block, consisting of physical
- *   illuminated switch on PCB.<br>
+ *   illuminated switch on PCB.\n\n
  *   This class is an interface for reading button data from Mux
  *   and controlling integrated illumination with Pwm.
  */
@@ -29,15 +29,16 @@ public:
 	 */
 	struct button_init_map {
 		                                      /*!  \name Mux object related data */
-		Mux *mux;                             /*!< Pointer to global Mux object */
-		uint16_t *mux_raw_data;               /*!< Pointer to Button specific Mux raw data */
-		uint8_t mux_first_bit;                /*!< First bit in Button specific Mux raw data */
-		                                      /*!  \name Pwm object related data */
-		Pwm *leds;					          /*!< Pointer to global Pwm object */
-		uint16_t max_led_value;		          /*!< Led maximum brightness <br>
-									           *   PCA9685 12 bit pwm -> 4095 values */
-		uint8_t first_pwm_output;             /*!< Address of len in Pwm leds array <br>
-		                                       *   (0 - PWM_DRIVERS_COUNT * 16) */
+		Mux *mux;                             /*!< Pointer to global Mux object. */
+		uint16_t *mux_raw_data;               /*!< Pointer to Button specific Mux raw data. */
+		uint8_t mux_first_bit;                /*!< First bit in Button specific Mux raw data. */
+		                                      /*!  \name Pwm object related data. */
+		Pwm *leds;					          /*!< Pointer to global Pwm object.
+		                                       *   Initialized in init() function. */
+		uint16_t max_led_value;		          /*!< Led maximum brightness \n
+									           *   PCA9685 12 bit pwm -> 4095 values. */
+		uint8_t first_pwm_output;             /*!< Address of led in Pwm leds array.
+		                                       *   Maximum value = (PWM_DRIVERS_COUNT * 16) */
 	};
 
 	/*! \fn Button()
@@ -53,22 +54,23 @@ public:
 	/*! \fn bool init(button_init_map button_configuration)
 	 *  \brief Initialize object.
 	 *
-	 *   Initialize object with button_init_map structure.<br>
+	 *   Initialize object with button_init_map structure.\n\n
 	 *   This function needs to be called just after startup.
 	 *
-	 *  \warning No null checking in runtime code!<br>
-	 *   this->button_config must be properly initialized with button_configuration
-	 *	 \param[in]     button_configuration Initialization struct
+	 *  \warning No null checking in runtime code!
+	 *   this->button_config must be properly initialized with
+	 *   proper filled Knob::button_configuration structure.
+	 *	 \param[in]     button_configuration Initialization structure.
 	 */
 	void init(button_init_map button_configuration);
 
 	/*! \fn bool update()
 	 *  \brief Update current state of Button.
 	 *
-	 *   Read button state from Pwm register.<br>
+	 *   Read button state from Pwm register.\n\n
 	 *   If switch state changed return true, otherwise false.
 	 *
-	 *  \return True when switch value changed.
+	 *  \return true when switch value changed.
 	 *  \sa get_state()
 	 */
 	bool update();
@@ -76,9 +78,9 @@ public:
 	/*! \fn bool get_state()
 	 *  \brief Get last state of Button.
 	 *
-	 *   Return last known state of switch.<br>
-	 *	 This function does not fetch switch data from Mux.<br>
-	 *	 Just returns Knob::last_state value
+	 *   Return last known state of switch. \n\n
+	 *	 This function does not fetch switch data from Mux.
+	 *	 Just returns last_state value.
 	 *
 	 *  \return Last state of switch.
 	 *  \sa update()
@@ -88,8 +90,8 @@ public:
 	/*! \fn void set_led_val(uint16_t brightness)
 	 *  \brief Set value of switch illumination brightness.
 	 *
-	 *   Set value of pulse width modulation on corresponding to Button output of Pwm.<br>
-	 *	 Maximum input value = 4095 (PCA9685 12 bit pwm)<br>
+	 *   Set value of pulse width modulation on corresponding to Button output of Pwm.\n\n
+	 *	 Maximum input value = 4095 (PCA9685 12 bit pwm)\n
 	 *	\param[in] brightness Switch illumination brightness (0-4095)
 	 */
 	void set_led_val(uint16_t brightness);
@@ -112,7 +114,7 @@ private:
 	/*! \var uint8_t last_state
  	 *  \brief Last switch state.
  	 *
- 	 *   Upadted Knob::update() function.
+ 	 *   Upadted in Knob::update() function.
 	 */
 	uint8_t last_state=1;
 	void print_config(button_init_map config);

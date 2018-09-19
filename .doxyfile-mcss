@@ -1,11 +1,6 @@
-@INCLUDE                = Doxyfile
+@INCLUDE                = .doxyfile
 
 GENERATE_HTML           = NO
 GENERATE_XML            = YES
 XML_PROGRAMLISTING      = NO
-
-
-
-M_THEME_COLOR = #22272e
-
 
