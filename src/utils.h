@@ -11,6 +11,7 @@
 #define DEBUG
 //#define DEBUG_BUTTON
 //#define DEBUG_KNOB
+//#define DEBUG_KNOB_STARTUP
 //#define DEBUG_PCA9685
 
 
@@ -38,5 +39,10 @@
 #define  DEBUG_PCA9685_LOG(f_, ...)  (void)0
 #endif
 
+#ifdef DEBUG_KNOB
+#define DEBUG_KNOB_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
+#else
+#define  DEBUG_KNOB_LOG(f_, ...)  (void)0
+#endif
 
 #endif /* SRC_UTILS_H_ */

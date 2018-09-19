@@ -109,14 +109,20 @@ private:
 	/*! \var button_init_map button_config
 	 *  \brief Button configuration structure.
 	 */
-	button_init_map button_config;
+	button_init_map button_config = {};
 
 	/*! \var uint8_t last_state
  	 *  \brief Last switch state.
- 	 *
- 	 *   Upadted in Knob::update() function.
+ 	 *   Updated in Knob::update() function.
 	 */
-	uint8_t last_state=1;
+	uint8_t last_state = 1;
+
+	/*! \fn void print_config(button_init_map config)
+	 *  \brief Print configuration during init().
+	 *
+	 *   For debug prints uncomment "#define DEBUG_BUTTON" in utils.h file
+	 *
+	 */
 	void print_config(button_init_map config);
 };
 

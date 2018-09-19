@@ -104,7 +104,7 @@ public:
 			auto &knob = get_knobs();
 			uint8_t val = knob_values[i][current_instance];
 			knob[i].set_value(val);
-			knob[i].set_leds(val);
+			knob[i].led_indicator_set_value(val, true);
 		}
 		sw[LOOP].set_led_val(knob_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);

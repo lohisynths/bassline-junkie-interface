@@ -80,7 +80,13 @@ void do_message(MIDIMessage msg) {
 //	}
 //}
 
+void baud(int baudrate) {
+    Serial s(USBTX, USBRX);
+    s.baud(baudrate);
+}
+
 int main() {
+    baud(115200);
 	DEBUG_LOG("\r\n\r\n----*******--******----\r\n");
 	DEBUG_LOG("****BASSLINE-JUNKIE****\r\n");
 	DEBUG_LOG("''**   SIEMANKO    **''\r\n");

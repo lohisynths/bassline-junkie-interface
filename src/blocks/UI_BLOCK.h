@@ -77,7 +77,7 @@ public:
 	};
 
 	void knob_val_changed(uint8_t index, uint16_t value_scaled) {
-		knob[index].set_leds(value_scaled);
+		knob[index].led_indicator_set_value(value_scaled);
 		knob_values[index][0] = value_scaled;
 		midi->send_cc(get_midi_nr(index), value_scaled, 1);
 	}

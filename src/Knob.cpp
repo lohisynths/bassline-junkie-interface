@@ -13,14 +13,17 @@
 void Knob::init(knob_init_map config) {
 	memcpy(&knob_config, &config, sizeof(knob_init_map));
 
-	encoder.init(*knob_config.mux_raw_data, knob_config.mux_first_bit+1);
-	encoder.update();
+	// knob_config.mux_first_bit corresponds to rotary encoder rotary switch
+	// so first_bit is knob_config.mux_first_bit+1
+	uint8_t first_bit = knob_config.mux_first_bit+1;
+	encoder.init(*knob_config.mux_raw_data, first_bit);
+	// TODO: propper reseting
 	encoder.set(0);
 	encoder.update();
 
 	encoder_max_to_127_divider = (float)(knob_config.total_led_count-1) / 127.;
 	encoder_2_midi_mult = 127. / (float)knob_config.encoder_max_value ;
-
+	// uncomment '#define DEBUG_BUTTON in utils.h.h' for debug prints
 	print_config(config);
 }
 
@@ -29,55 +32,76 @@ Knob::knob_msg Knob::update() {
 	bool sw_state = CHECKBIT(*knob_config.mux_raw_data, knob_config.mux_first_bit);
 
 	if (last_sw_state != sw_state) {
+		DEBUG_KNOB_LOG("sw_state changed \t\t%d\r\n", last_sw_state);
 		ret.switch_changed = true;
 		last_sw_state = sw_state;
 	}
 
 	bool encoder_value_changed = encoder.update();
 	if (encoder_value_changed) {
-		int16_t enc = encoder.get();
+		// TODO: check if 16 bit if fine
+		int16_t enc_val = encoder.get();
 
-		if (encoder_value_last > enc) {
-			if (encoder_value != 0)
-				encoder_value--;
+		if (last_enc_value > enc_val) {
+			if (actual_value != 0) {
+				actual_value--;
+				DEBUG_KNOB_LOG("actual_value \t\t\t%d\r\n", actual_value);
+				ret.value_changed=true;
+			}
 		} else {
-			if (encoder_value < knob_config.encoder_max_value)
-				encoder_value++;
+			if (actual_value < knob_config.encoder_max_value) {
+				actual_value++;
+				DEBUG_KNOB_LOG("actual_value \t\t\t%d\r\n", actual_value);
+				ret.value_changed=true;
+			}
 		}
-		encoder_value_last = enc;
-		ret.value_changed=true;
+		last_enc_value = enc_val;
 	}
 	return ret;
 }
 
-void Knob::set_value(uint16_t val){
-	encoder_value = val / encoder_2_midi_mult;
+void Knob::set_value(uint16_t value, bool force_led_update){
+	actual_value = value / encoder_2_midi_mult;
 }
 
 uint16_t Knob::get_knob_value(){
-	return encoder_value * encoder_2_midi_mult;
+	uint8_t actual_calue_scaled = actual_value * encoder_2_midi_mult;
+	DEBUG_KNOB_LOG("actual_calue_scaled \t\t%d\r\n", actual_calue_scaled);
+	return actual_calue_scaled;
 }
 
 bool Knob::get_switch_state(){
 	return last_sw_state;
 }
 
-void Knob::led_on_last_off(size_t led_nr, int16_t bright) {
-	led_nr = (knob_config.total_led_count-1) - led_nr;
+uint8_t Knob::calculate_led_position(uint8_t led_number) {
+	// leds in PCA9685 registry are located counter-clockwise
+	uint8_t led_nr = (knob_config.total_led_count - 1) - led_number;
 	led_nr += knob_config.first_pwm_output;
-	knob_config.leds->set(led_last, 0);
-	knob_config.leds->set(led_nr, bright);
-	led_last = led_nr;
+	return led_nr;
 }
-void Knob::set_leds(uint16_t value) {
-	int led_bright = 256;
+
+void Knob::led_on_last_off(uint8_t led_on_nr, uint8_t led_off_nr, int16_t bright) {
+	uint8_t led_nr_tmp = calculate_led_position(led_on_nr);
+	uint8_t last_led_nr_tmp = calculate_led_position(led_off_nr);
+
+	knob_config.leds->set(last_led_nr_tmp, 0);
+	knob_config.leds->set(led_nr_tmp, bright);
+}
+
+void Knob::led_indicator_set_value(uint16_t value, bool force) {
+	int led_bright = knob_config.max_led_value;
 	int led_nr = value * encoder_max_to_127_divider;
-	led_on_last_off(led_nr, led_bright);
+	if(led_nr != last_led_on || force) {
+		DEBUG_KNOB_LOG("led_indicator_set_value \t%d\r\n", value);
+		led_on_last_off(led_nr, last_led_on, led_bright);
+		last_led_on = led_nr;
+	}
 }
 
 void Knob::print_config(knob_init_map config) {
-    // uncomment '#define DEBUG_KNOB in Knob.h' for debug prints
-#ifdef DEBUG_KNOB
+    // uncomment '#define DEBUG_KNOB_STARTUP in utils.h' for debug prints
+#ifdef DEBUG_KNOB_STARTUP
 	std::string sep("\r\n");
 	std::string out(sep + std::string("knob config: ") + sep +
 			"mux                 " + std::to_string((uint32_t)config.mux) + sep +

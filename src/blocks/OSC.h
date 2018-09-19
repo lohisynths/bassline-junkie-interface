@@ -95,7 +95,7 @@ public:
 			auto &knob = get_knobs();
 			uint8_t val = knob_values[i][current_instance];
 			knob[i].set_value(val);
-			knob[i].set_leds(val);
+			knob[i].led_indicator_set_value(val, true);
 		}
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};

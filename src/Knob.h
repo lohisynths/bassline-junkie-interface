@@ -35,7 +35,6 @@ public:
 		uint16_t encoder_max_value;           /*!< Maximum encoder value.
 		 	 	 	 	 	 	 	 	 	   *   Internal value of encoder TODO:  */
 		                                      /*!  \name Pwm object related data. */
-
 		Pwm *leds;                 		      /*!< Pointer to global Pwm object.
                                                *   Initialized in init() function. */
 		uint8_t max_led_value;      		  /*!< Led maximum brightness \n\n
@@ -85,7 +84,7 @@ public:
 	/*! \fn knob_msg update()
 	 *  \brief Update current state of Knob.
 	 *
-	 *   Read encoder data fron Pwm register.\n\n
+	 *   Read encoder data from Pwm register.\n\n
 	 *   If switch state changed return true, otherwise false.
 	 *
 	 *  \return
@@ -94,21 +93,55 @@ public:
 	 */
 	knob_msg update();
 
-	void set_leds(uint16_t value);
-	void set_value(uint16_t val);
+	void led_indicator_set_value(uint16_t value, bool force  = false);
+	void set_value(uint16_t val , bool force_led_update = false);
 	uint16_t get_knob_value();
 	bool get_switch_state();
-	knob_init_map knob_config={};
 
 private:
-	void led_on_last_off(size_t led_nr, int16_t bright);
+	/*! \var knob_init_map knob_config
+	 *  \brief Knob configuration structure.
+	 */
+	knob_init_map knob_config={};
+
+	/*! \fn uint8_t calculate_led_position(uint8_t led_number)
+	 *  \brief Calculate absolute position of led on scale illumination.
+	 *
+	 *   Leds in PCA9685 address space are located counter-clockwise.\n\n
+	 *   Therefore we subtract (knob_config.total_led_count - 1) and
+	 *   add knob_config.first_pwm_output to get absolute address of input led.
+	 *
+	 * 	\param[in] led_number Number of led corresponding to encoder calie.
+	 *
+	 *  \return
+	 *   knob_msg.value_changed == true if rotary encoder value changed\n
+	 *   knob_msg.switch_changed == true if rotary encoder switch state changed.
+	 */
+	uint8_t calculate_led_position(uint8_t led_number);
+
+
+
+	void led_on_last_off(uint8_t led_on_nr, uint8_t led_off_nr, int16_t bright);
+
 	void print_config(knob_init_map config);
 
+	/*! \var Enc encoder
+	 *  \brief Enc class, to for gray code decoding.
+	 */
 	Enc encoder;
 
-	uint16_t encoder_value = 0;
-	int16_t encoder_value_last = 0;
-	uint16_t led_last = 0;
+	/*! \var uint8_t actual_value.
+	 *  \brief Knob actual value.\n
+	 *   value in range from 0 to maximum value knob_init_map.encoder_max_value
+	 */
+	uint8_t actual_value = 0;
+
+	/*! \var uint8_t last_value.
+	 *  \brief Knob last value.\n
+	 *   value in range from 0 to maximum value knob_init_map.encoder_max_value
+	 */
+	int16_t last_enc_value = 0;
+	uint16_t last_led_on = 0;
 	uint16_t last_sw_state = 1;
 
 	float encoder_max_to_127_divider = 0;
