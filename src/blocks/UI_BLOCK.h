@@ -37,7 +37,7 @@ public:
 		for (int i = 0; i < BUTTON_COUNT; i++) {
 			bool ret = sw[i].update();
 			if (ret) {
-				bool pushed = !sw[i].get();
+				bool pushed = !sw[i].get_state();
 				DEBUG_LOG("%s %d button switch %d", get_name(), current_instance, i);
 				DEBUG_LOG( (pushed) ? " pushed\r\n" : " released\r\n" );
 				button_changed(i, pushed);

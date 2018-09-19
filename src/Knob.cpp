@@ -57,15 +57,6 @@ Knob::knob_msg Knob::update() {
 	return ret;
 }
 
-/** @brief Function for setting knob value.<br>
-   0-127 will be converted to 0-encoder_max_value from config.<br><br>
-
-   used the most from void select_instance(uint8_t index) function
-
-   @param[in]     val value, scaled from 0-127
-   @param[out]    void Description of second function argument.
-   @return No returning value.
- */
 void Knob::set_value(uint16_t val){
 	encoder_value = val / encoder_2_midi_mult;
 }

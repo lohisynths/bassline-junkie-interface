@@ -1,47 +1,35 @@
-/*
- * Button.cpp
- *
- *  Created on: Nov 1, 2017
- *      Author: alax
+/*! \file Button.cpp
+ *  \brief Source file for Button class.
+ *    Main interface for reading switch data and controlling it's illumination.
+ *  \author lohi-synths
+ *  \version 0.0
+ *  \date Nov 1 2017
  */
 
 #include "Button.h"
 #include <string>
 
-Button::Button() {
-
-}
-
-Button::~Button() {
-
-}
-
-void Button::init(button_init_map config) {
-	memcpy(&button_config, &config, sizeof(config));
+void Button::init(button_init_map button_configuration) {
+	memcpy(&button_config, &button_configuration, sizeof(button_configuration));
 	print_config(button_config);
 }
 
 bool Button::update() {
 	bool ret = false;
-
 	bool sw = CHECKBIT(*button_config.mux_raw_data, button_config.mux_first_bit);
-
-	if (last_sw != sw) {
+	if (last_state != sw) {
 		ret = true;
-		last_sw = sw;
+		last_state = sw;
 	}
-
 	return ret;
 }
 
-bool Button::get()
-{
-	return last_sw;
+bool Button::get_state() {
+	return last_state;
 }
 
-void Button::set_led_val(uint16_t val)
-{
-	button_config.leds->set(button_config.first_pwm_output, val);
+void Button::set_led_val(uint16_t brightness) {
+	button_config.leds->set(button_config.first_pwm_output, brightness);
 }
 
 void Button::print_config(button_init_map config) {
