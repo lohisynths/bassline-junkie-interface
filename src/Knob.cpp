@@ -38,25 +38,21 @@ Knob::knob_msg Knob::update() {
 	}
 
 	bool encoder_value_changed = encoder.update();
+	int16_t enc_val  = encoder.get();
 	if (encoder_value_changed) {
 		// TODO: check if 16 bit if fine
-		int16_t enc_val = encoder.get();
-
-		if (last_enc_value > enc_val) {
-			if (actual_value != 0) {
-				actual_value--;
-				DEBUG_KNOB_LOG("actual_value \t\t\t%d\r\n", actual_value);
-				ret.value_changed=true;
-			}
-		} else {
-			if (actual_value < knob_config.encoder_max_value) {
-				actual_value++;
-				DEBUG_KNOB_LOG("actual_value \t\t\t%d\r\n", actual_value);
-				ret.value_changed=true;
-			}
+		if (last_enc_value > enc_val && actual_value != 0) {
+			actual_value--;
+			ret.value_changed=true;
+			DEBUG_KNOB_LOG("actual_value \t\t\t%d\r\n", actual_value);
 		}
-		last_enc_value = enc_val;
+		if (last_enc_value < enc_val && actual_value < knob_config.encoder_max_value) {
+			actual_value++;
+			ret.value_changed=true;
+			DEBUG_KNOB_LOG("actual_value \t\t\t%d\r\n", actual_value);
+		}
 	}
+	last_enc_value = enc_val;
 	return ret;
 }
 
