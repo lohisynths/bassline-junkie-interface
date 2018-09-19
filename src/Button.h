@@ -16,16 +16,16 @@
 /*! \class Button
  *  \brief Button class - Interface for illuminated switches.
  *
- *   Button means real user interface block, consisting of physical
- *   illuminated switch on PCB.\n\n
+ *   Button is class representing physical interface block, consists of
+ *   illuminated switch.\n\n
  *   This class is an interface for reading button data from Mux
- *   and controlling integrated illumination with Pwm.
+ *   and controlling switch illumination with Pwm.
  */
 class Button {
 public:
 
 	/*! \struct button_init_map
-	 *  \brief Button Initialization struct
+	 *  \brief Button Initialization structure
 	 */
 	struct button_init_map {
 		                                      /*!  \name Mux object related data */
@@ -35,7 +35,7 @@ public:
 		                                      /*!  \name Pwm object related data. */
 		Pwm *leds;					          /*!< Pointer to global Pwm object.
 		                                       *   Initialized in init() function. */
-		uint16_t max_led_value;		          /*!< Led maximum brightness \n
+		uint16_t max_led_value;		          /*!< Led maximum brightness \n\n
 									           *   PCA9685 12 bit pwm -> 4095 values. */
 		uint8_t first_pwm_output;             /*!< Address of led in Pwm leds array.
 		                                       *   Maximum value = (PWM_DRIVERS_COUNT * 16) */
@@ -51,8 +51,8 @@ public:
 	 */
 	virtual ~Button() {};
 
-	/*! \fn bool init(button_init_map button_configuration)
-	 *  \brief Initialize object.
+	/*! \fn void init(button_init_map button_configuration)
+	 *  \brief Initialize Button object.
 	 *
 	 *   Initialize object with button_init_map structure.\n\n
 	 *   This function needs to be called just after startup.
@@ -97,9 +97,9 @@ public:
 	void set_led_val(uint16_t brightness);
 
 	/*! \fn button_init_map &get_config()
-	 *  \brief Get reference to current Knob::button_config.
+	 *  \brief Get reference to current Button::button_config.
 	 *
-	 *  \return Reference to current Knob::button_config.
+	 *  \return Reference to current Button::button_config.
 	 */
 	button_init_map &get_config() {
 		return button_config;

@@ -1,19 +1,14 @@
-/**
- * @file Knob.cpp
- * Knob main class
- *
- * @brief Core class for controlling user interface input and ouput
- * @author lohi
- * @version 0
+/*! \file Knob.cpp
+ *  \brief Source file for Knob class.
+ *   Main class for reading encoder data and illumination control.
+ *  \author lohi-synths
+ *  \version 0.0
+ *  \date Nov 1 2017
  */
 
 #include "Knob.h"
 #include "utils.h"
 #include <string>
-
-Knob::Knob(){}
-
-Knob::~Knob(){}
 
 void Knob::init(knob_init_map config) {
 	memcpy(&knob_config, &config, sizeof(knob_init_map));
@@ -22,8 +17,6 @@ void Knob::init(knob_init_map config) {
 	encoder.update();
 	encoder.set(0);
 	encoder.update();
-
-
 
 	encoder_max_to_127_divider = (float)(knob_config.total_led_count-1) / 127.;
 	encoder_2_midi_mult = 127. / (float)knob_config.encoder_max_value ;
