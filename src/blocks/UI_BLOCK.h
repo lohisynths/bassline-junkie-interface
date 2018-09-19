@@ -76,8 +76,8 @@ public:
 		select_instance(current_instance);
 	};
 
-	void knob_val_changed(uint8_t index, uint16_t value_scaled) {
-		knob[index].led_indicator_set_value(value_scaled);
+	void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
+		knob[index].led_indicator_set_value(value_scaled, force_led_update);
 		knob_values[index][0] = value_scaled;
 		midi->send_cc(get_midi_nr(index), value_scaled, 1);
 	}

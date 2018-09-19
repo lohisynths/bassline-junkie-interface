@@ -21,6 +21,7 @@
 #define KNOB_MAX_LED_VAL 			(255)
 #define COMMON_KNOB_LED_COUNT 		(10)
 
+#define BUTTON_MAX_LED_VAL 			(511)
 
 #define CHECKBIT(n, x)      ((n >> x) & 1)
 #define SETBIT(n, x)        (n |=  (1L << x))

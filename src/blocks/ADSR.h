@@ -49,8 +49,8 @@ public:
 		midi = midi_;
 		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
 		uint8_t knob_val_max_val = KNOB_MAX_LED_VAL;
-		uint8_t knob_max_val = 64;
-		uint8_t button_val_max_val = KNOB_MAX_LED_VAL;
+		uint16_t knob_max_val = 63;
+		uint16_t button_val_max_val = KNOB_MAX_LED_VAL;
 
 		knob_config knob_ctrl={
 			Knob::knob_init_map{mux, mux->get(0), 9, knob_max_val, leds, knob_val_max_val, (ADSR_FIRST_ENC_LED + 30), knob_led_count},
@@ -101,10 +101,8 @@ public:
 		}
 
 		for (int i = 0; i < ADSR_KNOB_COUNT; i++) {
-			auto &knob = get_knobs();
 			uint8_t val = knob_values[i][current_instance];
-			knob[i].set_value(val);
-			knob[i].led_indicator_set_value(val, true);
+			knob_val_changed(i, val, true);
 		}
 		sw[LOOP].set_led_val(knob_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);

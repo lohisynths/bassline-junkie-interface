@@ -37,7 +37,7 @@ public:
 		                                      /*!  \name Pwm object related data. */
 		Pwm *leds;                 		      /*!< Pointer to global Pwm object.
                                                *   Initialized in init() function. */
-		uint8_t max_led_value;      		  /*!< Led maximum brightness \n\n
+		uint16_t max_led_value;      		  /*!< Led maximum brightness \n\n
                                                *   PCA9685 12 bit pwm -> 4095 values. */
 		uint8_t first_pwm_output;             /*!< Address of led in Pwm leds array.
                                                *   Maximum value = (PWM_DRIVERS_COUNT * 16) */

@@ -52,44 +52,32 @@ public:
 		}
 
 		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
-			auto &knob = get_knobs();
-			knob[i].set_value(knob_values[i][0]);
-			knob_val_changed(i, knob_values[i][0]);
+			uint8_t val = knob_values[i][current_instance];
+			knob_val_changed(i, val, true);
 		}
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
 
-	void init_internal(Pwm &leds, knob_data knobdata[FLT_KNOB_COUNT], sw_data swdata[FLT_BUTTON_COUNT]) {
-		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
-			auto &knob = get_knobs();
-			if(i == 0) {
-				knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data, 119, 12);
-				// cutoff frequency knob
-			} else {
-				knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data, 64, 10);
-			}
-
-		}
-		for (int i = 0; i < FLT_BUTTON_COUNT; i++) {
-			auto &sw = get_sw();
-			sw[i].init(swdata[i].sw_first_led,  swdata[i].sw_first_mux_adr, leds, *swdata[i].sw_mux_data);
-		}
-	};
-
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
-		knob_data FLT_ctl[FLT_KNOB_COUNT] = {
-				FLT_FIRST_ENC_LED + 0 , 4,  mux->get(3),
-				FLT_FIRST_ENC_LED + 16, 7,  mux->get(3)
+		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
+		uint8_t big_knob_led_count = knob_led_count + 2;
+		uint8_t knob_max_val = COMMON_KNOB_LED_COUNT;
+		uint8_t big_knob_max_val = 127;
+		uint16_t knob_led_max_val = KNOB_MAX_LED_VAL;
+		uint16_t button_max_led_val = BUTTON_MAX_LED_VAL;
+
+		knob_config knob_ctrl={
+			Knob::knob_init_map{mux, mux->get(3), 4, big_knob_max_val, leds, knob_led_max_val, (FLT_FIRST_ENC_LED + 0), big_knob_led_count},
+			Knob::knob_init_map{mux, mux->get(3), 7, knob_max_val , leds, knob_led_max_val, (FLT_FIRST_ENC_LED + 16), knob_led_count}
 		};
 
-		sw_data FLT_ctl_sw[FLT_BUTTON_COUNT] = {
-				FLT_FIRST_BUTTON_LED+2, 15, mux->get(3),
-				FLT_FIRST_BUTTON_LED+1, 14,	mux->get(3),
-				FLT_FIRST_BUTTON_LED,   13,	mux->get(3),
-
+		button_config button_ctrl={
+			Button::button_init_map{mux, mux->get(3), 15, leds, button_max_led_val, (FLT_FIRST_BUTTON_LED+2)},
+			Button::button_init_map{mux, mux->get(3), 14, leds, button_max_led_val, (FLT_FIRST_BUTTON_LED+1)},
+			Button::button_init_map{mux, mux->get(3), 13, leds, button_max_led_val, (FLT_FIRST_BUTTON_LED+0)}
 		};
-		init_internal(*leds, FLT_ctl, FLT_ctl_sw);
+		init_internal(knob_ctrl, button_ctrl);
 		select_instance(current_instance);
 	}
 

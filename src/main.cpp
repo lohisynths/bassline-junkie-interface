@@ -11,7 +11,7 @@
 #include "blocks/ADSR.h"
 //#include "blocks/MOD.h"
 //#include "blocks/LFO.h"
-//#include "blocks/FLT.h"
+#include "blocks/FLT.h"
 //#include "blocks/PRESET.h"
 
 
@@ -107,7 +107,7 @@ int main() {
 	OSC osc;
 	//MOD mod;
 	//LFO lfo;
-	//FLT filter;
+	FLT filter;
 	//PRESET display;
 
 	leds.init();
@@ -117,7 +117,7 @@ int main() {
 	osc.init(&mux, &leds, &midi);
 	//mod.init(&mux, &leds, &midi);
 	//lfo.init(&mux, &leds, &midi);
-	//filter.init(&mux, &leds, &midi);
+	filter.init(&mux, &leds, &midi);
 	midi_usb.attach(do_message);
 	//display.init(&mux, &leds, &midi);
 
@@ -144,7 +144,7 @@ int main() {
 //
 		adsr.update();
 //		//lfo.update();
-//		//ret = filter.update();
+		ret = filter.update();
 //		if (ret > -1) {
 //			//mod.select_MOD_dest(ret+15);
 //			DEBUG_LOG("wcisniety %d\r\n", ret);
