@@ -9,7 +9,7 @@
 
 #include "blocks/OSC.h"
 #include "blocks/ADSR.h"
-//#include "blocks/MOD.h"
+#include "blocks/MOD.h"
 #include "blocks/LFO.h"
 #include "blocks/FLT.h"
 //#include "blocks/PRESET.h"
@@ -115,7 +115,7 @@ int main() {
 	Mux mux;
 	ADSR adsr;
 	OSC osc;
-	//MOD mod;
+	MOD mod;
 	LFO lfo;
 	FLT filter;
 	//PRESET display;
@@ -125,7 +125,7 @@ int main() {
 
 	adsr.init(&mux, &leds, &midi);
 	osc.init(&mux, &leds, &midi);
-	//mod.init(&mux, &leds, &midi);
+	mod.init(&mux, &leds, &midi);
 	lfo.init(&mux, &leds, &midi);
 	filter.init(&mux, &leds, &midi);
 	midi_usb.attach(do_message);
@@ -188,7 +188,7 @@ int main() {
 //
 //		}
 //
-//		mod.update();
+		mod.update();
 	}
 }
 
