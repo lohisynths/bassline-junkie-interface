@@ -41,23 +41,9 @@ public:
 		return preset_values;
 	}
 
-	void select_instance(uint8_t index) {
-		auto &sw = get_sw();
-		sw[index].set_led_val(sw_bright);
-
-		if(index != current_instance) {
-			// get button number of button from current OSC and turn led off
-			sw[current_instance].set_led_val(0);
-			current_instance = index;
-		}
-
-		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
-			// knob_values[i][0] as filter for now has only one instance
-			uint8_t val = preset_values[i][index];
-			knob_val_changed(i, val, true);
-		}
-		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
-	};
+	void special_function(uint8_t index, uint8_t value) {
+		DEBUG_LOG("%s %d special_function %d %d\r\n", get_name(), current_instance, index, value);
+	}
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
@@ -82,13 +68,9 @@ public:
 		select_instance(current_instance);
 	}
 
-	virtual void button_changed(uint8_t index, bool state) {
-		if (state) {
-			if (index != current_instance) {
-				select_instance(index);
-			}
-		}
-	};
+	void select_shape(uint8_t index, bool loop) {
+
+	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
 

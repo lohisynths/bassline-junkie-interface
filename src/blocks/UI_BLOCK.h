@@ -33,6 +33,18 @@ public:
 		}
 	}
 
+	virtual void button_changed(uint8_t index, bool state) {
+		if (state) {
+			// if COUNT = 1
+			// only one knob used, so jump straight to special_function
+			if (index < COUNT && COUNT != 1) {
+				select_instance(index);
+			} else {
+				special_function(index, state);
+			}
+		}
+	};
+
 	void update_buttons() {
 		for (int i = 0; i < BUTTON_COUNT; i++) {
 			bool ret = sw[i].update();
@@ -66,6 +78,24 @@ public:
 		return ret_val;
 	}
 
+	void select_instance(uint8_t index) {
+		auto &sw = get_sw();
+		sw[index].set_led_val(sw_bright);
+
+		if(index != current_instance) {
+			// get button number of button from current OSC and turn led off
+			sw[current_instance].set_led_val(0);
+			current_instance = index;
+		}
+
+		for (int i = 0; i < KNOB_COUNT; i++) {
+			uint8_t val = preset_values[i][current_instance];
+			knob_val_changed(i, val, true);
+		}
+		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
+	};
+
+
 	int update() {
 		update_buttons();
 		return update_knobs();
@@ -82,9 +112,8 @@ public:
 		midi->send_cc(get_midi_nr(index), value_scaled, 1);
 	}
 
-	virtual void button_changed(uint8_t index, bool state) = 0;
 	virtual void knob_sw_changed(uint8_t index, bool state) = 0;
-	virtual void select_instance(uint8_t index) = 0;
+	virtual void special_function(uint8_t index, uint8_t value) = 0;
 
 	std::array<Button, BUTTON_COUNT> &get_sw(){return sw;} ;
 	std::array<Knob, KNOB_COUNT> &get_knobs(){return knob;};
