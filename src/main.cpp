@@ -30,11 +30,12 @@ void do_message(MIDIMessage msg) {
     }
 }
 
-//struct preset {
-//	OSC::osc_preset osc_preset;
-//	ADSR::adsr_preset adsr_preset;
-//	FLT::flt_preset flt_preset;
-//};
+struct preset {
+	OSC::preset osc_preset;
+	ADSR::preset adsr_preset;
+	FLT::preset flt_preset;
+};
+
 //
 //void print_preset(preset &input){
 //
@@ -93,7 +94,10 @@ int main() {
 	DEBUG_LOG("%s at %s\r\n\r\n", __DATE__, __TIME__);
 
 	EEPROM eeprom;
-//	preset SynthPreset = {0};
+	preset SynthPreset = {0};
+	SynthPreset.osc_preset[OSC_PITCH][0] = 64;
+	SynthPreset.osc_preset[OSC_SIN][0] = 64;
+
 //	load_preset_eeprom(eeprom, SynthPreset);
 	//print_preset(SynthPreset);
 
@@ -121,7 +125,7 @@ int main() {
 	midi_usb.attach(do_message);
 	//display.init(&mux, &leds, &midi);
 
-//	osc.set_preset(SynthPreset.osc_preset);
+	osc.set_preset(SynthPreset.osc_preset);
 	//adsr.set_preset(SynthPreset.adsr_preset);
 	//filter.set_preset(SynthPreset.flt_preset);
 

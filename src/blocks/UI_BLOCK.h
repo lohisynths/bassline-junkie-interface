@@ -55,6 +55,13 @@ public:
 		midi->send_cc(get_midi_nr(index), value_scaled, 1);
 	}
 
+	void force_knob_update(uint8_t index, uint16_t value_scaled) {
+		knob[index].set_value(value_scaled);
+		knob[index].led_indicator_set_value(value_scaled, true);
+		set_current_preset_value(index, value_scaled);
+		midi->send_cc(get_midi_nr(index), value_scaled, 1);
+	}
+
 	void update_buttons() {
 		for (int i = 0; i < BUTTON_COUNT; i++) {
 			bool ret = sw[i].update();
@@ -97,20 +104,22 @@ public:
 	}
 
 	void select_instance(uint8_t index) {
-		auto &sw = get_sw();
-		sw[index].set_led_val(sw_bright);
 
-		if(index != current_instance) {
+		// force update for select instance
+		// if index == current instance
+		// turn off index led and turn on
+		//if(index != current_instance) {
 			// get button number of button from current OSC and turn led off
-			sw[current_instance].set_led_val(0);
-			current_instance = index;
-		}
+		turn_off_sw(current_instance);
+		turn_on_sw(index);
+		current_instance = index;
+		//}
 
 		for (int i = 0; i < KNOB_COUNT; i++) {
 			// get value of [i] knob from current preset
 			//
 			uint8_t val = get_current_preset_value(i);
-			knob_val_changed(i, val, true);
+			force_knob_update(i, val);
 		}
 
 		const int special_parameters_count = PARAM_COUNT - KNOB_COUNT;
@@ -143,7 +152,7 @@ public:
 		sw[index].set_led_val(0);
 	}
 	void turn_on_sw(uint8_t index) {
-		sw[index].set_led_val(255);
+		sw[index].set_led_val(sw_bright);
 	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) = 0;

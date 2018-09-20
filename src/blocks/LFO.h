@@ -137,17 +137,17 @@ public:
 		}
 	}
 
-	void select_instance(uint8_t index) {
-		select_LFO(current_instance);
-		select_shape(LFO_shape[current_instance]);
-
-		for (int i = 0; i < LFO_KNOB_COUNT; i++) {
-				auto &knob = get_knobs();
-				knob[i].set_value(knob_values[0][i]);
-				knob_val_changed(i, knob_values[0][i]);
-		}
-		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
-	};
+//	void select_instance(uint8_t index) {
+//		select_LFO(current_instance);
+//		select_shape(LFO_shape[current_instance]);
+//
+//		for (int i = 0; i < LFO_KNOB_COUNT; i++) {
+//				auto &knob = get_knobs();
+//				knob[i].set_value(knob_values[0][i]);
+//				knob_val_changed(i, knob_values[0][i]);
+//		}
+//		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
+//	};
 
 private:
 	int16_t LFO_shape[LFO_COUNT]={};
