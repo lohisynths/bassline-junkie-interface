@@ -95,8 +95,12 @@ int main() {
 
 	EEPROM eeprom;
 	preset SynthPreset = {0};
-	SynthPreset.osc_preset[OSC_PITCH][0] = 64;
-	SynthPreset.osc_preset[OSC_SIN][0] = 64;
+	SynthPreset.osc_preset[0][OSC_PITCH] = 64;
+	SynthPreset.osc_preset[0][OSC_SIN] = 64;
+	SynthPreset.adsr_preset[0][ADSR_LOOP] = 1;
+
+	SynthPreset.flt_preset[0][FLT_FREQ] = 64;
+	SynthPreset.flt_preset[0][FLT_SHAPE] = 2;
 
 //	load_preset_eeprom(eeprom, SynthPreset);
 	//print_preset(SynthPreset);
@@ -126,8 +130,8 @@ int main() {
 	//display.init(&mux, &leds, &midi);
 
 	osc.set_preset(SynthPreset.osc_preset);
-	//adsr.set_preset(SynthPreset.adsr_preset);
-	//filter.set_preset(SynthPreset.flt_preset);
+	adsr.set_preset(SynthPreset.adsr_preset);
+	filter.set_preset(SynthPreset.flt_preset);
 
 	uint16_t tmp1[PWM_DRIVERS_COUNT * PWM_COUNT];
 	//bool clear = false;

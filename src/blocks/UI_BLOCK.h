@@ -17,7 +17,7 @@
 template<uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t PARAM_COUNT, uint8_t COUNT>
 class UI_BLOCK {
 public:
-	typedef std::array<std::array<int, COUNT>, PARAM_COUNT> preset;
+	typedef std::array<std::array<int, PARAM_COUNT>, COUNT> preset;
 	typedef std::array<Knob::knob_init_map, KNOB_COUNT> knob_config;
 	typedef std::array<Button::button_init_map, BUTTON_COUNT> button_config;
 
@@ -96,11 +96,11 @@ public:
 	}
 
 	int16_t get_current_preset_value(uint8_t index) {
-		return preset_values[index][current_instance];
+		return preset_values[current_instance][index];
 	}
 
 	void set_current_preset_value(uint8_t index, uint16_t value) {
-		preset_values[index][current_instance] = value;
+		preset_values[current_instance][index] = value;
 	}
 
 	void select_instance(uint8_t index) {
