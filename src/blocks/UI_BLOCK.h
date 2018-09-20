@@ -108,12 +108,12 @@ public:
 		// force update for select instance
 		// if index == current instance
 		// turn off index led and turn on
-		//if(index != current_instance) {
+		if(index != current_instance) {
 			// get button number of button from current OSC and turn led off
-		turn_off_sw(current_instance);
-		turn_on_sw(index);
-		current_instance = index;
-		//}
+			turn_off_sw(current_instance);
+			turn_on_sw(index);
+			current_instance = index;
+		}
 
 		for (int i = 0; i < KNOB_COUNT; i++) {
 			// get value of [i] knob from current preset

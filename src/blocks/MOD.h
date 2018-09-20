@@ -81,6 +81,7 @@ public:
 
 	void select_MOD_dest(int index) {
 		if(index > -1) {
+			DEBUG_LOG("MOD dst %d\r\n", index);
 			mod_dest = index;
 		}
 	}

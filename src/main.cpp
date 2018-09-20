@@ -37,50 +37,49 @@ struct preset {
 	LFO::preset lfo_preset;
 };
 
-//
-//void print_preset(preset &input){
-//
-//	uint32_t *data = (uint32_t *)&input;
-//	for(size_t i=0; i < sizeof(preset)/4; i++) {
-//		uint32_t ret = data[i];
-//		DEBUG_LOG("preset data nr %zd : %lu\r\n", i, ret);
-//	}
-//
-//	for (size_t i = 0; i < OSC_COUNT; i++) {
-//		for (int j = 0; j < OSC_KNOB_COUNT; j++) {
-//			DEBUG_LOG("OSC %zd PARAM %d val: %d\r\n", j, i, input.osc_preset[j][i]);
-//		}
-//	}
-//	for (size_t i = 0; i < ADSR_COUNT; i++) {
-//		for (int j = 0; j < ADSR_PARAM_NR; j++) {
-//			DEBUG_LOG("ADSR %zd PARAM %d val: %d\r\n", j, i, input.adsr_preset[j][i]);
-//		}
-//	}
-//	for (size_t i = 0; i < FLT_COUNT; i++) {
-//		for (int j = 0; j < FLT_PARAM_COUNT; j++) {
-//			DEBUG_LOG("FLT %zd PARAM %d val: %d\r\n", j, i, input.flt_preset[j][i]);
-//		}
-//	}
-//}
+void print_preset(preset &input){
+
+	uint32_t *data = (uint32_t *)&input;
+	for(size_t i=0; i < sizeof(preset)/4; i++) {
+		uint32_t ret = data[i];
+		DEBUG_LOG("preset data nr %zd : %lu\r\n", i, ret);
+	}
+
+	for (size_t i = 0; i < OSC_COUNT; i++) {
+		for (int j = 0; j < OSC_KNOB_COUNT; j++) {
+			DEBUG_LOG("OSC %zd PARAM %d val: %d\r\n", j, i, input.osc_preset[j][i]);
+		}
+	}
+	for (size_t i = 0; i < ADSR_COUNT; i++) {
+		for (int j = 0; j < ADSR_PARAM_NR; j++) {
+			DEBUG_LOG("ADSR %zd PARAM %d val: %d\r\n", j, i, input.adsr_preset[j][i]);
+		}
+	}
+	for (size_t i = 0; i < FLT_COUNT; i++) {
+		for (int j = 0; j < FLT_PARAM_COUNT; j++) {
+			DEBUG_LOG("FLT %zd PARAM %d val: %d\r\n", j, i, input.flt_preset[j][i]);
+		}
+	}
+}
 
 
-//void load_preset_eeprom(EEPROM &eeprom, preset &input){
-//	uint32_t *output_data = (uint32_t *)&input;
-//	for(size_t i=0; i < sizeof(preset)/4; i++) {
-//		  uint32_t ret = eeprom.readEEPROMWord(i*4);
-//		  DEBUG_LOG("read nr %zu : %lu\r\n", i, ret);
-//		  output_data[i] = ret;
-//	}
-//}
-//
-//void save_preset_eeprom(EEPROM &eeprom, preset &input){
-//	eeprom.erase(sizeof(preset));
-//	uint32_t *data = (uint32_t *)&input;
-//	for(size_t i=0; i < sizeof(preset)/4; i++) {
-//		  uint32_t ret = data[i];
-//		  eeprom.writeEEPROMWord(i*4, ret);
-//	}
-//}
+void load_preset_eeprom(EEPROM &eeprom, preset &input){
+	uint32_t *output_data = (uint32_t *)&input;
+	for(size_t i=0; i < sizeof(preset)/4; i++) {
+		  uint32_t ret = eeprom.readEEPROMWord(i*4);
+		  DEBUG_LOG("read nr %zu : %lu\r\n", i, ret);
+		  output_data[i] = ret;
+	}
+}
+
+void save_preset_eeprom(EEPROM &eeprom, preset &input){
+	eeprom.erase(sizeof(preset));
+	uint32_t *data = (uint32_t *)&input;
+	for(size_t i=0; i < sizeof(preset)/4; i++) {
+		  uint32_t ret = data[i];
+		  eeprom.writeEEPROMWord(i*4, ret);
+	}
+}
 
 void baud(int baudrate) {
     Serial s(USBTX, USBRX);
@@ -96,13 +95,15 @@ int main() {
 
 	EEPROM eeprom;
 	preset SynthPreset = {0};
-	SynthPreset.osc_preset[0][OSC_PITCH] = 64;
-	SynthPreset.osc_preset[0][OSC_SIN] = 64;
-	SynthPreset.adsr_preset[0][ADSR_LOOP] = 1;
-	SynthPreset.flt_preset[0][FLT_FREQ] = 64;
-	SynthPreset.flt_preset[0][FLT_SHAPE] = 2;
-	SynthPreset.lfo_preset[0][LFO_SHAPE] = 2;
-	SynthPreset.lfo_preset[0][LFO_FREQ] = 64;
+//	SynthPreset.osc_preset[0][OSC_PITCH] = 10;
+	SynthPreset.osc_preset[0][OSC_SAW] = 127;
+	SynthPreset.osc_preset[1][OSC_SAW] = 127;
+
+//	SynthPreset.adsr_preset[0][ADSR_LOOP] = 1;
+	SynthPreset.flt_preset[0][FLT_FREQ] = 127;
+//	SynthPreset.flt_preset[0][FLT_SHAPE] = 2;
+//	SynthPreset.lfo_preset[0][LFO_SHAPE] = 2;
+//	SynthPreset.lfo_preset[0][LFO_FREQ] = 64;
 
 //	load_preset_eeprom(eeprom, SynthPreset);
 	//print_preset(SynthPreset);
@@ -148,18 +149,18 @@ int main() {
 
 		//mux.print(1);
 		int ret = osc.update();
-//		if (ret > -1) {
-//			//mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
-//			DEBUG_LOG("wcisniety %d\r\n", ret);
-//		}
-//
+		if (ret > -1) {
+			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
+			DEBUG_LOG("wcisniety %d\r\n", ret);
+		}
+
 		adsr.update();
 		lfo.update();
 		ret = filter.update();
-//		if (ret > -1) {
-//			//mod.select_MOD_dest(ret+15);
-//			DEBUG_LOG("wcisniety %d\r\n", ret);
-//		}
+		if (ret > -1) {
+			mod.select_MOD_dest(ret+15);
+			DEBUG_LOG("wcisniety %d\r\n", ret);
+		}
 
 
 //		ret = display.update();
