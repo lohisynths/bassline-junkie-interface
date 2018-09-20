@@ -67,7 +67,18 @@ public:
 		select_instance(current_instance);
 	}
 
-	void special_function_button_pressed(uint8_t index, bool force = false) {
+	void force_mode(uint8_t input) {
+		uint8_t button_adr = ADSR_COUNT;
+
+		set_current_preset_value(LOOP, input);
+		if(input) {
+			turn_on_sw(button_adr);
+		} else {
+			turn_off_sw(button_adr);
+		}
+	}
+
+	void select_mode(uint8_t index) {
 		// index ignored as ADSR has only one extra function
 		// with no parameters.
 		// for now we care only about triggering loop state for
@@ -80,18 +91,19 @@ public:
 		// are first and then LOOP switch
 		// so button addr = ADSR_COUNT
 		uint8_t button_adr = ADSR_COUNT;
+		uint8_t preset_adr = ADSR_KNOB_COUNT;
 
-		auto ciuciu = get_current_preset_value(LOOP);
-		ciuciu ^= 1;
-		if(ciuciu) {
+		int16_t loop_state = get_current_preset_value(preset_adr);
+		loop_state ^= 1;
+		if(loop_state) {
 			turn_on_sw(button_adr);
 		} else {
 			turn_off_sw(button_adr);
 		}
 
-		DEBUG_LOG("ADSR %d LOOP %d\r\n", current_instance, ciuciu);
+		DEBUG_LOG("ADSR %d LOOP %d\r\n", current_instance, loop_state);
 
-		set_current_preset_value(LOOP, ciuciu);
+		set_current_preset_value(preset_adr, loop_state);
 	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {

@@ -27,13 +27,6 @@ enum FLT_PARAMS {
 	FLT_PARAM_COUNT
 };
 
-
-
-
-typedef std::tuple<int, const char *> parameter_;
-
-
-
 class FLT : public UI_BLOCK<FLT_KNOB_COUNT, FLT_BUTTON_COUNT, FLT_PARAM_COUNT, FLT_COUNT> {
 public:
 	~FLT(){};
@@ -65,11 +58,15 @@ public:
 		select_instance(current_instance);
 	}
 
-	void special_function_button_pressed(uint8_t index, bool force = false) {
-			select_filter_type(index, force);
+	void select_mode(uint8_t index) {
+			select_filter_type(index);
 	}
 
-	void select_filter_type(uint8_t index, bool force) {
+	void force_mode(uint8_t index) {
+			select_filter_type(index, true);
+	}
+
+	void select_filter_type(uint8_t index, bool force = 0) {
 		if(last_filter_type != index || force) {
 			DEBUG_LOG("FILTER TYPE %d SELECTED\r\n", index);
 			turn_off_sw(last_filter_type);
