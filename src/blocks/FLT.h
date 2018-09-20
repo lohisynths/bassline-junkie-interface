@@ -27,11 +27,7 @@ enum FLT_PARAMS {
 	FLT_PARAM_COUNT
 };
 
-constexpr std::tuple<int, const char *> ret2 () {
-    int a = FLT_FREQ;
-    const char *b = "FLT_FREQ";
-    return std::make_tuple(a, b);
-}
+
 
 
 typedef std::tuple<int, const char *> parameter_;
