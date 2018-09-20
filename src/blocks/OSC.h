@@ -91,7 +91,7 @@ public:
 		}
 
 		for (int i = 0; i < OSC_KNOB_COUNT; i++) {
-			uint8_t val = knob_values[i][current_instance];
+			uint8_t val = preset_values[i][current_instance];
 			knob_val_changed(i, val, true);
 		}
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
@@ -100,12 +100,12 @@ public:
 	uint8_t get_current_osc() { return current_instance; };
 
 	void set_preset(preset input) {
-		memcpy(&knob_values, &input, sizeof(input));
+		memcpy(&preset_values, &input, sizeof(input));
 		select_instance(current_instance);
 	};
 
 	preset &get_preset() {
-		return knob_values;
+		return preset_values;
 	}
 
 private:

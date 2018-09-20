@@ -72,13 +72,13 @@ public:
 	}
 
 	void set_preset(preset input) {
-		memcpy(&knob_values, &input, sizeof(input));
+		memcpy(&preset_values, &input, sizeof(input));
 		select_instance(current_instance);
 	};
 
 	void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
 		knob[index].led_indicator_set_value(value_scaled, force_led_update);
-		knob_values[index][0] = value_scaled;
+		preset_values[index][current_instance] = value_scaled;
 		midi->send_cc(get_midi_nr(index), value_scaled, 1);
 	}
 
@@ -96,7 +96,7 @@ public:
 	MIDI *midi;
 	int sw_bright = 1024;
 	std::array<Button, BUTTON_COUNT> sw;
-	preset knob_values = {};
+	preset preset_values = {};
 
 private:
 	std::array<Knob, KNOB_COUNT> knob;

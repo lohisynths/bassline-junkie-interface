@@ -33,11 +33,11 @@ void Pwm::init() {
 
 }
 
-void Pwm::set(size_t led, uint16_t val) {
+void Pwm::set(uint8_t led, uint16_t val) {
 	pwm_array[led] = val;
 
-	size_t dev_nr = led / PWM_COUNT;
-	size_t dev_led = led % PWM_COUNT;
+	uint8_t dev_nr = led / PWM_COUNT;
+	uint8_t dev_led = led % PWM_COUNT;
 
 	pwm[dev_nr].setPWM(dev_led, 0, val);
 }

@@ -101,21 +101,21 @@ public:
 		}
 
 		for (int i = 0; i < ADSR_KNOB_COUNT; i++) {
-			uint8_t val = knob_values[i][current_instance];
+			uint8_t val = preset_values[i][current_instance];
 			knob_val_changed(i, val, true);
 		}
-		sw[LOOP].set_led_val(knob_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
+		sw[LOOP].set_led_val(preset_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
 
 	void select_loop(uint8_t index, bool loop) {
-		knob_values[ADSR_PARAM_NR-1][current_instance] ^= 1;
+		preset_values[ADSR_PARAM_NR-1][current_instance] ^= 1;
 		auto &sw = get_sw();
-		sw[index].set_led_val(knob_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
+		sw[index].set_led_val(preset_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
 
 		DEBUG_LOG("%s %d ", get_name(), current_instance);
 
-		bool LOOP = knob_values[ADSR_PARAM_NR-1][current_instance];
+		bool LOOP = preset_values[ADSR_PARAM_NR-1][current_instance];
 		if (LOOP) {
 			DEBUG_LOG("LOOP ON\r\n");
 		} else {
@@ -124,7 +124,7 @@ public:
 	}
 
 	adsr_preset &get_preset() {
-		return knob_values;
+		return preset_values;
 	}
 
 private:

@@ -14,7 +14,7 @@ MIDI::MIDI() : pc(PA_9, PA_10, 115200) {}
 
 MIDI::~MIDI() {}
 
-ssize_t MIDI::raspi_usart_write(const void* buffer, size_t length) {
+ssize_t MIDI::raspi_usart_write(const void* buffer, uint8_t length) {
     const uint8_t* ptr = (const uint8_t*)buffer;
     const uint8_t* end = ptr + length;
 

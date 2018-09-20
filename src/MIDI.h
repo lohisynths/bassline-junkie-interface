@@ -25,7 +25,7 @@ public:
 private:
 	Serial pc;
 
-	ssize_t raspi_usart_write(const void* buffer, size_t length);
+	ssize_t raspi_usart_write(const void* buffer, uint8_t length);
 	void show_message(MIDIMessage msg);
 
 };

@@ -38,7 +38,7 @@ public:
 	typedef std::array<std::array<int, FLT_COUNT>, FLT_PARAM_COUNT> flt_preset;
 
 	flt_preset &get_preset() {
-		return knob_values;
+		return preset_values;
 	}
 
 	void select_instance(uint8_t index) {
@@ -53,7 +53,7 @@ public:
 
 		for (int i = 0; i < FLT_KNOB_COUNT; i++) {
 			// knob_values[i][0] as filter for now has only one instance
-			uint8_t val = knob_values[i][0];
+			uint8_t val = preset_values[i][index];
 			knob_val_changed(i, val, true);
 		}
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);

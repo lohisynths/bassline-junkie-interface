@@ -16,7 +16,7 @@ public:
 	Pwm();
 	virtual ~Pwm();
 
-	void set(size_t led, uint16_t val);
+	void set(uint8_t led, uint16_t val);
 	void set(const uint16_t input[PWM_DRIVERS_COUNT * PWM_COUNT]);
 	const uint16_t *get();
 
