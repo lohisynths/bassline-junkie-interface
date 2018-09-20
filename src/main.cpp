@@ -10,7 +10,7 @@
 #include "blocks/OSC.h"
 #include "blocks/ADSR.h"
 //#include "blocks/MOD.h"
-//#include "blocks/LFO.h"
+#include "blocks/LFO.h"
 #include "blocks/FLT.h"
 //#include "blocks/PRESET.h"
 
@@ -34,6 +34,7 @@ struct preset {
 	OSC::preset osc_preset;
 	ADSR::preset adsr_preset;
 	FLT::preset flt_preset;
+	LFO::preset lfo_preset;
 };
 
 //
@@ -98,9 +99,10 @@ int main() {
 	SynthPreset.osc_preset[0][OSC_PITCH] = 64;
 	SynthPreset.osc_preset[0][OSC_SIN] = 64;
 	SynthPreset.adsr_preset[0][ADSR_LOOP] = 1;
-
 	SynthPreset.flt_preset[0][FLT_FREQ] = 64;
 	SynthPreset.flt_preset[0][FLT_SHAPE] = 2;
+	SynthPreset.lfo_preset[0][LFO_SHAPE] = 2;
+	SynthPreset.lfo_preset[0][LFO_FREQ] = 64;
 
 //	load_preset_eeprom(eeprom, SynthPreset);
 	//print_preset(SynthPreset);
@@ -114,7 +116,7 @@ int main() {
 	ADSR adsr;
 	OSC osc;
 	//MOD mod;
-	//LFO lfo;
+	LFO lfo;
 	FLT filter;
 	//PRESET display;
 
@@ -124,7 +126,7 @@ int main() {
 	adsr.init(&mux, &leds, &midi);
 	osc.init(&mux, &leds, &midi);
 	//mod.init(&mux, &leds, &midi);
-	//lfo.init(&mux, &leds, &midi);
+	lfo.init(&mux, &leds, &midi);
 	filter.init(&mux, &leds, &midi);
 	midi_usb.attach(do_message);
 	//display.init(&mux, &leds, &midi);
@@ -132,6 +134,7 @@ int main() {
 	osc.set_preset(SynthPreset.osc_preset);
 	adsr.set_preset(SynthPreset.adsr_preset);
 	filter.set_preset(SynthPreset.flt_preset);
+	lfo.set_preset(SynthPreset.lfo_preset);
 
 	uint16_t tmp1[PWM_DRIVERS_COUNT * PWM_COUNT];
 	//bool clear = false;
@@ -151,7 +154,7 @@ int main() {
 //		}
 //
 		adsr.update();
-//		//lfo.update();
+		lfo.update();
 		ret = filter.update();
 //		if (ret > -1) {
 //			//mod.select_MOD_dest(ret+15);

@@ -126,7 +126,7 @@ public:
 		for (int i = 0; i < special_parameters_count; i++) {
 			uint8_t val = get_current_preset_value(KNOB_COUNT+i);
 			force_mode(val);
-			DEBUG_LOG("special_function_button_pressed %d %d \r\n", i, val);
+			DEBUG_LOG("%s current_instance %d preset %d value  %d \r\n", get_name(), current_instance, KNOB_COUNT+i, val);
 		}
 
 
