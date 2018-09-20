@@ -116,7 +116,7 @@ public:
 		const int special_parameters_count = PARAM_COUNT - KNOB_COUNT;
 		for (int i = 0; i < special_parameters_count; i++) {
 			uint8_t val = get_current_preset_value(KNOB_COUNT+i);
-			special_function_button_pressed(val);
+			special_function_button_pressed(val, true);
 			DEBUG_LOG("special_function_button_pressed %d %d \r\n", i, val);
 		}
 
@@ -135,6 +135,10 @@ public:
 		select_instance(current_instance);
 	};
 
+	preset &get_preset() {
+		return preset_values;
+	}
+
 	void turn_off_sw(uint8_t index) {
 		sw[index].set_led_val(0);
 	}
@@ -143,7 +147,7 @@ public:
 	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) = 0;
-	virtual void special_function_button_pressed(uint8_t index) = 0;
+	virtual void special_function_button_pressed(uint8_t index, bool force = false) = 0;
 
 	std::array<Button, BUTTON_COUNT> &get_sw(){return sw;} ;
 	std::array<Knob, KNOB_COUNT> &get_knobs(){return knob;};

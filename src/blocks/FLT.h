@@ -65,17 +65,18 @@ public:
 		select_instance(current_instance);
 	}
 
-	void special_function_button_pressed(uint8_t index) {
-		select_filter_type(index);
+	void special_function_button_pressed(uint8_t index, bool force = false) {
+			select_filter_type(index, force);
 	}
 
-	void select_filter_type(uint8_t index) {
-		DEBUG_LOG("FILTER TYPE %d SELECTED\r\n", index);
-
-		turn_off_sw(last_filter_type);
-		turn_on_sw(index);
-		set_current_preset_value(FLT_SHAPE, index);
-		last_filter_type = index;
+	void select_filter_type(uint8_t index, bool force) {
+		if(last_filter_type != index || force) {
+			DEBUG_LOG("FILTER TYPE %d SELECTED\r\n", index);
+			turn_off_sw(last_filter_type);
+			turn_on_sw(index);
+			set_current_preset_value(FLT_SHAPE, index);
+			last_filter_type = index;
+		}
 	}
 
 	void knob_sw_changed(uint8_t index, bool state) {
@@ -84,10 +85,6 @@ public:
 
 	uint8_t get_midi_nr(uint8_t index) {
 		return FLT_MIDI_OFFSET+index;
-	}
-
-	preset &get_preset() {
-		return preset_values;
 	}
 
 private:

@@ -67,7 +67,7 @@ public:
 		select_instance(current_instance);
 	}
 
-	void special_function_button_pressed(uint8_t index) {
+	void special_function_button_pressed(uint8_t index, bool force = false) {
 		// index ignored as ADSR has only one extra function
 		// with no parameters.
 		// for now we care only about triggering loop state for
@@ -100,10 +100,6 @@ public:
 
 	uint8_t get_midi_nr(uint8_t index) {
 		return ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT);
-	}
-
-	preset &get_preset() {
-		return preset_values;
 	}
 
 private:

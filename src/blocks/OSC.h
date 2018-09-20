@@ -64,7 +64,7 @@ public:
 		select_instance(current_instance);
 	}
 
-	void special_function_button_pressed(uint8_t index) {
+	void special_function_button_pressed(uint8_t index, bool force = false) {
 		DEBUG_LOG("%s %d special_function %d\r\n", get_name(), current_instance, index);
 	}
 
@@ -82,10 +82,6 @@ public:
 		memcpy(&preset_values, &input, sizeof(input));
 		select_instance(current_instance);
 	};
-
-	preset &get_preset() {
-		return preset_values;
-	}
 
 private:
 
