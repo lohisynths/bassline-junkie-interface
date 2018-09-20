@@ -35,23 +35,33 @@ public:
 
 	virtual void button_changed(uint8_t index, bool state) {
 		if (state) {
-			// if COUNT = 1
-			// only one knob used, so jump straight to special_function
-			if (index < COUNT && COUNT != 1) {
-				select_instance(index);
+			// if COUNT = 1 only one knob used,
+			// so jump straight to special_function
+			if(COUNT != 1) {
+				if (index < COUNT) {
+					select_instance(index);
+				} else {
+					special_function_button_pressed(index-COUNT);
+				}
 			} else {
-				special_function(index, state);
+				special_function_button_pressed(index);
 			}
 		}
 	};
+
+	void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
+		knob[index].led_indicator_set_value(value_scaled, force_led_update);
+		set_current_preset_value(index, value_scaled);
+		midi->send_cc(get_midi_nr(index), value_scaled, 1);
+	}
 
 	void update_buttons() {
 		for (int i = 0; i < BUTTON_COUNT; i++) {
 			bool ret = sw[i].update();
 			if (ret) {
 				bool pushed = !sw[i].get_state();
-				DEBUG_LOG("%s %d button switch %d", get_name(), current_instance, i);
-				DEBUG_LOG( (pushed) ? " pushed\r\n" : " released\r\n" );
+				//DEBUG_LOG("%s %d button switch %d", get_name(), current_instance, i);
+				//DEBUG_LOG( (pushed) ? " pushed\r\n" : " released\r\n" );
 				button_changed(i, pushed);
 			}
 		}
@@ -78,6 +88,14 @@ public:
 		return ret_val;
 	}
 
+	int16_t get_current_preset_value(uint8_t index) {
+		return preset_values[index][current_instance];
+	}
+
+	void set_current_preset_value(uint8_t index, uint16_t value) {
+		preset_values[index][current_instance] = value;
+	}
+
 	void select_instance(uint8_t index) {
 		auto &sw = get_sw();
 		sw[index].set_led_val(sw_bright);
@@ -89,9 +107,20 @@ public:
 		}
 
 		for (int i = 0; i < KNOB_COUNT; i++) {
-			uint8_t val = preset_values[i][current_instance];
+			// get value of [i] knob from current preset
+			//
+			uint8_t val = get_current_preset_value(i);
 			knob_val_changed(i, val, true);
 		}
+
+		const int special_parameters_count = PARAM_COUNT - KNOB_COUNT;
+		for (int i = 0; i < special_parameters_count; i++) {
+			uint8_t val = get_current_preset_value(KNOB_COUNT+i);
+			special_function_button_pressed(val);
+			DEBUG_LOG("special_function_button_pressed %d %d \r\n", i, val);
+		}
+
+
 		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
 	};
 
@@ -106,14 +135,15 @@ public:
 		select_instance(current_instance);
 	};
 
-	void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
-		knob[index].led_indicator_set_value(value_scaled, force_led_update);
-		preset_values[index][current_instance] = value_scaled;
-		midi->send_cc(get_midi_nr(index), value_scaled, 1);
+	void turn_off_sw(uint8_t index) {
+		sw[index].set_led_val(0);
+	}
+	void turn_on_sw(uint8_t index) {
+		sw[index].set_led_val(255);
 	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) = 0;
-	virtual void special_function(uint8_t index, uint8_t value) = 0;
+	virtual void special_function_button_pressed(uint8_t index) = 0;
 
 	std::array<Button, BUTTON_COUNT> &get_sw(){return sw;} ;
 	std::array<Knob, KNOB_COUNT> &get_knobs(){return knob;};

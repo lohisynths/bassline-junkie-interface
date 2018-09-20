@@ -32,12 +32,9 @@ enum ADSR_PARAMS {
 class ADSR : public UI_BLOCK<ADSR_KNOB_COUNT, ADSR_BUTTON_COUNT, ADSR_PARAM_NR, ADSR_COUNT> {
 public:
 
-	typedef std::array<std::array<int, ADSR_COUNT>, ADSR_PARAM_NR> adsr_preset;
-
 	~ADSR(){};
 
-	virtual const char* get_name()
-	{
+	virtual const char* get_name() {
 	    return "ADSR";
 	}
 
@@ -70,10 +67,32 @@ public:
 		select_instance(current_instance);
 	}
 
-	void special_function(uint8_t index, uint8_t value) {
-		DEBUG_LOG("%s %d special_function %d %d\r\n", get_name(), current_instance, index, value);
+	void special_function_button_pressed(uint8_t index) {
+		// index ignored as ADSR has only one extra function
+		// with no parameters.
+		// for now we care only about triggering loop state for
+		// current instance
+		triger_loop_for_current_preset();
 	}
 
+	void triger_loop_for_current_preset() {
+		// in Pwm address space ADSR 0-2 selection buttons
+		// are first and then LOOP switch
+		// so button addr = ADSR_COUNT
+		uint8_t button_adr = ADSR_COUNT;
+
+		auto ciuciu = get_current_preset_value(LOOP);
+		ciuciu ^= 1;
+		if(ciuciu) {
+			turn_on_sw(button_adr);
+		} else {
+			turn_off_sw(button_adr);
+		}
+
+		DEBUG_LOG("ADSR %d LOOP %d\r\n", current_instance, ciuciu);
+
+		set_current_preset_value(LOOP, ciuciu);
+	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
 
@@ -83,22 +102,7 @@ public:
 		return ADSR_MIDI_OFFSET+index+(current_instance * ADSR_KNOB_COUNT);
 	}
 
-	void select_loop(uint8_t index, bool loop) {
-		preset_values[ADSR_PARAM_NR-1][current_instance] ^= 1;
-		auto &sw = get_sw();
-		sw[index].set_led_val(preset_values[ADSR_PARAM_NR-1][current_instance] * sw_bright);
-
-		DEBUG_LOG("%s %d ", get_name(), current_instance);
-
-		bool LOOP = preset_values[ADSR_PARAM_NR-1][current_instance];
-		if (LOOP) {
-			DEBUG_LOG("LOOP ON\r\n");
-		} else {
-			DEBUG_LOG("LOOP OFF\r\n");
-		}
-	}
-
-	adsr_preset &get_preset() {
+	preset &get_preset() {
 		return preset_values;
 	}
 

@@ -64,8 +64,8 @@ public:
 		select_instance(current_instance);
 	}
 
-	void special_function(uint8_t index, uint8_t value) {
-		DEBUG_LOG("%s %d special_function %d %d\r\n", get_name(), current_instance, index, value);
+	void special_function_button_pressed(uint8_t index) {
+		DEBUG_LOG("%s %d special_function %d\r\n", get_name(), current_instance, index);
 	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {

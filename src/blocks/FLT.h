@@ -23,26 +23,27 @@
 enum FLT_PARAMS {
 	FLT_FREQ,
 	FLT_RES,
+	FLT_SHAPE,
 	FLT_PARAM_COUNT
 };
+
+constexpr std::tuple<int, const char *> ret2 () {
+    int a = FLT_FREQ;
+    const char *b = "FLT_FREQ";
+    return std::make_tuple(a, b);
+}
+
+
+typedef std::tuple<int, const char *> parameter_;
+
+
 
 class FLT : public UI_BLOCK<FLT_KNOB_COUNT, FLT_BUTTON_COUNT, FLT_PARAM_COUNT, FLT_COUNT> {
 public:
 	~FLT(){};
 
-	virtual const char* get_name()
-	{
+	virtual const char* get_name() {
 	    return "FLT";
-	}
-
-	typedef std::array<std::array<int, FLT_COUNT>, FLT_PARAM_COUNT> flt_preset;
-
-	flt_preset &get_preset() {
-		return preset_values;
-	}
-
-	void special_function(uint8_t index, uint8_t value) {
-		DEBUG_LOG("%s %d special_function %d %d\r\n", get_name(), current_instance, index, value);
 	}
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
@@ -68,11 +69,20 @@ public:
 		select_instance(current_instance);
 	}
 
-	void select_shape(uint8_t index, bool loop) {
-
+	void special_function_button_pressed(uint8_t index) {
+		select_filter_type(index);
 	}
 
-	virtual void knob_sw_changed(uint8_t index, bool state) {
+	void select_filter_type(uint8_t index) {
+		DEBUG_LOG("FILTER TYPE %d SELECTED\r\n", index);
+
+		turn_off_sw(last_filter_type);
+		turn_on_sw(index);
+		set_current_preset_value(FLT_SHAPE, index);
+		last_filter_type = index;
+	}
+
+	void knob_sw_changed(uint8_t index, bool state) {
 
 	}
 
@@ -80,8 +90,12 @@ public:
 		return FLT_MIDI_OFFSET+index;
 	}
 
-private:
+	preset &get_preset() {
+		return preset_values;
+	}
 
+private:
+	uint8_t last_filter_type = 0;
 };
 
 
