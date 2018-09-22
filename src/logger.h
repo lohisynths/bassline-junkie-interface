@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <bitset>
 
 enum class LOG_LEVELS {
     DISABLED,
@@ -15,6 +16,16 @@ enum class LOG_LEVELS {
     LOG5,
     LOG6,
     TOTAL_COUNT
+};
+
+const std::string LOG_LEVEL_NAMES[] = {
+    "LOG0\t",
+    "LOG1\t",
+    "LOG2\t",
+    "LOG3\t",
+    "LOG4\t",
+    "LOG5\t",
+    "LOG6\t"
 };
 
 constexpr LOG_LEVELS operator <<(int lhs, LOG_LEVELS rhs) {
@@ -39,12 +50,21 @@ constexpr T set_level(T first, Args ... args) {
     return (1 << first) | set_level(args...);
 }
 
+template<typename T>
+const char *get_binary(const T input) {
+    return std::bitset<16>(input).to_string().c_str();
+}
+
 template<LOG_LEVELS LEVEL>
 struct logger {
     template<LOG_LEVELS internal_n>
     struct logger_internal {
         logger_internal(const char *format, ...) {
             if constexpr ((LEVEL >> internal_n) & 1) {
+                // in enum index 0 = DISABLED, so
+                // index = internal_n - 1
+                int index = static_cast<int>(internal_n) - 1;
+                printf("%s ", LOG_LEVEL_NAMES[index].c_str());
                 va_list args;
                 va_start(args, format);
                 vprintf(format, args);

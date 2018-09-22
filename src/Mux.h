@@ -48,15 +48,11 @@ public:
 
 	void update();
 
-	const char *get_binary(uint16_t input);
-
 	uint16_t *get(uint8_t index);
 	void print();
 	void print(uint8_t mux_nr);
 
-
 	void print_bit(uint8_t mux_index, uint8_t pin);
-
 
 private:
 	uint16_t mux_data[MUX_COUNT+1];

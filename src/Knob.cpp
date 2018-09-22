@@ -86,13 +86,17 @@ void Knob::led_on_last_off(uint8_t led_on_nr, uint8_t led_off_nr, int16_t bright
 }
 
 void Knob::led_indicator_set_value(uint16_t value, bool force) {
-	int led_bright = knob_config.max_led_value;
-	int led_nr = value * encoder_max_to_127_divider;
-	if(led_nr != last_led_on || force) {
-	    LOG::LOG2("%s led indication scale value %d\r\n", name, value);
-		led_on_last_off(led_nr, last_led_on, led_bright);
-		last_led_on = led_nr;
-	}
+    if(knob_config.total_led_count > 0 ) {
+    	int led_bright = knob_config.max_led_value;
+        int led_nr = value * encoder_max_to_127_divider;
+        if(led_nr != last_led_on || force) {
+            LOG::LOG2("%s led indication scale value %d\r\n", name, value);
+            led_on_last_off(led_nr, last_led_on, led_bright);
+            last_led_on = led_nr;
+        }
+    } else {
+            LOG::LOG2("%s error led indication scale value %d\r\n", name, value);
+    }
 }
 
 void Knob::print_config(knob_init_map config) {

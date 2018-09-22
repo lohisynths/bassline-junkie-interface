@@ -83,7 +83,7 @@ public:
     /*! \var const char *name
      *  \brief const char * defining class name
      */
-    const char *name = "PCA9685";
+    const char *name = "PWM";
     /*! \typedef logger
      *  \brief Typedef defining logger used in all instances of this object
      */

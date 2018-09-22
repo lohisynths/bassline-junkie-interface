@@ -5,8 +5,8 @@
  *      Author: alax
  */
 
-#ifndef SRC_BLOCKS_PRESET_H_
-#define SRC_BLOCKS_PRESET_H_
+#ifndef SRC_BLOCKS_LED_DISP_H_
+#define SRC_BLOCKS_LED_DISP_H_
 
 #include "utils.h"
 
@@ -22,14 +22,13 @@
 
 #define PRESET_PARAM_COUNT				(PRESET_KNOB_COUNT)
 
-class PRESET : public UI_BLOCK<PRESET_KNOB_COUNT, PRESET_BUTTON_COUNT, PRESET_PARAM_COUNT, PRESET_COUNT> {
+class LED_DISP : public UI_BLOCK<PRESET_KNOB_COUNT, PRESET_BUTTON_COUNT, PRESET_PARAM_COUNT, PRESET_COUNT> {
 public:
-	PRESET(){};
-	virtual ~PRESET(){};
+	LED_DISP(){};
+	virtual ~LED_DISP(){};
 
-	virtual const char* get_name()
-	{
-	    return "PRESET";
+	virtual const char* get_name() {
+	    return "LED";
 	}
 
 	void button_changed(uint8_t index, bool state) {};
@@ -40,22 +39,11 @@ public:
 		return 0;
 	}
 
-	void init_internal(Pwm &leds, knob_data knobdata[PRESET_KNOB_COUNT], sw_data swdata[PRESET_BUTTON_COUNT]) {
-		for (int i = 0; i < PRESET_KNOB_COUNT; i++) {
-			auto &knob = get_knobs();
-			knob[i].init(knobdata[i].knobs_first_led, knobdata[i].knobs_first_mux_adr, leds, *knobdata[i].knobs_mux_data, 127, 10);
-		}
-		for (int i = 0; i < PRESET_BUTTON_COUNT; i++) {
-			auto &sw = get_sw();
-			sw[i].init(swdata[i].sw_first_led,  swdata[i].sw_first_mux_adr, leds, *swdata[i].sw_mux_data);
-		}
-	};
-
 	virtual void knob_sw_changed(uint8_t index, bool state) {
 
 	}
 
-	void knob_val_changed(uint8_t index, uint16_t value_scaled) {
+    virtual void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
 
 		uint8_t first_nr  = value_scaled % 10;
 		uint8_t second_nr = (value_scaled / 10) % 10;
@@ -89,7 +77,7 @@ public:
 	void set_digit(uint8_t seg_nr, uint8_t digit) {
 
 		for(int i=0;i<7;i++) {
-			m_leds->set(PRESET_FIRST_ENC_LED+i+(seg_nr*SEGMENTS), digits[digit][i]*led_bright);
+			m_leds->set(PRESET_FIRST_ENC_LED+i+(seg_nr*SEGMENTS), digits[digit][i]*DISPLAY_MAX_LED_VAL);
 		}
 
 //		m_leds->set(PRESET_FIRST_ENC_LED+digit, 1024);
@@ -104,23 +92,37 @@ public:
 		}
 	}
 
+    void init(Mux *mux, Pwm *leds, MIDI *midi_) {
+        midi = midi_;
+        uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
+        uint8_t knob_val_max_val = KNOB_MAX_LED_VAL;
+        uint16_t knob_max_val = KNOB_MAX_VAL;
+        uint16_t button_val_max_val = KNOB_MAX_LED_VAL;
 
-	void init(Mux *mux, Pwm *leds, MIDI *m_midi) {
-		m_mux = mux;
-		m_leds = leds;
-		midi = m_midi;
+        knob_config knob_ctrl={
+            Knob::knob_init_map{mux, mux->get(4), 6, knob_max_val, leds, knob_val_max_val, 0, 0}
+        };
 
-		knob_data PRESET_ctl[PRESET_KNOB_COUNT] = {0, 6, mux->get(4) };
+        button_config button_ctrl;
 
-		sw_data PRESET_ctl_sw[PRESET_BUTTON_COUNT];// = {
+        init_internal(knob_ctrl, button_ctrl);
+        select_instance(current_instance);
+        LOG::LOG0("%s initialized %d\r\n", get_name(), current_instance);
+    }
 
-		init_internal(*leds, PRESET_ctl, PRESET_ctl_sw);
-	}
 	int last_led = PRESET_FIRST_ENC_LED;
 
 	Pwm *m_leds;
 	Mux *m_mux;
 
+    void select_mode(uint8_t index) {
+        LOG::LOG0("%s %d special_function %d\r\n", get_name(), current_instance, index);
+    }
+
+    void force_mode(uint8_t index) {
+        LOG::LOG0("%s %d forced %d\r\n", get_name(), current_instance, index);
+    }
+
 };
 
-#endif /* SRC_BLOCKS_PRESET_H_ */
+#endif /* SRC_BLOCKS_LED_DISP_H_ */

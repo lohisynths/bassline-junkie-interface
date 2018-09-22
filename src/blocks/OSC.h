@@ -38,12 +38,12 @@ public:
      */
     typedef logger<OSC_LOG_LEVEL> LOG;
 
-	OSC(){};
-	~OSC(){};
-
 	virtual const char* get_name() {
 	    return "OSC";
 	}
+
+    OSC(){};
+    ~OSC(){};
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;

@@ -26,7 +26,7 @@ public:
      */
     typedef logger<UI_BLOCK_LOG_LEVEL> LOG;
 
-	UI_BLOCK() {};
+	UI_BLOCK() : midi(nullptr) {};
 	virtual ~UI_BLOCK(){};
 
 	void init_internal(knob_config &knob_settings, button_config &button_config) {
@@ -177,7 +177,6 @@ public:
 
 private:
 	std::array<Knob, KNOB_COUNT> knob;
-	int led_bright = 256;
 
 };
 
