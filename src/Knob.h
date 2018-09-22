@@ -24,6 +24,15 @@
 class Knob {
 public:
 
+    /*! \var const char *name
+     *  \brief const char * defining class name
+     */
+    const char *name = "Knob";
+    /*! \typedef logger
+     *  \brief Typedef defining logger used in all instances of this object
+     */
+    typedef logger<set_level(LOG_LEVELS::DISABLED) > LOG;
+
 	/*! \struct knob_init_map
 	 *  \brief Knob Initialization structure
 	 */

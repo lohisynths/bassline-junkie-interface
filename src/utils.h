@@ -8,12 +8,7 @@
 #ifndef SRC_UTILS_H_
 #define SRC_UTILS_H_
 
-#define DEBUG
-//#define DEBUG_BUTTON
-//#define DEBUG_KNOB
-//#define DEBUG_KNOB_STARTUP
-//#define DEBUG_PCA9685
-
+#include "logger.h"
 
 #define PWM_DRIVERS_COUNT 13
 #define PWM_COUNT 16

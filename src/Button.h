@@ -24,6 +24,15 @@
 class Button {
 public:
 
+    /*! \var const char *name
+     *  \brief const char * defining class name
+     */
+    const char *name = "Button";
+    /*! \typedef logger
+     *  \brief Typedef defining logger used in all instances of this object
+     */
+    typedef logger<set_level(LOG_LEVELS::DISABLED) > LOG;
+
 	/*! \struct button_init_map
 	 *  \brief Button Initialization structure
 	 */
@@ -124,6 +133,8 @@ private:
 	 *
 	 */
 	void print_config(button_init_map config);
+
+
 };
 
 #endif /* SRC_BUTTON_H_ */

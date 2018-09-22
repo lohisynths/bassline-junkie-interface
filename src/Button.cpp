@@ -11,7 +11,6 @@
 
 void Button::init(button_init_map button_configuration) {
 	memcpy(&button_config, &button_configuration, sizeof(button_configuration));
-    // uncomment '#define DEBUG_KNOB in utils.h.h' for debug prints
 	print_config(button_config);
 }
 
@@ -19,6 +18,7 @@ bool Button::update() {
 	bool ret = false;
 	bool sw = CHECKBIT(*button_config.mux_raw_data, button_config.mux_first_bit);
 	if (last_state != sw) {
+	    LOG::LOG0((last_state) ? "Button pushed\r\n" : "Button released\r\n");
 		ret = true;
 		last_state = sw;
 	}
@@ -34,15 +34,13 @@ void Button::set_led_val(uint16_t brightness) {
 }
 
 void Button::print_config(button_init_map config) {
-#ifdef DEBUG_BUTTON
 	std::string sep("\r\n");
-	std::string out(sep + std::string("button config: ") + sep +
-			"mux                 " + std::to_string((uint32_t)config.mux) + sep +
-			"mux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
-			"mux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
-			"leds                " + std::to_string((uint32_t)config.leds) + sep +
-			"max_led_value       " + std::to_string(config.max_led_value) + sep +
-			"first_pwm_output    " + std::to_string(config.first_pwm_output) + sep);
-	DEBUG_LOG("%s\r\n", out.c_str());
-#endif
+	std::string out(sep + std::string(std::string(name) + " config: ") + sep +
+	        name + " mux                 " + std::to_string((uint32_t)config.mux) + sep +
+	        name + " mux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
+	        name + " mux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
+	        name + " leds                " + std::to_string((uint32_t)config.leds) + sep +
+	        name + " max_led_value       " + std::to_string(config.max_led_value) + sep +
+	        name + " first_pwm_output    " + std::to_string(config.first_pwm_output) + sep);
+	LOG::LOG1("%s\r\n", out.c_str());
 }
