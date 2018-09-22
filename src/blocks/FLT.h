@@ -45,8 +45,8 @@ public:
 		midi = midi_;
 		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
 		uint8_t big_knob_led_count = knob_led_count + 2;
-		uint8_t knob_max_val = COMMON_KNOB_LED_COUNT;
-		uint8_t big_knob_max_val = 127;
+		uint8_t knob_max_val = KNOB_MAX_VAL;
+		uint8_t big_knob_max_val = KNOB_MAX_VAL;
 		uint16_t knob_led_max_val = KNOB_MAX_LED_VAL;
 		uint16_t button_max_led_val = BUTTON_MAX_LED_VAL;
 
