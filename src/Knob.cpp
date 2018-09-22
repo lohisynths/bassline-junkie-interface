@@ -101,14 +101,14 @@ void Knob::led_indicator_set_value(uint16_t value, bool force) {
 
 void Knob::print_config(knob_init_map config) {
 	std::string sep("\r\n");
-	std::string out(std::string(std::string(name) + " config: ") + sep +
-	        name + " mux                 " + std::to_string((uint32_t)config.mux) + sep +
-	        name + " mux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
-	        name + " mux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
-	        name + " encoder_max_value   " + std::to_string(config.encoder_max_value) + sep +
-	        name + " leds                " + std::to_string((uint32_t)config.leds) + sep +
-	        name + " max_led_value       " + std::to_string(config.max_led_value) + sep +
-	        name + " first_pwm_output    " + std::to_string(config.first_pwm_output) + sep +
-	        name + " total_led_count     " + std::to_string(config.total_led_count) + sep);
+	std::string out(std::string(name) + " config: " + sep +
+	        "\t\tmux                 " + std::to_string((uint32_t)config.mux) + sep +
+	        "\t\tmux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
+	        "\t\tmux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
+	        "\t\tencoder_max_value   " + std::to_string(config.encoder_max_value) + sep +
+	        "\t\tleds                " + std::to_string((uint32_t)config.leds) + sep +
+	        "\t\tmax_led_value       " + std::to_string(config.max_led_value) + sep +
+	        "\t\tfirst_pwm_output    " + std::to_string(config.first_pwm_output) + sep +
+	        "\t\ttotal_led_count     " + std::to_string(config.total_led_count) + sep);
 	LOG::LOG3("%s", out.c_str());
 }

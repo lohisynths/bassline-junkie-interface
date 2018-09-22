@@ -16,7 +16,7 @@
 #define KNOB_MAX_VAL                (32)
 #define KNOB_MAX_LED_VAL 			(50)
 #define COMMON_KNOB_LED_COUNT 		(10)
-#define BUTTON_MAX_LED_VAL 			(50)
+#define BUTTON_MAX_LED_VAL 			(256)
 #define DISPLAY_MAX_LED_VAL         (50)
 
 #define CHECKBIT(n, x)      ((n >> x) & 1)
@@ -28,7 +28,7 @@ const LOG_LEVELS MIN = static_cast<LOG_LEVELS>(0);
 const LOG_LEVELS MAX = static_cast<LOG_LEVELS>(0xFF);
 
 const LOG_LEVELS KNOB_LOG_LEVEL = MAX;//set_level(LOG_LEVELS::LOG2);
-const LOG_LEVELS BUTTON_LOG_LEVEL = set_level(LOG_LEVELS::DISABLED);
+const LOG_LEVELS BUTTON_LOG_LEVEL = MAX;//set_level(LOG_LEVELS::DISABLED);
 
 const LOG_LEVELS PRESET_LOG_LEVEL = MAX;//set_level(LOG_LEVELS::LOG0);
 

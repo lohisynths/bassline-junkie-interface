@@ -156,7 +156,7 @@ public:
 		sw[index].set_led_val(0);
 	}
 	void turn_on_sw(uint8_t index) {
-		sw[index].set_led_val(sw_bright);
+		sw[index].set_led_val(BUTTON_MAX_LED_VAL);
 	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) = 0;
@@ -171,7 +171,6 @@ public:
 	virtual uint8_t get_midi_nr(uint8_t index) = 0;
 
 	MIDI *midi;
-	int sw_bright = 1024;
 	std::array<Button, BUTTON_COUNT> sw;
 	preset preset_values = {};
 
