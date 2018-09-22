@@ -21,6 +21,11 @@ public:
 	typedef std::array<Knob::knob_init_map, KNOB_COUNT> knob_config;
 	typedef std::array<Button::button_init_map, BUTTON_COUNT> button_config;
 
+    /*! \typedef logger
+     *  \brief Typedef defining logger used in all instances of this object
+     */
+    typedef logger<set_level(LOG_LEVELS::DISABLED) > LOG;
+
 	UI_BLOCK() {};
 	virtual ~UI_BLOCK(){};
 
@@ -67,8 +72,8 @@ public:
 			bool ret = sw[i].update();
 			if (ret) {
 				bool pushed = !sw[i].get_state();
-				//DEBUG_LOG("%s %d button switch %d", get_name(), current_instance, i);
-				//DEBUG_LOG( (pushed) ? " pushed\r\n" : " released\r\n" );
+				LOG::LOG0("%s %d button switch %d", get_name(), current_instance, i);
+				LOG::LOG0( (pushed) ? " pushed\r\n" : " released\r\n" );
 				button_changed(i, pushed);
 			}
 		}
@@ -80,15 +85,15 @@ public:
 			Knob::knob_msg ret = knob[i].update();
 			if (ret.switch_changed) {
 				bool state = !knob[i].get_switch_state();
-				DEBUG_LOG("%s %d encoder switch %d ", get_name(), current_instance, i);
-				DEBUG_LOG( (state) ? " pushed\r\n" : " released\r\n" );
+				LOG::LOG0("%s %d encoder switch %d ", get_name(), current_instance, i);
+				LOG::LOG0( (state) ? " pushed\r\n" : " released\r\n" );
 				knob_sw_changed(i, state);
 				if (state) {
 					ret_val = i;
 				}
 			}
 			if (ret.value_changed) {
-				DEBUG_LOG("%s %d value %d changed %d\r\n", get_name(), current_instance, i, knob[i].get_knob_value());
+			    LOG::LOG0("%s %d value %d changed %d\r\n", get_name(), current_instance, i, knob[i].get_knob_value());
 				knob_val_changed(i, knob[i].get_knob_value());
 			}
 		}
@@ -126,11 +131,10 @@ public:
 		for (int i = 0; i < special_parameters_count; i++) {
 			uint8_t val = get_current_preset_value(KNOB_COUNT+i);
 			force_mode(val);
-			DEBUG_LOG("%s current_instance %d preset %d value  %d \r\n", get_name(), current_instance, KNOB_COUNT+i, val);
+			LOG::LOG0("%s current_instance %d preset %d value  %d \r\n", get_name(), current_instance, KNOB_COUNT+i, val);
 		}
 
-
-		DEBUG_LOG("%s %d SELECTED\r\n", get_name(), index);
+		LOG::LOG0("%s %d selected\r\n", get_name(), index);
 	};
 
 

@@ -45,6 +45,12 @@ LFO_OFFSET 36
 
 class LFO : public UI_BLOCK<LFO_KNOB_COUNT, LFO_BUTTON_COUNT, LFO_PARAM_COUNT, LFO_COUNT> {
 public:
+
+    /*! \typedef logger
+     *  \brief Typedef defining logger used in all instances of this object
+     */
+    typedef logger<set_level(LOG_LEVELS::DISABLED)> LOG;
+
 	~LFO(){};
 
 	virtual const char* get_name() {
@@ -79,7 +85,7 @@ public:
 
 	void select_lfo_shape(uint8_t index, bool force = 0) {
 		if(last_lfo_shape != index || force) {
-			DEBUG_LOG("LFO SELECT MOD %d\r\n", index);
+		    LOG::LOG0("%s SELECT MOD %d\r\n", get_name(), index);
 
 			uint8_t shape_button_adr = index + LFO_COUNT;
 			uint8_t last_shape_button_adr = last_lfo_shape + LFO_COUNT;
@@ -97,7 +103,7 @@ public:
 	}
 
 	void force_mode(uint8_t index) {
-		DEBUG_LOG("LFO FORCE MODE %d\r\n", index);
+	    LOG::LOG0("%s FORCE MODE %d\r\n", get_name(), index);
 		select_lfo_shape(index, true);
 	}
 

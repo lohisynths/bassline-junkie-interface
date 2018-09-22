@@ -23,22 +23,4 @@
 #define CLEARBIT(n, x)      (n &= ~(1L << x))
 #define TOGGLEBIT(n, x)     (n ^= (1 << x))
 
-#ifdef DEBUG
-#define DEBUG_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
-#else
-#define  DEBUG_LOG(f_, ...)  (void)0
-#endif
-
-#ifdef DEBUG_PCA9685
-#define DEBUG_PCA9685_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
-#else
-#define  DEBUG_PCA9685_LOG(f_, ...)  (void)0
-#endif
-
-#ifdef DEBUG_KNOB
-#define DEBUG_KNOB_LOG(f_, ...) printf((f_), ##__VA_ARGS__)
-#else
-#define  DEBUG_KNOB_LOG(f_, ...)  (void)0
-#endif
-
 #endif /* SRC_UTILS_H_ */

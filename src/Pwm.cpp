@@ -16,7 +16,7 @@ Pwm::~Pwm() {
 }
 
 void Pwm::init() {
-	auto *addr = PCA9685::i2c_probe();
+	int *addr = pwm[0].i2c_probe();
 
 	for(int i=0; i < PWM_DRIVERS_COUNT; i++)
 	{

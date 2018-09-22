@@ -24,19 +24,24 @@
 
 class MOD : public UI_BLOCK<MOD_KNOB_COUNT, MOD_BUTTON_COUNT, MOD_PARAM_COUNT, MOD_COUNT> {
 public:
+
+    /*! \typedef logger
+     *  \brief Typedef defining logger used in all instances of this object
+     */
+    typedef logger<set_level(LOG_LEVELS::DISABLED)> LOG;
+
 	~MOD(){};
 
-	virtual const char* get_name()
-	{
+	virtual const char* get_name() {
 	    return "MOD";
 	}
 
 	void select_mode(uint8_t index) {
-		DEBUG_LOG("MOD SE:ECT MODE %d\r\n", index);
+	    LOG::LOG0("MOD SE:ECT MODE %d\r\n", index);
 	}
 
 	void force_mode(uint8_t index) {
-		DEBUG_LOG("MOD FORCE MODE %d\r\n", index);
+	    LOG::LOG0("MOD FORCE MODE %d\r\n", index);
 	}
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
@@ -81,16 +86,13 @@ public:
 
 	void select_MOD_dest(int index) {
 		if(index > -1) {
-			DEBUG_LOG("MOD dst %d\r\n", index);
+		    LOG::LOG0("MOD dst %d\r\n", index);
 			mod_dest = index;
 		}
 	}
 
 private:
-
 	uint8_t mod_dest = 0;
-
 };
-
 
 #endif /* SRC_MOD_H_ */

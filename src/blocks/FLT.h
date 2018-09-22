@@ -29,6 +29,12 @@ enum FLT_PARAMS {
 
 class FLT : public UI_BLOCK<FLT_KNOB_COUNT, FLT_BUTTON_COUNT, FLT_PARAM_COUNT, FLT_COUNT> {
 public:
+
+    /*! \typedef logger
+     *  \brief Typedef defining logger used in all instances of this object
+     */
+    typedef logger<set_level(LOG_LEVELS::DISABLED)> LOG;
+
 	~FLT(){};
 
 	virtual const char* get_name() {
@@ -68,7 +74,7 @@ public:
 
 	void select_filter_type(uint8_t index, bool force = 0) {
 		if(last_filter_type != index || force) {
-			DEBUG_LOG("FILTER TYPE %d SELECTED\r\n", index);
+		    LOG::LOG0("%s type %d selected\r\n", get_name(), index);
 			turn_off_sw(last_filter_type);
 			turn_on_sw(index);
 			set_current_preset_value(FLT_SHAPE, index);

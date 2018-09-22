@@ -32,6 +32,12 @@ enum OSC_PARAMS {
 
 class OSC : public UI_BLOCK<OSC_KNOB_COUNT, OSC_BUTTON_COUNT, OSC_PARAM_COUNT, OSC_COUNT> {
 public:
+
+    /*! \typedef logger
+     *  \brief Typedef defining logger used in all instances of this object
+     */
+    typedef logger<set_level(LOG_LEVELS::DISABLED)> LOG;
+
 	OSC(){};
 	~OSC(){};
 
@@ -65,11 +71,11 @@ public:
 	}
 
 	void select_mode(uint8_t index) {
-		DEBUG_LOG("%s %d special_function %d\r\n", get_name(), current_instance, index);
+	    LOG::LOG0("%s %d special_function %d\r\n", get_name(), current_instance, index);
 	}
 
 	void force_mode(uint8_t index) {
-		DEBUG_LOG("%s %d Forced %d\r\n", get_name(), current_instance, index);
+	    LOG::LOG0("%s %d forced %d\r\n", get_name(), current_instance, index);
 	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {

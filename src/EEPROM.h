@@ -112,8 +112,6 @@ public:
 		  {
 		    uint32_t data32 = *(__IO uint32_t*)Address;
 
-		    printf("%lu\r\n", data32);
-
 		    Address = Address + 4;
 		  }
 	}

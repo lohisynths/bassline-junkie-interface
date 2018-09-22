@@ -26,7 +26,6 @@ public:
 		uint8_t first_number = input%10;
 		uint8_t second_number = input / 10;
 		uint8_t third_number = input / 100;
-		printf("LEDSEG %d %d %d\r\n");
 	}
 
 

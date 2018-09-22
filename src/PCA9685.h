@@ -53,6 +53,7 @@
 #ifndef PCA9685_H
 #define PCA9685_H
 
+#include "logger.h"
 #include "mbed.h"
 #include <cmath>
 //register definitions
@@ -79,6 +80,15 @@
 class PCA9685
 {
 public:
+    /*! \var const char *name
+     *  \brief const char * defining class name
+     */
+    const char *name = "PCA9685";
+    /*! \typedef logger
+     *  \brief Typedef defining logger used in all instances of this object
+     */
+    typedef logger<set_level(LOG_LEVELS::DISABLED) > LOG;
+
     PCA9685();
     void frequencyI2C(int freq);
     void begin(void); //Initialize the controller
@@ -106,7 +116,7 @@ public:
      */
     void set_address(uint8_t addr) {_i2caddr=addr;}
 
-    static int *i2c_probe();
+    int *i2c_probe();
 
 private:
     void write8(uint8_t address, uint8_t data);

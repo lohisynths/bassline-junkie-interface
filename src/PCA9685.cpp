@@ -3,63 +3,53 @@
 #include "utils.h"
 
 static I2C i2c(I2C_SDA, I2C_SCL); // sda, scl
-static int addr_found[128]={};
+static int addr_found[16]={};
 
 PCA9685::PCA9685() : _i2caddr(0) {}
 
-int *PCA9685::i2c_probe()
-{
-	DEBUG_PCA9685_LOG("Searching for I2C devices...\n");
+int *PCA9685::i2c_probe() {
+    LOG::LOG2("%s Searching for I2C devices...\n", name);
 
     int *tab = addr_found;
     int count = 0;
     for (int address=4; address<256; address+=2) {
         if (!i2c.write(address, NULL, 0)) { // 0 returned is ok
-        	DEBUG_PCA9685_LOG(" - I2C device found at address 0x%02X\r\n", address);
+            LOG::LOG2("%s I2C device found at address 0x%02X\r\n", name, address);
             *tab = address;
             tab++;
             count++;
         }
     }
-
-    DEBUG_PCA9685_LOG("%d devices found\r\n", count);
+    LOG::LOG2("%s %d devices found\r\n", name, count);
     return addr_found;
 }
 
 
-void PCA9685::begin(void)
-{
+void PCA9685::begin(void) {
     reset();
-
     setPrescale(64);
     frequencyI2C(800000);
-
+    LOG::LOG2("%s init done\r\n", name);
 }
 
-void PCA9685::frequencyI2C(int freq)
-{
+void PCA9685::frequencyI2C(int freq) {
     i2c.frequency(freq);
 }
-void PCA9685::write8(uint8_t address, uint8_t data)
-{
+void PCA9685::write8(uint8_t address, uint8_t data) {
     char cmd[2];
     cmd[0] = address;
     cmd[1] = data;
     i2c.write(_i2caddr, cmd, 2);
 }
 
-char PCA9685::read8(char address)
-{
+char PCA9685::read8(char address) {
     i2c.write(_i2caddr, &address, 1);
     char rtn;
     i2c.read(_i2caddr, &rtn, 1);
     return rtn;
 }
-int count = 0;
-int adr[10] = {};
 
-void PCA9685::reset(void)
-{
+void PCA9685::reset(void) {
     write8(PCA9685_MODE1, 0x0);
 }
 
@@ -93,8 +83,7 @@ void PCA9685::setPrescale(uint8_t prescale) {
     wait_ms(5);
     write8(PCA9685_MODE1, oldmode | 0xa1);
 }
-void PCA9685::setPWMFreq(float freq)
-{
+void PCA9685::setPWMFreq(float freq) {
     float prescaleval = 25000000;
     prescaleval /= 4096;
     prescaleval /= freq;
@@ -102,8 +91,8 @@ void PCA9685::setPWMFreq(float freq)
     setPrescale(prescale);
 }
 
-void PCA9685::setPWM(uint8_t num, uint16_t on, uint16_t off)
-{
+void PCA9685::setPWM(uint8_t num, uint16_t on, uint16_t off) {
+    LOG::LOG1("%s set pwm nr %d on %d off %d\r\n", name, num, on, off);
     char cmd[5];
     cmd[0] = LED0_ON_L + 4 * num;
     cmd[1] = on;
@@ -112,5 +101,4 @@ void PCA9685::setPWM(uint8_t num, uint16_t on, uint16_t off)
     cmd[4] = off >> 8;
     int ret = i2c.write(_i2caddr, cmd, 5);
     ret++;
-
 }

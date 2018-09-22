@@ -28,7 +28,6 @@ void do_message(MIDIMessage msg) {
             midi_glob->show_message(msg);
             break;
         default:
-			printf("midi err \r\n");
             midi_glob->show_message(msg);
     }
 }
@@ -40,27 +39,33 @@ struct preset {
 	LFO::preset lfo_preset;
 };
 
+
+/*! \typedef logger
+ *  \brief Typedef defining logger used in all instances of this object
+ */
+typedef logger<set_level(LOG_LEVELS::DISABLED)> LOG;
+
 void print_preset(preset &input){
 
 	uint32_t *data = (uint32_t *)&input;
 	for(size_t i=0; i < sizeof(preset)/4; i++) {
 		uint32_t ret = data[i];
-		DEBUG_LOG("preset data nr %zd : %lu\r\n", i, ret);
+		LOG::LOG0("preset data nr %zd : %lu\r\n", i, ret);
 	}
 
 	for (size_t i = 0; i < OSC_COUNT; i++) {
 		for (int j = 0; j < OSC_KNOB_COUNT; j++) {
-			DEBUG_LOG("OSC %zd PARAM %d val: %d\r\n", j, i, input.osc_preset[j][i]);
+		    LOG::LOG0("OSC %zd PARAM %d val: %d\r\n", j, i, input.osc_preset[j][i]);
 		}
 	}
 	for (size_t i = 0; i < ADSR_COUNT; i++) {
 		for (int j = 0; j < ADSR_PARAM_NR; j++) {
-			DEBUG_LOG("ADSR %zd PARAM %d val: %d\r\n", j, i, input.adsr_preset[j][i]);
+		    LOG::LOG0("ADSR %zd PARAM %d val: %d\r\n", j, i, input.adsr_preset[j][i]);
 		}
 	}
 	for (size_t i = 0; i < FLT_COUNT; i++) {
 		for (int j = 0; j < FLT_PARAM_COUNT; j++) {
-			DEBUG_LOG("FLT %zd PARAM %d val: %d\r\n", j, i, input.flt_preset[j][i]);
+		    LOG::LOG0("FLT %zd PARAM %d val: %d\r\n", j, i, input.flt_preset[j][i]);
 		}
 	}
 }
@@ -70,7 +75,7 @@ void load_preset_eeprom(EEPROM &eeprom, preset &input){
 	uint32_t *output_data = (uint32_t *)&input;
 	for(size_t i=0; i < sizeof(preset)/4; i++) {
 		  uint32_t ret = eeprom.readEEPROMWord(i*4);
-		  DEBUG_LOG("read nr %zu : %lu\r\n", i, ret);
+		  LOG::LOG0("read nr %zu : %lu\r\n", i, ret);
 		  output_data[i] = ret;
 	}
 }
@@ -91,10 +96,10 @@ void baud(int baudrate) {
 
 int main() {
     baud(115200);
-	DEBUG_LOG("\r\n\r\n----*******--******----\r\n");
-	DEBUG_LOG("****BASSLINE-JUNKIE****\r\n");
-	DEBUG_LOG("''**   SIEMANKO    **''\r\n");
-	DEBUG_LOG("%s at %s\r\n\r\n", __DATE__, __TIME__);
+    LOG::LOG0("\r\n\r\n----*******--******----\r\n");
+    LOG::LOG0("****BASSLINE-JUNKIE****\r\n");
+    LOG::LOG0("''**   SIEMANKO    **''\r\n");
+    LOG::LOG0("%s at %s\r\n\r\n", __DATE__, __TIME__);
 
 	EEPROM eeprom;
 	preset SynthPreset = {0};
@@ -154,7 +159,7 @@ int main() {
 		int ret = osc.update();
 		if (ret > -1) {
 			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
-			DEBUG_LOG("wcisniety %d\r\n", ret);
+			LOG::LOG0("wcisniety %d\r\n", ret);
 		}
 
 		adsr.update();
@@ -162,7 +167,7 @@ int main() {
 		ret = filter.update();
 		if (ret > -1) {
 			mod.select_MOD_dest(ret+15);
-			DEBUG_LOG("wcisniety %d\r\n", ret);
+			LOG::LOG0("wcisniety %d\r\n", ret);
 		}
 
 

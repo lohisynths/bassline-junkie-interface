@@ -32,6 +32,11 @@ enum ADSR_PARAMS {
 class ADSR : public UI_BLOCK<ADSR_KNOB_COUNT, ADSR_BUTTON_COUNT, ADSR_PARAM_NR, ADSR_COUNT> {
 public:
 
+    /*! \typedef logger
+     *  \brief Typedef defining logger used in all instances of this object
+     */
+    typedef logger<set_level(LOG_LEVELS::DISABLED)> LOG;
+
 	~ADSR(){};
 
 	virtual const char* get_name() {
@@ -100,10 +105,8 @@ public:
 		} else {
 			turn_off_sw(button_adr);
 		}
-
-		DEBUG_LOG("ADSR %d LOOP %d\r\n", current_instance, loop_state);
-
 		set_current_preset_value(preset_adr, loop_state);
+        LOG::LOG0("ADSR %d LOOP %d\r\n", current_instance, loop_state);
 	}
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
