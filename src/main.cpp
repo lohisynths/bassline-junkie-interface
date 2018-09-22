@@ -123,8 +123,6 @@ int main() {
 
             preset.save_preset_eeprom(piesek);
 
-			print_preset(SynthPreset);
-
 			if(clear) {
 				leds.set(tmp1);
 			} else {
