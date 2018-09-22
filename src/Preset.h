@@ -43,18 +43,17 @@ public:
     ~Preset() {};
     void init() {
         LOG::LOG0("%s eeprom write\r\n", get_name());
-        main_preset.osc_preset[0][OSC_PITCH] = 10;
-        main_preset.osc_preset[0][OSC_SAW] = 127;
-        main_preset.osc_preset[1][OSC_SAW] = 127;
-
-        main_preset.adsr_preset[0][ADSR_LOOP] = 1;
-        main_preset.flt_preset[0][FLT_FREQ] = 127;
-        main_preset.flt_preset[0][FLT_SHAPE] = 2;
-        main_preset.lfo_preset[0][LFO_SHAPE] = 2;
-        main_preset.lfo_preset[0][LFO_FREQ] = 64;
+//        main_preset.osc_preset[0][OSC_PITCH] = 10;
+//        main_preset.osc_preset[0][OSC_SAW] = 127;
+//        main_preset.osc_preset[1][OSC_SAW] = 127;
+//
+//        main_preset.adsr_preset[0][ADSR_LOOP] = 1;
+//        main_preset.flt_preset[0][FLT_FREQ] = 127;
+//        main_preset.flt_preset[0][FLT_SHAPE] = 2;
+//        main_preset.lfo_preset[0][LFO_SHAPE] = 2;
+//        main_preset.lfo_preset[0][LFO_FREQ] = 64;
 
         load_preset_eeprom(eeprom, main_preset);
-        save_preset_eeprom(eeprom, main_preset);
     }
     void load_preset_eeprom(EEPROM &eeprom, SynthPreset &input){
         LOG::LOG0("%s eeprom read\r\n", get_name());

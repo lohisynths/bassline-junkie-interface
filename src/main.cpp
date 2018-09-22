@@ -114,12 +114,14 @@ int main() {
 			OSC::preset osc_preset = osc.get_preset();
 			ADSR::preset adsr_preset = adsr.get_preset();
 			FLT::preset flt_preset = filter.get_preset();
+            LFO::preset lfo_preset = lfo.get_preset();
 
 			Preset::SynthPreset piesek;
 
 		    std::copy(osc_preset.begin(), osc_preset.end(), piesek.osc_preset.begin());
 		    std::copy(adsr_preset.begin(), adsr_preset.end(), piesek.adsr_preset.begin());
 		    std::copy(flt_preset.begin(), flt_preset.end(), piesek.flt_preset.begin());
+            std::copy(lfo_preset.begin(), lfo_preset.end(), piesek.lfo_preset.begin());
 
             preset.save_preset_eeprom(piesek);
 
