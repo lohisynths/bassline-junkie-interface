@@ -6,7 +6,6 @@
 #include "MIDI.h"
 #include "USBMIDI.h"
 #include "Preset.h"
-#include "Display.h"
 
 #include "blocks/OSC.h"
 #include "blocks/ADSR.h"
@@ -52,6 +51,8 @@ void baud(int baudrate) {
 }
 
 int main() {
+    bool clear;
+
     baud(115200);
 
 	USBMIDI midi_usb;
@@ -109,31 +110,31 @@ int main() {
 
 
 		ret = display.update();
-//		if (ret > -1) {
-//			OSC::osc_preset osc_preset = osc.get_preset();
-//			ADSR::adsr_preset adsr_preset = adsr.get_preset();
-//			FLT::flt_preset flt_preset = filter.get_preset();
-//
-//		    std::copy(osc_preset.begin(), osc_preset.end(), SynthPreset.osc_preset.begin());
-//		    std::copy(adsr_preset.begin(), adsr_preset.end(), SynthPreset.adsr_preset.begin());
-//		    std::copy(flt_preset.begin(), flt_preset.end(), SynthPreset.flt_preset.begin());
-//
-//			save_preset_eeprom(eeprom, SynthPreset);
-//
-//			//print_preset(SynthPreset);
-//
-//			if(clear) {
-//				leds.set(tmp1);
-//			} else {
-//				auto led_val = leds.get();
-//				memcpy(tmp1, led_val, sizeof(tmp1));
-//				leds.clear();
-//				leds.update_all();
-//			}
-//			clear ^= 1;
-//
-//		}
-//
+		if (ret > -1) {
+			OSC::preset osc_preset = osc.get_preset();
+			ADSR::preset adsr_preset = adsr.get_preset();
+			FLT::preset flt_preset = filter.get_preset();
+
+			Preset::SynthPreset piesek;
+
+		    std::copy(osc_preset.begin(), osc_preset.end(), piesek.osc_preset.begin());
+		    std::copy(adsr_preset.begin(), adsr_preset.end(), piesek.adsr_preset.begin());
+		    std::copy(flt_preset.begin(), flt_preset.end(), piesek.flt_preset.begin());
+
+            preset.save_preset_eeprom(piesek);
+
+			print_preset(SynthPreset);
+
+			if(clear) {
+				leds.set(tmp1);
+			} else {
+				auto led_val = leds.get();
+				memcpy(tmp1, led_val, sizeof(tmp1));
+				leds.clear();
+				leds.update_all();
+			}
+			clear ^= 1;
+		}
 		mod.update();
 	}
 }

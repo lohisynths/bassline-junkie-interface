@@ -49,16 +49,16 @@ public:
 		midi = midi_;
 
 		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
-		uint8_t knob_val_max_val = KNOB_MAX_LED_VAL;
+		uint8_t knob_led_max_val = KNOB_MAX_LED_VAL;
 		uint16_t knob_max_val = KNOB_MAX_VAL;
 		uint16_t button_val_max_val = KNOB_MAX_LED_VAL;
 
 		knob_config knob_ctrl={
-			Knob::knob_init_map{mux, mux->get(1), 12,knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 48),knob_led_count},
-			Knob::knob_init_map{mux, mux->get(1), 9, knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 30),knob_led_count},
-			Knob::knob_init_map{mux, mux->get(1), 6, knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 20),knob_led_count},
-			Knob::knob_init_map{mux, mux->get(1), 3, knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 10),knob_led_count},
-			Knob::knob_init_map{mux, mux->get(1), 0, knob_max_val, leds,knob_val_max_val, (OSC_FIRST_ENC_LED + 0) ,knob_led_count}
+			Knob::knob_init_map{mux, mux->get(1), 12,knob_max_val, leds,knob_led_max_val, (OSC_FIRST_ENC_LED + 48),knob_led_count},
+			Knob::knob_init_map{mux, mux->get(1), 9, knob_max_val, leds,knob_led_max_val, (OSC_FIRST_ENC_LED + 30),knob_led_count},
+			Knob::knob_init_map{mux, mux->get(1), 6, knob_max_val, leds,knob_led_max_val, (OSC_FIRST_ENC_LED + 20),knob_led_count},
+			Knob::knob_init_map{mux, mux->get(1), 3, knob_max_val, leds,knob_led_max_val, (OSC_FIRST_ENC_LED + 10),knob_led_count},
+			Knob::knob_init_map{mux, mux->get(1), 0, knob_max_val, leds,knob_led_max_val, (OSC_FIRST_ENC_LED + 0) ,knob_led_count}
 		};
 
 		button_config button_ctrl={

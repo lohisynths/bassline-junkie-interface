@@ -21,8 +21,11 @@ void Knob::init(knob_init_map config) {
 	encoder.set(0);
 	encoder.update();
 
-	encoder_max_to_127_divider = (float)(knob_config.total_led_count-1) / 127.;
-	encoder_2_midi_mult = 127. / (float)knob_config.encoder_max_value ;
+	if(knob_config.total_led_count > 0) {
+	    encoder_max_to_127_divider = (float)(knob_config.total_led_count-1) / 127.;
+	}
+    encoder_2_midi_mult = 127. / (float)knob_config.encoder_max_value ;
+
 	print_config(config);
 }
 
@@ -78,24 +81,23 @@ uint8_t Knob::calculate_led_position(uint8_t led_number) {
 }
 
 void Knob::led_on_last_off(uint8_t led_on_nr, uint8_t led_off_nr, int16_t bright) {
-	uint8_t led_nr_tmp = calculate_led_position(led_on_nr);
-	uint8_t last_led_nr_tmp = calculate_led_position(led_off_nr);
-
+    uint8_t led_nr_tmp = calculate_led_position(led_on_nr);
+    uint8_t last_led_nr_tmp = calculate_led_position(led_off_nr);
+    if(knob_config.total_led_count > 0 ) {
 	knob_config.leds->set(last_led_nr_tmp, 0);
 	knob_config.leds->set(led_nr_tmp, bright);
+    } else {
+      LOG::LOG2("%s error led on %d led off %d\r\n", name, last_led_nr_tmp, led_nr_tmp);
+    }
 }
 
 void Knob::led_indicator_set_value(uint16_t value, bool force) {
-    if(knob_config.total_led_count > 0 ) {
-    	int led_bright = knob_config.max_led_value;
-        int led_nr = value * encoder_max_to_127_divider;
-        if(led_nr != last_led_on || force) {
-            LOG::LOG2("%s led indication scale value %d\r\n", name, value);
-            led_on_last_off(led_nr, last_led_on, led_bright);
-            last_led_on = led_nr;
-        }
-    } else {
-            LOG::LOG2("%s error led indication scale value %d\r\n", name, value);
+    int led_bright = knob_config.max_led_value;
+    int led_nr = value * encoder_max_to_127_divider;
+    if(led_nr != last_led_on || force) {
+        LOG::LOG2("%s led indication scale value %d\r\n", name, value);
+        led_on_last_off(led_nr, last_led_on, led_bright);
+        last_led_on = led_nr;
     }
 }
 

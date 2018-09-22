@@ -56,7 +56,7 @@ public:
 		}
 	};
 
-	void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
+	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
 		knob[index].led_indicator_set_value(value_scaled, force_led_update);
 		set_current_preset_value(index, value_scaled);
 		midi->send_cc(get_midi_nr(index), value_scaled, 1);
@@ -131,7 +131,7 @@ public:
 		for (int i = 0; i < special_parameters_count; i++) {
 			uint8_t val = get_current_preset_value(KNOB_COUNT+i);
 			force_mode(val);
-			LOG::LOG0("%s current_instance %d preset %d value  %d \r\n", get_name(), current_instance, KNOB_COUNT+i, val);
+			LOG::LOG0("%s %d UI_BLOCK special param %d %d \r\n", get_name(), current_instance, KNOB_COUNT+i, val);
 		}
 
 		LOG::LOG0("%s %d selected\r\n", get_name(), index);

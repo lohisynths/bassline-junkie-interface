@@ -28,7 +28,7 @@ public:
 	virtual ~LED_DISP(){};
 
 	virtual const char* get_name() {
-	    return "LED";
+	    return "Disp";
 	}
 
 	void button_changed(uint8_t index, bool state) {};
@@ -44,20 +44,15 @@ public:
 	}
 
     virtual void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
+        LOG::LOG0("%s value changed %d\r\n", get_name(), value_scaled);
 
 		uint8_t first_nr  = value_scaled % 10;
 		uint8_t second_nr = (value_scaled / 10) % 10;
 		uint8_t third_nr  = value_scaled / 100;
 
-		//DEBUG_LOG("%s %d %d %d\r\n", get_name(),  third_nr, second_nr, first_nr);
-
-		//set_all(first_nr*128);
-
 		set_digit(2, first_nr);
 		set_digit(1, second_nr);
 		set_digit(0, third_nr);
-
-		//DEBUG_LOG("%s %d value %d changed %d\r\n", NAME, current_instance, index, value);
 	}
 
 	bool digits[10][SEGMENTS] {
@@ -75,6 +70,7 @@ public:
 	};
 
 	void set_digit(uint8_t seg_nr, uint8_t digit) {
+        LOG::LOG0("%s set digit %d %d\r\n", get_name(), seg_nr, digit);
 
 		for(int i=0;i<7;i++) {
 			m_leds->set(PRESET_FIRST_ENC_LED+i+(seg_nr*SEGMENTS), digits[digit][i]*DISPLAY_MAX_LED_VAL);
@@ -87,20 +83,21 @@ public:
 	}
 
 	void set_all(uint16_t val) {
+        LOG::LOG0("%s set all %d\r\n", get_name(), val);
 		for(int i=0;i<SEGMENTS*3;i++) {
 			m_leds->set(PRESET_FIRST_ENC_LED+i, val);
 		}
 	}
 
     void init(Mux *mux, Pwm *leds, MIDI *midi_) {
+        LOG::LOG0("%s init\r\n", get_name());
+        uint8_t knob_led_max_val = KNOB_MAX_LED_VAL;
+        uint16_t knob_max_val = 256;
         midi = midi_;
-        uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
-        uint8_t knob_val_max_val = KNOB_MAX_LED_VAL;
-        uint16_t knob_max_val = KNOB_MAX_VAL;
-        uint16_t button_val_max_val = KNOB_MAX_LED_VAL;
+        m_leds = leds;
 
         knob_config knob_ctrl={
-            Knob::knob_init_map{mux, mux->get(4), 6, knob_max_val, leds, knob_val_max_val, 0, 0}
+            Knob::knob_init_map{mux, mux->get(4), 6, knob_max_val, leds, knob_led_max_val, 0, 0}
         };
 
         button_config button_ctrl;
@@ -110,10 +107,8 @@ public:
         LOG::LOG0("%s initialized %d\r\n", get_name(), current_instance);
     }
 
+	Pwm *m_leds = nullptr;
 	int last_led = PRESET_FIRST_ENC_LED;
-
-	Pwm *m_leds;
-	Mux *m_mux;
 
     void select_mode(uint8_t index) {
         LOG::LOG0("%s %d special_function %d\r\n", get_name(), current_instance, index);

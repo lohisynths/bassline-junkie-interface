@@ -68,6 +68,19 @@ public:
         print_preset(input);
     }
 
+    void save_preset_eeprom(SynthPreset &input){
+        uint32_t *data = (uint32_t *)&input;
+        LOG::LOG0("%s eeprom write\r\n", get_name());
+        eeprom.erase(sizeof(SynthPreset));
+        for(size_t i=0; i < sizeof(SynthPreset)/4; i++) {
+              uint32_t ret = data[i];
+              LOG::LOG5("%s eeprom write %d %d\r\n", get_name(), i, ret);
+              LOG::LOG6("%#08x %s %#04x %d\r\n", i*4+FLASH_USER_START_ADDR, get_binary(ret), ret, ret);
+              eeprom.writeEEPROMWord(i*4, ret);
+        }
+        print_preset(main_preset);
+    }
+
     void save_preset_eeprom(EEPROM &eeprom, SynthPreset &input){
         LOG::LOG0("%s eeprom write\r\n", get_name());
         eeprom.erase(sizeof(SynthPreset));

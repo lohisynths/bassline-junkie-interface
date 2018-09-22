@@ -15,6 +15,7 @@ enum class LOG_LEVELS {
     LOG4,
     LOG5,
     LOG6,
+    LOG7,
     TOTAL_COUNT
 };
 
@@ -25,6 +26,7 @@ const std::string LOG_LEVEL_NAMES[] = {
     "LOG3\t",
     "LOG4\t",
     "LOG5\t",
+    "LOG7\t",
     "LOG6\t"
 };
 
@@ -80,6 +82,7 @@ struct logger {
     typedef logger_internal<LOG_LEVELS::LOG4> LOG4;
     typedef logger_internal<LOG_LEVELS::LOG5> LOG5;
     typedef logger_internal<LOG_LEVELS::LOG6> LOG6;
+    typedef logger_internal<LOG_LEVELS::LOG7> LOG7;
 };
 
 #endif /* LOG_H_ */
