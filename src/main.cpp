@@ -21,12 +21,15 @@ void do_message(MIDIMessage msg) {
     switch (msg.type()) {
         case MIDIMessage::NoteOnType:
         	midi_glob->send_note_on(msg.key(), msg.velocity() , 0 );
+        	midi_glob->show_message(msg);
             break;
         case MIDIMessage::NoteOffType:
         	midi_glob->send_note_off(msg.key(), msg.velocity() , 0 );
+            midi_glob->show_message(msg);
             break;
         default:
 			printf("midi err \r\n");
+            midi_glob->show_message(msg);
     }
 }
 
