@@ -43,7 +43,7 @@ struct preset {
 /*! \typedef logger
  *  \brief Typedef defining logger used in all instances of this object
  */
-typedef logger<set_level(LOG_LEVELS::DISABLED)> LOG;
+typedef logger<MAIN_LOG_LEVEL> LOG;
 
 void print_preset(preset &input){
 

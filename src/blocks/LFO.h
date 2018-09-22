@@ -49,7 +49,7 @@ public:
     /*! \typedef logger
      *  \brief Typedef defining logger used in all instances of this object
      */
-    typedef logger<set_level(LOG_LEVELS::DISABLED)> LOG;
+    typedef logger<LFO_LOG_LEVEL> LOG;
 
 	~LFO(){};
 
@@ -85,7 +85,7 @@ public:
 
 	void select_lfo_shape(uint8_t index, bool force = 0) {
 		if(last_lfo_shape != index || force) {
-		    LOG::LOG0("%s SELECT MOD %d\r\n", get_name(), index);
+		    LOG::LOG0("%s mod %d selected\r\n", get_name(), index);
 
 			uint8_t shape_button_adr = index + LFO_COUNT;
 			uint8_t last_shape_button_adr = last_lfo_shape + LFO_COUNT;
@@ -103,7 +103,7 @@ public:
 	}
 
 	void force_mode(uint8_t index) {
-	    LOG::LOG0("%s FORCE MODE %d\r\n", get_name(), index);
+	    LOG::LOG0("%s mode %d forced\r\n", get_name(), index);
 		select_lfo_shape(index, true);
 	}
 

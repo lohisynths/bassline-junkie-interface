@@ -31,7 +31,8 @@ Knob::knob_msg Knob::update() {
 	bool sw_state = CHECKBIT(*knob_config.mux_raw_data, knob_config.mux_first_bit);
 
 	if (last_sw_state != sw_state) {
-        LOG::LOG0("%s sw_state changed %d\r\n", name, sw_state);
+        LOG::LOG0("%s switch state changed changed, ", name);
+        LOG::LOG0((sw_state) ? "pushed\r\n" : " released\r\n" );
 		ret.switch_changed = true;
 		last_sw_state = sw_state;
 	}
@@ -88,7 +89,7 @@ void Knob::led_indicator_set_value(uint16_t value, bool force) {
 	int led_bright = knob_config.max_led_value;
 	int led_nr = value * encoder_max_to_127_divider;
 	if(led_nr != last_led_on || force) {
-	    LOG::LOG2("%s led_indicator_set_value %d\r\n", name, value);
+	    LOG::LOG2("%s led indication scale value %d\r\n", name, value);
 		led_on_last_off(led_nr, last_led_on, led_bright);
 		last_led_on = led_nr;
 	}
@@ -96,7 +97,7 @@ void Knob::led_indicator_set_value(uint16_t value, bool force) {
 
 void Knob::print_config(knob_init_map config) {
 	std::string sep("\r\n");
-	std::string out(sep + std::string(std::string(name) + " config: ") + sep +
+	std::string out(std::string(std::string(name) + " config: ") + sep +
 	        name + " mux                 " + std::to_string((uint32_t)config.mux) + sep +
 	        name + " mux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
 	        name + " mux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
@@ -105,5 +106,5 @@ void Knob::print_config(knob_init_map config) {
 	        name + " max_led_value       " + std::to_string(config.max_led_value) + sep +
 	        name + " first_pwm_output    " + std::to_string(config.first_pwm_output) + sep +
 	        name + " total_led_count     " + std::to_string(config.total_led_count) + sep);
-	LOG::LOG3("%s\r\n", out.c_str());
+	LOG::LOG3("%s", out.c_str());
 }

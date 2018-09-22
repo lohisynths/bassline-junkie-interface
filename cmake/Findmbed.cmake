@@ -41,3 +41,13 @@ function(add_flash_target target)
 			add_dependencies(${target}_flash ${target})
 	endif()
 endfunction()
+
+function(rap target)
+#set_target_properties(${target} PROPERTIES SUFFIX ".elf")
+add_custom_command(TARGET ${target}
+	POST_BUILD
+	COMMAND ${CMAKE_SIZE} --format=berkeley ${target}
+	COMMENT "Invoking: Cross ARM GNU Print Size"
+    )
+endfunction()
+

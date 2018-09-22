@@ -61,7 +61,7 @@ public:
 		uint8_t second_nr = (value_scaled / 10) % 10;
 		uint8_t third_nr  = value_scaled / 100;
 
-		DEBUG_LOG("%s %d %d %d\r\n", get_name(),  third_nr, second_nr, first_nr);
+		//DEBUG_LOG("%s %d %d %d\r\n", get_name(),  third_nr, second_nr, first_nr);
 
 		//set_all(first_nr*128);
 

@@ -24,7 +24,7 @@ public:
     /*! \typedef logger
      *  \brief Typedef defining logger used in all instances of this object
      */
-    typedef logger<set_level(LOG_LEVELS::DISABLED) > LOG;
+    typedef logger<UI_BLOCK_LOG_LEVEL> LOG;
 
 	UI_BLOCK() {};
 	virtual ~UI_BLOCK(){};
@@ -73,7 +73,7 @@ public:
 			if (ret) {
 				bool pushed = !sw[i].get_state();
 				LOG::LOG0("%s %d button switch %d", get_name(), current_instance, i);
-				LOG::LOG0( (pushed) ? " pushed\r\n" : " released\r\n" );
+				LOG::LOG0((pushed) ? "pushed\r\n" : "released\r\n" );
 				button_changed(i, pushed);
 			}
 		}
@@ -86,7 +86,7 @@ public:
 			if (ret.switch_changed) {
 				bool state = !knob[i].get_switch_state();
 				LOG::LOG0("%s %d encoder switch %d ", get_name(), current_instance, i);
-				LOG::LOG0( (state) ? " pushed\r\n" : " released\r\n" );
+				LOG::LOG0( (state) ? "pushed\r\n" : "released\r\n" );
 				knob_sw_changed(i, state);
 				if (state) {
 					ret_val = i;

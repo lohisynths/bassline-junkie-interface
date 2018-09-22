@@ -22,7 +22,7 @@ public:
     /*! \typedef logger
      *  \brief Typedef defining logger used in all instances of this object
      */
-    typedef logger<set_level(LOG_LEVELS::DISABLED) > LOG;
+    typedef logger<MIDI_LOG_LEVEL> LOG;
 
     MIDI() : pc(PA_9, PA_10, 115200) {}
     virtual ~MIDI() {}

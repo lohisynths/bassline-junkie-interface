@@ -8,7 +8,7 @@ static int addr_found[16]={};
 PCA9685::PCA9685() : _i2caddr(0) {}
 
 int *PCA9685::i2c_probe() {
-    LOG::LOG2("%s Searching for I2C devices...\n", name);
+    LOG::LOG2("%s Searching for I2C devices...\r\n", name);
 
     int *tab = addr_found;
     int count = 0;

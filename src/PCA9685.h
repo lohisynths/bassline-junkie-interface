@@ -53,9 +53,9 @@
 #ifndef PCA9685_H
 #define PCA9685_H
 
-#include "logger.h"
-#include "mbed.h"
-#include <cmath>
+#include "utils.h"
+#include <string.h>
+
 //register definitions
 #define PCA9685_SUBADR1 0x2
 #define PCA9685_SUBADR2 0x3
@@ -87,7 +87,7 @@ public:
     /*! \typedef logger
      *  \brief Typedef defining logger used in all instances of this object
      */
-    typedef logger<set_level(LOG_LEVELS::DISABLED) > LOG;
+    typedef logger<PCA9685_LOG_LEVEL> LOG;
 
     PCA9685();
     void frequencyI2C(int freq);

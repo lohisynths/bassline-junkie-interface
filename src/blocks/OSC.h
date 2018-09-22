@@ -36,7 +36,7 @@ public:
     /*! \typedef logger
      *  \brief Typedef defining logger used in all instances of this object
      */
-    typedef logger<set_level(LOG_LEVELS::DISABLED)> LOG;
+    typedef logger<OSC_LOG_LEVEL> LOG;
 
 	OSC(){};
 	~OSC(){};

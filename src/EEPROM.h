@@ -110,8 +110,6 @@ public:
 
 		  while (Address < FLASH_USER_END_ADDR)
 		  {
-		    uint32_t data32 = *(__IO uint32_t*)Address;
-
 		    Address = Address + 4;
 		  }
 	}

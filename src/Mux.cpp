@@ -24,10 +24,10 @@ void Mux::update() {
     // without optimizations, with LOG_LEVELS::DISABLED
     // measured time for 4 function calls below = 25 us
     //  vs 4 us without call to get_binary(mux_data[*])
-   LOG::LOG0( "%s 0 data %s\r\n", name, "");//get_binary(mux_data[0]));
-   LOG::LOG1( "%s 1 data %s\r\n", name, "");//get_binary(mux_data[1]));
-   LOG::LOG2( "%s 2 data %s\r\n", name, "");//get_binary(mux_data[2]));
-   LOG::LOG3( "%s 3 data %s\r\n", name, "");//get_binary(mux_data[3]));
+   LOG::LOG0( "%s 0 data %s\r\n", name, get_binary(mux_data[0]));
+   LOG::LOG1( "%s 1 data %s\r\n", name, get_binary(mux_data[1]));
+   LOG::LOG2( "%s 2 data %s\r\n", name, get_binary(mux_data[2]));
+   LOG::LOG3( "%s 3 data %s\r\n", name, get_binary(mux_data[3]));
 
 	for (uint8_t i = 0; i < 16; i++) {
 		mux_adr.write(i);
