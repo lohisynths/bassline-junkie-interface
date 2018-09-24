@@ -43,6 +43,10 @@ public:
 	    return "ADSR";
 	}
 
+	uint8_t get_midi_ch(){
+	    return 1;
+	}
+
 	enum ADSR_BUTTONS {
 		ADSR0, ADSR1, ADSR2, LOOP
 	};

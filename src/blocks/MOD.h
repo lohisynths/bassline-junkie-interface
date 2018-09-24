@@ -18,8 +18,6 @@
 
 #define MOD_FIRST_BUTTON_LED		(MOD_FIRST_ENC_LED+10)
 
-#define MOD_MIDI_OFFSET 			(96)
-
 // MOD_COUNT = 6
 // ADSR0, ADSR1, ADSR2, LFO0, LFO1, LFO2
 
@@ -123,8 +121,12 @@ public:
 
 	}
 
+    uint8_t get_midi_ch(){
+        return 2;
+    }
+
 	uint8_t get_midi_nr(uint8_t index) {
-		return MOD_MIDI_OFFSET + current_instance + (actual_mod_dest*MOD_SRC_COUNT);
+		return current_instance + (actual_mod_dest*MOD_SRC_COUNT);
 	}
 
 

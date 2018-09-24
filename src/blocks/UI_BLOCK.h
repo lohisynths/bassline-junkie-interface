@@ -59,7 +59,7 @@ public:
 	void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
 		knob[index].led_indicator_set_value(value_scaled, force_led_update);
 		set_current_preset_value(index, value_scaled);
-		midi->send_cc(get_midi_nr(index), value_scaled, 1);
+		midi->send_cc(get_midi_nr(index), value_scaled, get_midi_ch());
 	}
 
 	void force_knob_update(uint8_t index, uint16_t value_scaled) {
@@ -117,12 +117,10 @@ public:
 		// force update for select instance
 		// if index == current instance
 		// turn off index led and turn on
-		if(index != current_instance) {
-			// get button number of button from current OSC and turn led off
-			turn_off_sw(current_instance);
-			turn_on_sw(index);
-			current_instance = index;
-		}
+        // get button number of button from current OSC and turn led off
+        turn_off_sw(current_instance);
+        turn_on_sw(index);
+        current_instance = index;
 
 		for (int i = 0; i < KNOB_COUNT; i++) {
 			// get value of [i] knob from current preset
@@ -173,6 +171,7 @@ public:
 
 	virtual const char* get_name() = 0;
 	virtual uint8_t get_midi_nr(uint8_t index) = 0;
+    virtual uint8_t get_midi_ch() = 0;
 
 	MIDI *midi;
 	std::array<Button, BUTTON_COUNT> sw;

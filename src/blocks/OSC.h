@@ -42,6 +42,10 @@ public:
 	    return "OSC";
 	}
 
+    uint8_t get_midi_ch(){
+        return 1;
+    }
+
     OSC(){};
     ~OSC(){};
 

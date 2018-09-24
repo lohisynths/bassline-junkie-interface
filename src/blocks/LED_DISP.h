@@ -31,6 +31,10 @@ public:
 	    return "Disp";
 	}
 
+    uint8_t get_midi_ch(){
+        return 1;
+    }
+
 	void button_changed(uint8_t index, bool state) {};
 
 	void select_instance(uint8_t index) {};

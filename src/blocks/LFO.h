@@ -57,6 +57,10 @@ public:
 	    return "LFO";
 	}
 
+    uint8_t get_midi_ch(){
+        return 1;
+    }
+
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
 		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
