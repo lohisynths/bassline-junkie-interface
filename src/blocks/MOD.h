@@ -20,10 +20,37 @@
 
 #define MOD_MIDI_OFFSET 			(96)
 
-#define MOD_PARAM_COUNT 			(MOD_KNOB_COUNT+6)
+// MOD_COUNT = 6
+// ADSR0, ADSR1, ADSR2, LFO0, LFO1, LFO2
+
+// OSC0 pitch, OSC0 sin, OSC0 saw, OSC0 sqr, OSC0 rnd          = 5
+// OSC1 pitch, OSC1 sin, OSC1 saw, OSC1 sqr, OSC1 rnd          = 5
+// OSC2 pitch, OSC2 sin, OSC2 saw, OSC2 sqr, OSC2 rnd          = 5
+// FLT freq, FLT reso                                          = 2
+//                                                               17
+#define  MOD_DST_COUNT 17
+
+#define MOD_SRC_COUNT               (6)
+
+enum MOD_PARAMS {
+    MOD_AMT,
+    MOD_SRC,
+    MOD_PARAM_COUNT
+};
 
 class MOD : public UI_BLOCK<MOD_KNOB_COUNT, MOD_BUTTON_COUNT, MOD_PARAM_COUNT, MOD_COUNT> {
 public:
+    typedef std::array<int, MOD_DST_COUNT> dst_preset;
+    typedef std::array<dst_preset, MOD_PARAM_COUNT> src_preset;
+    typedef std::array<src_preset, MOD_COUNT> preset;
+
+    preset &get_preset() {
+        return preset_values;
+    }
+    void set_preset(preset input) {
+        memcpy(&preset_values, &input, sizeof(input));
+        select_instance(current_instance);
+    };
 
     /*! \typedef logger
      *  \brief Typedef defining logger used in all instances of this object
@@ -36,13 +63,38 @@ public:
 	    return "MOD";
 	}
 
-	void select_mode(uint8_t index) {
-	    LOG::LOG0("MOD SE:ECT MODE %d\r\n", index);
-	}
+    virtual int16_t get_current_preset_value(uint8_t index) {
+        return preset_values[current_instance][index][actual_mod_dest];
+    }
 
-	void force_mode(uint8_t index) {
-	    LOG::LOG0("MOD FORCE MODE %d\r\n", index);
-	}
+    virtual void set_current_preset_value(uint8_t index, uint16_t value) {
+        preset_values[current_instance][index][actual_mod_dest] = value;
+    }
+
+    void select_mod_src(uint8_t index, bool force = 0) {
+        if(current_instance != index || force) {
+            LOG::LOG0("%s src %d selected\r\n", get_name(), index);
+            turn_off_sw(current_instance);
+            turn_on_sw(index);
+            set_current_preset_value(MOD_SRC, index);
+            current_instance = index;
+        }
+    }
+
+    void select_MOD_dest(int index) {
+        LOG::LOG0("%s dst %d selected\r\n", get_name(), index);
+        actual_mod_dest = index;
+    }
+
+    void select_mode(uint8_t index) {
+        LOG::LOG0("%s select_mode %d\r\n", get_name(), index);
+    }
+
+    void force_mode(uint8_t index) {
+        // ignore index
+        LOG::LOG0("%s force_mode %d\r\n", get_name(), current_instance);
+        select_MOD_dest(actual_mod_dest);
+    }
 
 	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
 		midi = midi_;
@@ -62,37 +114,23 @@ public:
 			Button::button_init_map{mux, mux->get(2), 5, leds, button_max_led_val, (MOD_FIRST_BUTTON_LED + 2)},
 			Button::button_init_map{mux, mux->get(2), 4, leds, button_max_led_val, (MOD_FIRST_BUTTON_LED + 1)},
 			Button::button_init_map{mux, mux->get(2), 3, leds, button_max_led_val, (MOD_FIRST_BUTTON_LED + 0)}
-
 		};
 		init_internal(knob_ctrl, button_ctrl);
 		select_instance(current_instance);
 	}
-
-	virtual void button_changed(uint8_t index, bool state) {
-		if (state) {
-			if (index != current_instance) {
-				select_instance(index);
-			}
-		}
-	};
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {
 
 	}
 
 	uint8_t get_midi_nr(uint8_t index) {
-		return current_instance + (mod_dest*MOD_COUNT);
+		return MOD_MIDI_OFFSET + current_instance + (actual_mod_dest*MOD_SRC_COUNT);
 	}
 
-	void select_MOD_dest(int index) {
-		if(index > -1) {
-		    LOG::LOG0("MOD dst %d\r\n", index);
-			mod_dest = index;
-		}
-	}
 
 private:
-	uint8_t mod_dest = 0;
+	uint8_t actual_mod_dest = 0;
+    preset preset_values = {};
 };
 
 #endif /* SRC_MOD_H_ */

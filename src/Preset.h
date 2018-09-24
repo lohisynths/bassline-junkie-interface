@@ -13,6 +13,8 @@
 #include "blocks/ADSR.h"
 #include "blocks/LFO.h"
 #include "blocks/FLT.h"
+#include "blocks/MOD.h"
+
 #include "EEPROM.h"
 
 #include <bitset>
@@ -34,6 +36,7 @@ public:
         ADSR::preset adsr_preset;
         FLT::preset flt_preset;
         LFO::preset lfo_preset;
+        MOD::preset mod_preset;
     };
 
     Preset() {
@@ -125,6 +128,7 @@ public:
     const ADSR::preset &get_adrsr_preset() { return (main_preset.adsr_preset); }
     const FLT::preset &get_flt_preset() { return (main_preset.flt_preset); }
     const LFO::preset &get_lfo_preset() { return (main_preset.lfo_preset); }
+    const MOD::preset &get_mod_preset() { return (main_preset.mod_preset); }
 
 private:
     EEPROM eeprom;

@@ -82,6 +82,7 @@ int main() {
 	adsr.set_preset(preset.get_adrsr_preset());
 	filter.set_preset(preset.get_flt_preset());
 	lfo.set_preset(preset.get_lfo_preset());
+    mod.set_preset(preset.get_mod_preset());
 
 	uint16_t tmp1[PWM_DRIVERS_COUNT * PWM_COUNT];
 	bool clear = false;
@@ -108,13 +109,13 @@ int main() {
 			mod.update_instance();
 		}
 
-
 		ret = display.update();
 		if (ret > -1) {
 			OSC::preset osc_preset = osc.get_preset();
 			ADSR::preset adsr_preset = adsr.get_preset();
 			FLT::preset flt_preset = filter.get_preset();
             LFO::preset lfo_preset = lfo.get_preset();
+            MOD::preset mod_preset = mod.get_preset();
 
 			Preset::SynthPreset piesek;
 
@@ -122,6 +123,7 @@ int main() {
 		    std::copy(adsr_preset.begin(), adsr_preset.end(), piesek.adsr_preset.begin());
 		    std::copy(flt_preset.begin(), flt_preset.end(), piesek.flt_preset.begin());
             std::copy(lfo_preset.begin(), lfo_preset.end(), piesek.lfo_preset.begin());
+            std::copy(mod_preset.begin(), mod_preset.end(), piesek.mod_preset.begin());
 
             preset.save_preset_eeprom(piesek);
 
