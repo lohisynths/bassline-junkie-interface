@@ -65,8 +65,8 @@ struct logger {
             if constexpr ((LEVEL >> internal_n) & 1) {
                 // in enum index 0 = DISABLED, so
                 // index = internal_n - 1
-                int index = static_cast<int>(internal_n) - 1;
-                printf("%s ", LOG_LEVEL_NAMES[index].c_str());
+                //int index = static_cast<int>(internal_n) - 1;
+                //printf("%s ", LOG_LEVEL_NAMES[index].c_str());
                 va_list args;
                 va_start(args, format);
                 vprintf(format, args);

@@ -38,7 +38,7 @@ public:
 		}
 	}
 
-	virtual void button_changed(uint8_t index, bool state) {
+	void button_changed(uint8_t index, bool state) {
 		if (state) {
 			// if COUNT = 1 only one knob used,
 			// so jump straight to special_function
@@ -56,7 +56,7 @@ public:
 		}
 	};
 
-	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
+	void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
 		knob[index].led_indicator_set_value(value_scaled, force_led_update);
 		set_current_preset_value(index, value_scaled);
 		midi->send_cc(get_midi_nr(index), value_scaled, 1);
@@ -93,20 +93,24 @@ public:
 				}
 			}
 			if (ret.value_changed) {
-			    LOG::LOG0("%s %d value %d changed %d\r\n", get_name(), current_instance, i, knob[i].get_knob_value());
+			    LOG::LOG0("%s %d knob %d changed %d\r\n", get_name(), current_instance, i, knob[i].get_knob_value());
 				knob_val_changed(i, knob[i].get_knob_value());
 			}
 		}
 		return ret_val;
 	}
 
-	int16_t get_current_preset_value(uint8_t index) {
+	virtual int16_t get_current_preset_value(uint8_t index) {
 		return preset_values[current_instance][index];
 	}
 
-	void set_current_preset_value(uint8_t index, uint16_t value) {
+	virtual void set_current_preset_value(uint8_t index, uint16_t value) {
 		preset_values[current_instance][index] = value;
 	}
+
+    void update_instance() {
+        select_instance(current_instance);
+    }
 
 	void select_instance(uint8_t index) {
 
@@ -129,7 +133,7 @@ public:
 
 		const int special_parameters_count = PARAM_COUNT - KNOB_COUNT;
 		for (int i = 0; i < special_parameters_count; i++) {
-			uint8_t val = get_current_preset_value(KNOB_COUNT+i);
+			uint16_t val = get_current_preset_value(KNOB_COUNT+i);
 			force_mode(val);
 			LOG::LOG0("%s %d UI_BLOCK special param %d %d \r\n", get_name(), current_instance, KNOB_COUNT+i, val);
 		}

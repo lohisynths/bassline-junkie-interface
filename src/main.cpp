@@ -51,8 +51,6 @@ void baud(int baudrate) {
 }
 
 int main() {
-    bool clear;
-
     baud(115200);
 
 	USBMIDI midi_usb;
@@ -86,7 +84,7 @@ int main() {
 	lfo.set_preset(preset.get_lfo_preset());
 
 	uint16_t tmp1[PWM_DRIVERS_COUNT * PWM_COUNT];
-	//bool clear = false;
+	bool clear = false;
 	auto led_val = leds.get();
 	memcpy(tmp1, led_val, sizeof(tmp1));
 
@@ -99,6 +97,7 @@ int main() {
 		int ret = osc.update();
 		if (ret > -1) {
 			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
+            mod.update_instance();
 		}
 
 		adsr.update();
@@ -106,6 +105,7 @@ int main() {
 		ret = filter.update();
 		if (ret > -1) {
 			mod.select_MOD_dest(ret+15);
+			mod.update_instance();
 		}
 
 
