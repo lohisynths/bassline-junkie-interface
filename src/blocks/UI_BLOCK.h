@@ -64,7 +64,8 @@ public:
 
 	void force_knob_update(uint8_t index, uint16_t value_scaled) {
 		knob[index].set_value(value_scaled);
-		knob_val_changed(index, value_scaled, true);
+        knob[index].led_indicator_set_value(value_scaled, true);
+        set_current_preset_value(index, value_scaled);
 	}
 
 	void update_buttons() {
@@ -139,16 +140,28 @@ public:
 		LOG::LOG0("%s %d selected\r\n", get_name(), index);
 	};
 
+	void dump_midi() {
+        LOG::LOG0("%s %d UI_BLOCK dump midi\r\n", get_name());
+        for (int i = 0; i < COUNT; i++) {
+            for (int j = 0; j < PARAM_COUNT; j++) {
+                int value = preset_values[i][j];
+                int index = (i*PARAM_COUNT) + j;
+                uint8_t midi_nr = get_midi_nr(index);
+                midi->send_cc(midi_nr, value, get_midi_ch());
+            }
+        }
+	}
 
 	int update() {
 		update_buttons();
 		return update_knobs();
 	}
 
-	void set_preset(preset input) {
-		memcpy(&preset_values, &input, sizeof(input));
-		select_instance(current_instance);
-	};
+    void set_preset(preset input) {
+        memcpy(&preset_values, &input, sizeof(input));
+        select_instance(current_instance);
+        dump_midi();
+    };
 
 	preset &get_preset() {
 		return preset_values;

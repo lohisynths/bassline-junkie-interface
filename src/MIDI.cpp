@@ -39,7 +39,7 @@ void MIDI::send_note_off(uint8_t key, uint8_t velocity, uint8_t channel) {
 }
 
 void MIDI::send_cc(uint8_t control, uint8_t value, uint8_t channel) {
-    LOG::LOG1("%s ControlChange controller: %d, data: %d, channel: %d\r\n", name, control, value, channel);
+    LOG::LOG1("%s ControlChange %d channel %d data %d\r\n", name, control, channel, value);
 	uint8_t msg[3];
     msg[0] = 0xB0 | (channel & 0x0F);
     msg[1] = control & 0x7F;

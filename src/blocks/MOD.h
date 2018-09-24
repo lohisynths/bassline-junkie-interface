@@ -45,9 +45,23 @@ public:
     preset &get_preset() {
         return preset_values;
     }
+
+    void dump_midi() {
+        LOG::LOG0("%s %d UI_BLOCK dump midi\r\n", get_name());
+        for (int j = 0; j < MOD_DST_COUNT; j++) {
+            for (int i = 0; i < MOD_COUNT; i++) {
+                int value = preset_values[i][0][j];
+                //int index = (i*MOD_DST_COUNT) + j;
+                uint8_t midi_nr = get_midi_nr(i, j);
+                midi->send_cc(midi_nr, value, get_midi_ch());
+            }
+        }
+    }
+
     void set_preset(preset input) {
         memcpy(&preset_values, &input, sizeof(input));
         select_instance(current_instance);
+        dump_midi();
     };
 
     /*! \typedef logger
@@ -126,9 +140,12 @@ public:
     }
 
 	uint8_t get_midi_nr(uint8_t index) {
-		return current_instance + (actual_mod_dest*MOD_SRC_COUNT);
+		return get_midi_nr(current_instance, actual_mod_dest);
 	}
 
+    uint8_t get_midi_nr(uint8_t src, uint8_t dst) {
+        return src + (dst*MOD_SRC_COUNT);
+    }
 
 private:
 	uint8_t actual_mod_dest = 0;

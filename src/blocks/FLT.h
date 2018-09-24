@@ -18,7 +18,7 @@
 
 #define FLT_FIRST_BUTTON_LED		(FLT_FIRST_ENC_LED+28)
 
-#define FLT_MIDI_OFFSET				(32)
+#define FLT_MIDI_OFFSET				(33)
 
 enum FLT_PARAMS {
 	FLT_FREQ,

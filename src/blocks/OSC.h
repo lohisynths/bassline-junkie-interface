@@ -18,7 +18,7 @@
 
 #define OSC_FIRST_BUTTON_LED		(6*16+(12))
 
-#define OSC_MIDI_OFFSET 			(1)
+#define OSC_MIDI_OFFSET 			(0)
 
 
 enum OSC_PARAMS {
@@ -87,15 +87,10 @@ public:
 	}
 
 	uint8_t get_midi_nr(uint8_t index) {
-		return OSC_MIDI_OFFSET+index+(current_instance * (OSC_KNOB_COUNT+1));
+		return OSC_MIDI_OFFSET+index+(current_instance * (OSC_KNOB_COUNT));
 	}
 
 	uint8_t get_current_osc() { return current_instance; };
-
-	void set_preset(preset input) {
-		memcpy(&preset_values, &input, sizeof(input));
-		select_instance(current_instance);
-	};
 
 private:
 

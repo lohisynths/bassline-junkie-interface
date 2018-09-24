@@ -127,6 +127,15 @@ int main() {
 
             preset.save_preset_eeprom(piesek);
 
+
+            {
+            osc.set_preset(preset.get_osc_preset());
+            adsr.set_preset(preset.get_adrsr_preset());
+            filter.set_preset(preset.get_flt_preset());
+            lfo.set_preset(preset.get_lfo_preset());
+            mod.set_preset(preset.get_mod_preset());
+            }
+
 			if(clear) {
 				leds.set(tmp1);
 			} else {
