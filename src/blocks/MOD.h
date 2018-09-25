@@ -143,7 +143,7 @@ public:
     }
 
     uint8_t get_current_instance_midi_nr(uint8_t index) {
-        return get_midi_nr(current_instance, index);
+        return get_midi_nr(current_instance, actual_mod_dest);
     }
 
 private:
