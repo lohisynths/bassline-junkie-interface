@@ -70,6 +70,8 @@ int main() {
 	leds.init();
 	mux.init();
 
+	preset.load_preset_eeprom(0);
+
 	adsr.init(&mux, &leds, &midi);
 	osc.init(&mux, &leds, &midi);
 	mod.init(&mux, &leds, &midi);
@@ -84,10 +86,8 @@ int main() {
 	lfo.set_preset(preset.get_lfo_preset());
     mod.set_preset(preset.get_mod_preset());
 
-	uint16_t tmp1[PWM_DRIVERS_COUNT * PWM_COUNT];
-	bool clear = false;
-	auto led_val = leds.get();
-	memcpy(tmp1, led_val, sizeof(tmp1));
+    bool last_disp_pushed = false;
+    int last_disp_count = 0;
 
 	while(1) {
 		for(int i=0; i < MUX_COUNT; i++) {
@@ -109,43 +109,51 @@ int main() {
 			mod.update_instance();
 		}
 
-		ret = display.update();
-		if (ret > -1) {
-			OSC::preset osc_preset = osc.get_preset();
-			ADSR::preset adsr_preset = adsr.get_preset();
-			FLT::preset flt_preset = filter.get_preset();
-            LFO::preset lfo_preset = lfo.get_preset();
-            MOD::preset mod_preset = mod.get_preset();
-
-			Preset::SynthPreset piesek;
-
-		    std::copy(osc_preset.begin(), osc_preset.end(), piesek.osc_preset.begin());
-		    std::copy(adsr_preset.begin(), adsr_preset.end(), piesek.adsr_preset.begin());
-		    std::copy(flt_preset.begin(), flt_preset.end(), piesek.flt_preset.begin());
-            std::copy(lfo_preset.begin(), lfo_preset.end(), piesek.lfo_preset.begin());
-            std::copy(mod_preset.begin(), mod_preset.end(), piesek.mod_preset.begin());
-
-            preset.save_preset_eeprom(piesek);
+        ret = display.update();
 
 
-            {
-            osc.set_preset(preset.get_osc_preset());
-            adsr.set_preset(preset.get_adrsr_preset());
-            filter.set_preset(preset.get_flt_preset());
-            lfo.set_preset(preset.get_lfo_preset());
-            mod.set_preset(preset.get_mod_preset());
-            }
-
-			if(clear) {
-				leds.set(tmp1);
-			} else {
-				auto led_val = leds.get();
-				memcpy(tmp1, led_val, sizeof(tmp1));
-				leds.clear();
-				leds.update_all();
-			}
-			clear ^= 1;
+		bool pushed = display.if_knob_sw_pushed();
+		if(last_disp_pushed != pushed) {
+		    LOG::LOG0("changed %d\r\n", pushed);
 		}
+
+		if(pushed) {
+		    last_disp_count++;
+		}
+
+		if(!pushed && last_disp_pushed) {
+		    if(last_disp_count > 500) {
+	            LOG::LOG0("saving preset %d\r\n", display.get_actual_preset_nr());
+//	            leds.backup_state();
+	            Preset::SynthPreset asdsa = {
+	                    osc.get_preset(),
+	                    adsr.get_preset(),
+	                    filter.get_preset(),
+	                    lfo.get_preset(),
+	                    mod.get_preset()
+	            };
+	            preset.save_preset_eeprom(asdsa, display.get_actual_preset_nr());
+//	            leds.restore_state();
+                LOG::LOG0("preset %d saved\r\n", display.get_actual_preset_nr());
+
+		    } else {
+                LOG::LOG0("load preset %d\r\n", display.get_actual_preset_nr());
+//                leds.backup_state();
+                preset.load_preset_eeprom(display.get_actual_preset_nr());
+
+                osc.set_preset(preset.get_osc_preset());
+                adsr.set_preset(preset.get_adrsr_preset());
+                filter.set_preset(preset.get_flt_preset());
+                lfo.set_preset(preset.get_lfo_preset());
+                mod.set_preset(preset.get_mod_preset());
+
+                //leds.restore_state();
+		    }
+		    last_disp_count = 0;
+		}
+
+        last_disp_pushed = pushed;
+
 		mod.update();
 	}
 }

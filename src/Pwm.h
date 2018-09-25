@@ -26,6 +26,10 @@ public:
 
 	PCA9685	 pwm[PWM_DRIVERS_COUNT];
 
+    void backup_state();
+    void restore_state();
+
+    uint16_t tmp1[PWM_DRIVERS_COUNT * PWM_COUNT];
 };
 
 #endif /* SRC_PWM_H_ */

@@ -56,10 +56,10 @@ public:
 		}
 	};
 
-	void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
+	virtual void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
 		knob[index].led_indicator_set_value(value_scaled, force_led_update);
 		set_current_preset_value(index, value_scaled);
-		midi->send_cc(get_midi_nr(index), value_scaled, get_midi_ch());
+		midi->send_cc(get_current_instance_midi_nr(index), value_scaled, get_midi_ch());
 	}
 
 	void force_knob_update(uint8_t index, uint16_t value_scaled) {
@@ -123,11 +123,11 @@ public:
         turn_on_sw(index);
         current_instance = index;
 
-		for (int i = 0; i < KNOB_COUNT; i++) {
+		for (int j = 0; j < KNOB_COUNT; j++) {
 			// get value of [i] knob from current preset
 			//
-			uint8_t val = get_current_preset_value(i);
-			force_knob_update(i, val);
+			uint8_t val = get_current_preset_value(j);
+			force_knob_update(j, val);
 		}
 
 		const int special_parameters_count = PARAM_COUNT - KNOB_COUNT;
@@ -146,7 +146,7 @@ public:
             for (int j = 0; j < PARAM_COUNT; j++) {
                 int value = preset_values[i][j];
                 int index = (i*PARAM_COUNT) + j;
-                uint8_t midi_nr = get_midi_nr(index);
+                uint8_t midi_nr = get_current_instance_midi_nr(index);
                 midi->send_cc(midi_nr, value, get_midi_ch());
             }
         }
@@ -183,7 +183,7 @@ public:
 	uint8_t current_instance = 0;
 
 	virtual const char* get_name() = 0;
-	virtual uint8_t get_midi_nr(uint8_t index) = 0;
+	virtual uint8_t get_current_instance_midi_nr(uint8_t index) = 0;
     virtual uint8_t get_midi_ch() = 0;
 
 	MIDI *midi;

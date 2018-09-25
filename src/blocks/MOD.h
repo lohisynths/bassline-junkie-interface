@@ -39,18 +39,17 @@ enum MOD_PARAMS {
 class MOD : public UI_BLOCK<MOD_KNOB_COUNT, MOD_BUTTON_COUNT, MOD_PARAM_COUNT, MOD_COUNT> {
 public:
     typedef std::array<int, MOD_DST_COUNT> dst_preset;
-    typedef std::array<dst_preset, MOD_PARAM_COUNT> src_preset;
-    typedef std::array<src_preset, MOD_COUNT> preset;
+    typedef std::array<dst_preset, MOD_COUNT> preset;
 
     preset &get_preset() {
         return preset_values;
     }
 
     void dump_midi() {
-        LOG::LOG0("%s %d UI_BLOCK dump midi\r\n", get_name());
+        LOG::LOG0("%s UI_BLOCK dump midi\r\n", get_name());
         for (int j = 0; j < MOD_DST_COUNT; j++) {
             for (int i = 0; i < MOD_COUNT; i++) {
-                int value = preset_values[i][0][j];
+                int value = preset_values[i][j];
                 //int index = (i*MOD_DST_COUNT) + j;
                 uint8_t midi_nr = get_midi_nr(i, j);
                 midi->send_cc(midi_nr, value, get_midi_ch());
@@ -76,11 +75,11 @@ public:
 	}
 
     virtual int16_t get_current_preset_value(uint8_t index) {
-        return preset_values[current_instance][index][actual_mod_dest];
+        return preset_values[current_instance][actual_mod_dest];
     }
 
     virtual void set_current_preset_value(uint8_t index, uint16_t value) {
-        preset_values[current_instance][index][actual_mod_dest] = value;
+        preset_values[current_instance][actual_mod_dest] = value;
     }
 
     void select_mod_src(uint8_t index, bool force = 0) {
@@ -139,7 +138,7 @@ public:
         return 2;
     }
 
-	uint8_t get_midi_nr(uint8_t index) {
+	uint8_t get_current_instance_midi_nr(uint8_t index) {
 		return get_midi_nr(current_instance, actual_mod_dest);
 	}
 

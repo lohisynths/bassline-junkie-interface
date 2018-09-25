@@ -27,6 +27,10 @@ public:
 	LED_DISP(){};
 	virtual ~LED_DISP(){};
 
+	bool if_knob_sw_pushed(){
+	    auto &knobs = get_knobs();
+	    return !knobs[0].get_switch_state();
+	}
 	virtual const char* get_name() {
 	    return "Disp";
 	}
@@ -35,11 +39,16 @@ public:
         return 1;
     }
 
+
+    uint8_t get_midi_nr(uint8_t index) {
+        return get_midi_ch();
+    }
+
 	void button_changed(uint8_t index, bool state) {};
 
 	void select_instance(uint8_t index) {};
 
-	uint8_t get_midi_nr(uint8_t index) {
+	uint8_t get_current_instance_midi_nr(uint8_t index) {
 		return 0;
 	}
 
@@ -49,6 +58,7 @@ public:
 
     virtual void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
         LOG::LOG0("%s value changed %d\r\n", get_name(), value_scaled);
+        actual_preset_value = value_scaled;
 
 		uint8_t first_nr  = value_scaled % 10;
 		uint8_t second_nr = (value_scaled / 10) % 10;
@@ -122,6 +132,11 @@ public:
         LOG::LOG0("%s %d forced %d\r\n", get_name(), current_instance, index);
     }
 
+    uint8_t get_actual_preset_nr() {
+        return actual_preset_value;
+    }
+
+    uint8_t actual_preset_value = 0;
 };
 
 #endif /* SRC_BLOCKS_LED_DISP_H_ */

@@ -113,7 +113,7 @@ public:
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {}
 
-	uint8_t get_midi_nr(uint8_t index) {
+	uint8_t get_current_instance_midi_nr(uint8_t index) {
 		return LFO_MIDI_OFFSET+index + (current_instance*2);
 	}
 

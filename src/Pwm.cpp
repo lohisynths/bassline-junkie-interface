@@ -15,6 +15,17 @@ Pwm::Pwm() {
 Pwm::~Pwm() {
 }
 
+void Pwm::backup_state() {
+    auto led_val = get();
+    memcpy(tmp1, led_val, sizeof(tmp1));
+    clear();
+    update_all();
+}
+
+void Pwm::restore_state() {
+    set(tmp1);
+}
+
 void Pwm::init() {
 	int *addr = pwm[0].i2c_probe();
 

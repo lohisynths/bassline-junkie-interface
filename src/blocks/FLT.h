@@ -90,7 +90,7 @@ public:
 
 	}
 
-	uint8_t get_midi_nr(uint8_t index) {
+	uint8_t get_current_instance_midi_nr(uint8_t index) {
 		return FLT_MIDI_OFFSET+index;
 	}
 
