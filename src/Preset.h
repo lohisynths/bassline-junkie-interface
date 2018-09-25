@@ -61,6 +61,14 @@ public:
 //        main_preset.lfo_preset[0][LFO_FREQ] = 64;
     }
 
+    void load_global(int index) {
+        for(int i = 0; i < GLOBAL_PRESET_COUNT; i++) {
+            LOG::LOG0("%s eeprom %d write\r\n", get_name(), i);
+            load_preset_eeprom(eeprom, global_presets[i], i);
+        }
+        main_preset = global_presets[index];
+    }
+
     void load_preset_eeprom(int index) {
         load_preset_eeprom(eeprom, main_preset, index);
     }

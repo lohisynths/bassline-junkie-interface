@@ -106,7 +106,7 @@ public:
     void init(Mux *mux, Pwm *leds, MIDI *midi_) {
         LOG::LOG0("%s init\r\n", get_name());
         uint8_t knob_led_max_val = KNOB_MAX_LED_VAL;
-        uint16_t knob_max_val = 256;
+        uint16_t knob_max_val = 1024;
         midi = midi_;
         m_leds = leds;
 
