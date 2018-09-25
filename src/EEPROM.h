@@ -102,46 +102,6 @@ public:
 		  HAL_FLASH_Lock();
 	}
 
-	void read() {
-		  /* Check if the programmed data is OK
-		      MemoryProgramStatus = 0: data programmed correctly
-		      MemoryProgramStatus != 0: number of words not programmed correctly ******/
-		  uint32_t Address = FLASH_USER_START_ADDR;
-
-		  while (Address < FLASH_USER_END_ADDR)
-		  {
-		    Address = Address + 4;
-		  }
-	}
-
-	void write() {
-		  /* Program the user Flash area word by word
-		    (area defined by FLASH_USER_START_ADDR and FLASH_USER_END_ADDR) ***********/
-		  uint16_t i=0;
-		  HAL_FLASH_Unlock();
-		  uint32_t Address = FLASH_USER_START_ADDR;
-
-		  while (Address < FLASH_USER_END_ADDR)
-		  {
-		    if (HAL_FLASH_Program(TYPEPROGRAM_WORD, Address, i++) == HAL_OK)
-		    {
-		      Address = Address + 4;
-		    }
-		    else
-		    {
-		      /* Error occurred while writing data in Flash memory.
-		         User can add here some code to deal with this error */
-		      /*
-		        FLASH_ErrorTypeDef errorcode = HAL_FLASH_GetError();
-		      */
-		      Error_Handler();
-		    }
-		  }
-		  /* Lock the Flash to disable the flash control register access (recommended
-		     to protect the FLASH memory against possible unwanted operation) *********/
-		  HAL_FLASH_Lock();
-	}
-
 	void Error_Handler(void)
 	{
 	  /* Turn LED5 (RED) on */
@@ -152,7 +112,6 @@ public:
 
 	uint32_t readEEPROMWord(uint32_t address) {
 	    uint32_t val = 0;
-	    address = address + FLASH_USER_START_ADDR;
 	    val = *(__IO uint32_t*)address;
 
 	    return val;
@@ -161,7 +120,6 @@ public:
 
 	void writeEEPROMWord(uint32_t address, uint32_t data) {
 		  HAL_FLASH_Unlock();
-	      address = address + FLASH_USER_START_ADDR;
 
 	      if(address < FLASH_USER_END_ADDR)
 	      {

@@ -43,7 +43,9 @@ public:
         init();
     }
 
-    ~Preset() {};
+    ~Preset() {
+    }
+
     void init() {
         LOG::LOG0("%s eeprom write\r\n", get_name());
 //        main_preset.osc_preset[0][OSC_PITCH] = 10;
@@ -57,59 +59,48 @@ public:
 //        main_preset.lfo_preset[0][LFO_FREQ] = 64;
     }
 
-    void load_preset_eeprom(int index){
+    void load_preset_eeprom(int index) {
         load_preset_eeprom(eeprom, main_preset, index);
-      }
+    }
 
-    void load_preset_eeprom(EEPROM &eeprom, SynthPreset &input, int index){
+    void load_preset_eeprom(EEPROM &eeprom, SynthPreset &input, int index) {
         LOG::LOG0("%s eeprom %d read\r\n", get_name(), index);
-        uint32_t preset_address = FLASH_USER_START_ADDR + sizeof(SynthPreset)*(index +1);
+        uint32_t *output_data = (uint32_t *) &input;
+        uint32_t addr_start = FLASH_USER_START_ADDR + sizeof(SynthPreset) * (index);
 
-        uint32_t *output_data = (uint32_t *)&input;
-        for(size_t i=0; i < sizeof(SynthPreset)/4; i++) {
-              uint32_t ret = eeprom.readEEPROMWord(i*4);
-              LOG::LOG3("%s eeprom read %d %d\r\n", get_name(), i, ret);
-              LOG::LOG4("%#08x %s %#04x %d\r\n", i*4+preset_address, get_binary(ret), ret, ret);
-              output_data[i] = ret;
+        for (size_t i = 0; i < sizeof(SynthPreset) / 4; i++) {
+            uint32_t preset_address = (i * 4) + addr_start;
+            uint32_t ret = eeprom.readEEPROMWord(preset_address);
+
+            LOG::LOG3("%s eeprom read %d %d\r\n", get_name(), i, ret);
+            LOG::LOG4("%#08x %s %#04x %d\r\n", preset_address, get_binary(ret), ret, ret);
+            output_data[i] = ret;
         }
         print_preset(input);
     }
 
-    void save_preset_eeprom(SynthPreset &input, int index){
-        uint32_t *data = (uint32_t *)&input;
+    void save_preset_eeprom(SynthPreset &input, int index) {
         LOG::LOG0("%s eeprom %d write\r\n", get_name(), index);
-        uint32_t preset_address = FLASH_USER_START_ADDR + sizeof(SynthPreset)*(index +1);
+        uint32_t *data = (uint32_t *) &input;
+        uint32_t addr_start = FLASH_USER_START_ADDR + sizeof(SynthPreset) * (index);
 
         eeprom.erase(sizeof(SynthPreset));
-        for(size_t i=0; i < sizeof(SynthPreset)/4; i++) {
-              uint32_t ret = data[i];
-              LOG::LOG5("%s eeprom write %d %d\r\n", get_name(), i, ret);
-              LOG::LOG6("%#08x %s %#04x %d\r\n", i*4+preset_address, get_binary(ret), ret, ret);
-              eeprom.writeEEPROMWord(i*4, ret);
+        for (size_t i = 0; i < sizeof(SynthPreset) / 4; i++) {
+            uint32_t ret = data[i];
+            uint32_t preset_address = (i * 4) + addr_start;
+            LOG::LOG5("%s eeprom write %d %d\r\n", get_name(), i, ret);
+            LOG::LOG6("%#08x %s %#04x %d\r\n", preset_address, get_binary(ret), ret, ret);
+            eeprom.writeEEPROMWord(preset_address, ret);
         }
         print_preset(main_preset);
     }
 
-    void save_preset_eeprom(EEPROM &eeprom, SynthPreset &input, int index){
-        LOG::LOG0("%s eeprom %d write\r\n", get_name(), index);
-        eeprom.erase(sizeof(SynthPreset));
-        uint32_t *data = (uint32_t *)&input;
-        uint32_t preset_address = FLASH_USER_START_ADDR + sizeof(SynthPreset)*(index +1);
-        for(size_t i=0; i < sizeof(SynthPreset)/4; i++) {
-              uint32_t ret = data[i];
-              LOG::LOG5("%s eeprom write %d %d\r\n", get_name(), i, ret);
-              LOG::LOG6("%#08x %s %#04x %d\r\n", i*4+preset_address, get_binary(ret), ret, ret);
-              eeprom.writeEEPROMWord(i*4, ret);
-        }
-        print_preset(input);
-    }
-
-    void print_preset(SynthPreset &input){
+    void print_preset(SynthPreset &input) {
         LOG::LOG1("%s print\r\n", get_name());
         LOG::LOG2("%s print\r\n", get_name());
 
-        for(size_t i=0; i < sizeof(SynthPreset)/4; i++) {
-            uint32_t *data = (uint32_t *)&input;
+        for (size_t i = 0; i < sizeof(SynthPreset) / 4; i++) {
+            uint32_t *data = (uint32_t *) &input;
             uint32_t ret = data[i];
             LOG::LOG2("%s raw %d %d\r\n", get_name(), i, ret);
         }
@@ -132,15 +123,25 @@ public:
             }
         }
     }
-    const OSC::preset &get_osc_preset() { return (main_preset.osc_preset); }
-    const ADSR::preset &get_adrsr_preset() { return (main_preset.adsr_preset); }
-    const FLT::preset &get_flt_preset() { return (main_preset.flt_preset); }
-    const LFO::preset &get_lfo_preset() { return (main_preset.lfo_preset); }
-    const MOD::preset &get_mod_preset() { return (main_preset.mod_preset); }
+    const OSC::preset &get_osc_preset() {
+        return (main_preset.osc_preset);
+    }
+    const ADSR::preset &get_adrsr_preset() {
+        return (main_preset.adsr_preset);
+    }
+    const FLT::preset &get_flt_preset() {
+        return (main_preset.flt_preset);
+    }
+    const LFO::preset &get_lfo_preset() {
+        return (main_preset.lfo_preset);
+    }
+    const MOD::preset &get_mod_preset() {
+        return (main_preset.mod_preset);
+    }
 
 private:
     EEPROM eeprom;
-    SynthPreset main_preset = {};
+    SynthPreset main_preset = { };
 };
 
 #endif /* SRC_PRESET_H_ */
