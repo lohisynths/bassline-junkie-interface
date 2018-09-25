@@ -88,6 +88,7 @@ int main() {
 
     bool last_disp_pushed = false;
     int last_disp_count = 0;
+    int last_presset_selected = 0;
 
 	while(1) {
 		for(int i=0; i < MUX_COUNT; i++) {
@@ -110,11 +111,24 @@ int main() {
 		}
 
         ret = display.update();
+        if(ret == -2) {
+            int val = display.get_actual_preset_nr();
+            if(last_presset_selected != val) {
+                LOG::LOG1("changed %d\r\n", val);
+                preset.load_preset_eeprom(val);
+                osc.set_preset(preset.get_osc_preset());
+                adsr.set_preset(preset.get_adrsr_preset());
+                filter.set_preset(preset.get_flt_preset());
+                lfo.set_preset(preset.get_lfo_preset());
+                mod.set_preset(preset.get_mod_preset());
+                last_presset_selected = val;
+            }
+        }
 
 
 		bool pushed = display.if_knob_sw_pushed();
 		if(last_disp_pushed != pushed) {
-		    LOG::LOG0("changed %d\r\n", pushed);
+		    LOG::LOG1("changed %d\r\n", pushed);
 		}
 
 		if(pushed) {
@@ -123,7 +137,7 @@ int main() {
 
 		if(!pushed && last_disp_pushed) {
 		    if(last_disp_count > 500) {
-	            LOG::LOG0("saving preset %d\r\n", display.get_actual_preset_nr());
+	            LOG::LOG1("saving preset %d\r\n", display.get_actual_preset_nr());
 //	            leds.backup_state();
 	            Preset::SynthPreset asdsa = {
 	                    osc.get_preset(),
@@ -134,10 +148,10 @@ int main() {
 	            };
 	            preset.save_preset_eeprom(asdsa, display.get_actual_preset_nr());
 //	            leds.restore_state();
-                LOG::LOG0("preset %d saved\r\n", display.get_actual_preset_nr());
+                LOG::LOG1("preset %d saved\r\n", display.get_actual_preset_nr());
 
 		    } else {
-                LOG::LOG0("load preset %d\r\n", display.get_actual_preset_nr());
+                LOG::LOG1("load preset %d\r\n", display.get_actual_preset_nr());
 //                leds.backup_state();
                 preset.load_preset_eeprom(display.get_actual_preset_nr());
 

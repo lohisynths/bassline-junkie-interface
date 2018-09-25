@@ -96,6 +96,7 @@ public:
 			if (ret.value_changed) {
 			    LOG::LOG0("%s %d knob %d changed %d\r\n", get_name(), current_instance, i, knob[i].get_knob_value());
 				knob_val_changed(i, knob[i].get_knob_value());
+                ret_val = -2;
 			}
 		}
 		return ret_val;
