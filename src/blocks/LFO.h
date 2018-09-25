@@ -113,9 +113,13 @@ public:
 
 	virtual void knob_sw_changed(uint8_t index, bool state) {}
 
-	uint8_t get_current_instance_midi_nr(uint8_t index) {
-		return LFO_MIDI_OFFSET+index + (current_instance*2);
-	}
+    uint8_t get_midi_nr(uint8_t instance, uint8_t index){
+        return LFO_MIDI_OFFSET+index + (instance*2);
+    }
+
+    uint8_t get_current_instance_midi_nr(uint8_t index) {
+        return get_midi_nr(current_instance, index);
+    }
 
 private:
 	uint8_t last_lfo_shape = 0;

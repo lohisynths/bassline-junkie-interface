@@ -40,7 +40,7 @@ public:
     }
 
 
-    uint8_t get_midi_nr(uint8_t index) {
+    uint8_t get_midi_nr(uint8_t instance, uint8_t index) {
         return get_midi_ch();
     }
 

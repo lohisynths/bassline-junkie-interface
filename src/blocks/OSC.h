@@ -86,9 +86,13 @@ public:
 
 	}
 
-	uint8_t get_current_instance_midi_nr(uint8_t index) {
-		return OSC_MIDI_OFFSET+index+(current_instance * (OSC_KNOB_COUNT));
-	}
+   uint8_t get_midi_nr(uint8_t instance, uint8_t index){
+        return OSC_MIDI_OFFSET+index+(instance * (OSC_KNOB_COUNT));
+    }
+
+   uint8_t get_current_instance_midi_nr(uint8_t index) {
+       return get_midi_nr(current_instance, index);
+   }
 
 	uint8_t get_current_osc() { return current_instance; };
 

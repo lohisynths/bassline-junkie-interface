@@ -117,9 +117,13 @@ public:
 
 	}
 
-	uint8_t get_current_instance_midi_nr(uint8_t index) {
-		return ADSR_MIDI_OFFSET+index+(current_instance * ADSR_PARAM_NR);
-	}
+    uint8_t get_midi_nr(uint8_t instance, uint8_t index){
+        return ADSR_MIDI_OFFSET+index+(instance * ADSR_PARAM_NR);
+    }
+
+    uint8_t get_current_instance_midi_nr(uint8_t index) {
+        return get_midi_nr(current_instance, index);
+    }
 
 private:
 

@@ -70,7 +70,7 @@ int main() {
 	leds.init();
 	mux.init();
 
-	//preset.load_preset_eeprom(0);
+	preset.load_preset_eeprom(0);
 
 	adsr.init(&mux, &leds, &midi);
 	osc.init(&mux, &leds, &midi);

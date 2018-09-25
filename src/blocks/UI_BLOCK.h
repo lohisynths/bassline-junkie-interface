@@ -145,8 +145,7 @@ public:
         for (int i = 0; i < COUNT; i++) {
             for (int j = 0; j < PARAM_COUNT; j++) {
                 int value = preset_values[i][j];
-                int index = (i*PARAM_COUNT) + j;
-                uint8_t midi_nr = get_current_instance_midi_nr(index);
+                uint8_t midi_nr = get_midi_nr(i, j);
                 midi->send_cc(midi_nr, value, get_midi_ch());
             }
         }
@@ -184,6 +183,7 @@ public:
 
 	virtual const char* get_name() = 0;
 	virtual uint8_t get_current_instance_midi_nr(uint8_t index) = 0;
+    virtual uint8_t get_midi_nr(uint8_t instance, uint8_t index) = 0;
     virtual uint8_t get_midi_ch() = 0;
 
 	MIDI *midi;

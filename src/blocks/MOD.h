@@ -138,12 +138,12 @@ public:
         return 2;
     }
 
-	uint8_t get_current_instance_midi_nr(uint8_t index) {
-		return get_midi_nr(current_instance, actual_mod_dest);
-	}
+    uint8_t get_midi_nr(uint8_t instance, uint8_t index) {
+        return instance + (index*MOD_SRC_COUNT);
+    }
 
-    uint8_t get_midi_nr(uint8_t src, uint8_t dst) {
-        return src + (dst*MOD_SRC_COUNT);
+    uint8_t get_current_instance_midi_nr(uint8_t index) {
+        return get_midi_nr(current_instance, index);
     }
 
 private:

@@ -90,9 +90,13 @@ public:
 
 	}
 
-	uint8_t get_current_instance_midi_nr(uint8_t index) {
-		return FLT_MIDI_OFFSET+index;
-	}
+    uint8_t get_midi_nr(uint8_t instance, uint8_t index) {
+        return FLT_MIDI_OFFSET+index;
+    }
+
+    uint8_t get_current_instance_midi_nr(uint8_t index) {
+        return get_midi_nr(current_instance, index);
+    }
 
 private:
 	uint8_t last_filter_type = 0;

@@ -19,6 +19,8 @@
 
 #include <bitset>
 
+#define GLOBAL_PRESET_COUNT 32
+
 class Preset {
 public:
 
@@ -80,19 +82,27 @@ public:
     }
 
     void save_preset_eeprom(SynthPreset &input, int index) {
-        LOG::LOG0("%s eeprom %d write\r\n", get_name(), index);
-        uint32_t *data = (uint32_t *) &input;
-        uint32_t addr_start = FLASH_USER_START_ADDR + sizeof(SynthPreset) * (index);
-
-        eeprom.erase(sizeof(SynthPreset));
-        for (size_t i = 0; i < sizeof(SynthPreset) / 4; i++) {
-            uint32_t ret = data[i];
-            uint32_t preset_address = (i * 4) + addr_start;
-            LOG::LOG5("%s eeprom write %d %d\r\n", get_name(), i, ret);
-            LOG::LOG6("%#08x %s %#04x %d\r\n", preset_address, get_binary(ret), ret, ret);
-            eeprom.writeEEPROMWord(preset_address, ret);
-        }
+        global_presets[index] = input;
+        save_global();
         print_preset(main_preset);
+    }
+
+    void save_global() {
+        eeprom.erase(sizeof(SynthPreset)*GLOBAL_PRESET_COUNT);
+
+        for(int i = 0; i < GLOBAL_PRESET_COUNT; i++) {
+            LOG::LOG0("%s eeprom %d write\r\n", get_name(), i);
+
+            uint32_t *data = (uint32_t *)&global_presets[i];
+            uint32_t addr_start = FLASH_USER_START_ADDR + (sizeof(SynthPreset) * i);
+            for (size_t i = 0; i < sizeof(SynthPreset) / 4; i++) {
+                uint32_t ret = data[i];
+                uint32_t preset_address = (i * 4) + addr_start;
+                LOG::LOG5("%s eeprom write %d %d\r\n", get_name(), i, ret);
+                LOG::LOG6("%#08x %s %#04x %d\r\n", preset_address, get_binary(ret), ret, ret);
+                eeprom.writeEEPROMWord(preset_address, ret);
+            }
+        }
     }
 
     void print_preset(SynthPreset &input) {
@@ -142,6 +152,8 @@ public:
 private:
     EEPROM eeprom;
     SynthPreset main_preset = { };
+    SynthPreset global_presets[GLOBAL_PRESET_COUNT] = { };
+
 };
 
 #endif /* SRC_PRESET_H_ */
