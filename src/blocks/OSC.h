@@ -63,9 +63,9 @@ public:
 		};
 
 		button_config button_ctrl={
-			Button::button_init_map{mux, mux->get(3),3, leds, button_val_max_val, (OSC_FIRST_BUTTON_LED+2)},
-			Button::button_init_map{mux, mux->get(3),2, leds, button_val_max_val, (OSC_FIRST_BUTTON_LED+1)},
-			Button::button_init_map{mux, mux->get(1),15, leds,button_val_max_val, (OSC_FIRST_BUTTON_LED)}};
+			Button::button_init_map{3, 3, button_val_max_val, (OSC_FIRST_BUTTON_LED+2)},
+			Button::button_init_map{3, 2, button_val_max_val, (OSC_FIRST_BUTTON_LED+1)},
+			Button::button_init_map{1, 15, button_val_max_val, (OSC_FIRST_BUTTON_LED)}};
 
 		init_internal(knob_ctrl, button_ctrl);
 		select_instance(current_instance);

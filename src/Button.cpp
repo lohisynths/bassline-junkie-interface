@@ -9,14 +9,17 @@
 #include "Button.h"
 #include <string>
 
-void Button::init(button_init_map button_configuration) {
+void Button::init(button_init_map button_configuration, Pwm *_leds, Mux *_mux){
+    leds = _leds;
+    mux = _mux;
 	memcpy(&button_config, &button_configuration, sizeof(button_configuration));
 	print_config(button_config);
 }
 
 bool Button::update() {
 	bool ret = false;
-	bool sw = CHECKBIT(*button_config.mux_raw_data, button_config.mux_first_bit);
+	uint16_t data = *mux->get(button_config.mux_number);
+	bool sw = CHECKBIT(data, button_config.mux_first_bit);
 	if (last_state != sw) {
         LOG::LOG0("%s", name);
 	    LOG::LOG0((last_state) ? "pushed\r\n" : "released\r\n");
@@ -31,16 +34,13 @@ bool Button::get_state() {
 }
 
 void Button::set_led_val(uint16_t brightness) {
-	button_config.leds->set(button_config.first_pwm_output, brightness);
+	leds->set(button_config.first_pwm_output, brightness);
 }
 
 void Button::print_config(button_init_map config) {
 	std::string sep("\r\n");
 	std::string out(std::string(name) + " config: " + sep +
-	        "\t\tmux                 " + std::to_string((uint32_t)config.mux) + sep +
-	        "\t\tmux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
 	        "\t\tmux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
-	        "\t\tleds                " + std::to_string((uint32_t)config.leds) + sep +
 	        "\t\tmax_led_value       " + std::to_string(config.max_led_value) + sep +
 	        "\t\tfirst_pwm_output    " + std::to_string(config.first_pwm_output) + sep);
 	LOG::LOG1("%s", out.c_str());

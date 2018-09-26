@@ -72,15 +72,15 @@ public:
 		};
 
 		button_config button_ctrl={
-			Button::button_init_map{mux, mux->get(3), 0,  leds, button_max_led_val, (LFO_FIRST_BUTTON_LED + 20)},
-			Button::button_init_map{mux, mux->get(2), 15, leds, button_max_led_val, (LFO_FIRST_BUTTON_LED + 19)},
-			Button::button_init_map{mux, mux->get(2), 14, leds, button_max_led_val, (LFO_FIRST_BUTTON_LED + 18)},
+			Button::button_init_map{3, 0,  button_max_led_val, (LFO_FIRST_BUTTON_LED + 20)},
+			Button::button_init_map{2, 15, button_max_led_val, (LFO_FIRST_BUTTON_LED + 19)},
+			Button::button_init_map{2, 14, button_max_led_val, (LFO_FIRST_BUTTON_LED + 18)},
 
-			Button::button_init_map{mux, mux->get(2), 13, leds, button_max_led_val, (LFO_FIRST_BUTTON_LED + 4)},
-			Button::button_init_map{mux, mux->get(2), 12, leds, button_max_led_val, (LFO_FIRST_BUTTON_LED + 3)},
-			Button::button_init_map{mux, mux->get(2), 11, leds, button_max_led_val, (LFO_FIRST_BUTTON_LED + 2)},
-			Button::button_init_map{mux, mux->get(2), 10, leds, button_max_led_val, (LFO_FIRST_BUTTON_LED + 1)},
-			Button::button_init_map{mux, mux->get(2), 9,  leds, button_max_led_val, (LFO_FIRST_BUTTON_LED + 0)}
+			Button::button_init_map{2, 13, button_max_led_val, (LFO_FIRST_BUTTON_LED + 4)},
+			Button::button_init_map{2, 12, button_max_led_val, (LFO_FIRST_BUTTON_LED + 3)},
+			Button::button_init_map{2, 11, button_max_led_val, (LFO_FIRST_BUTTON_LED + 2)},
+			Button::button_init_map{2, 10, button_max_led_val, (LFO_FIRST_BUTTON_LED + 1)},
+			Button::button_init_map{2, 9,  button_max_led_val, (LFO_FIRST_BUTTON_LED + 0)}
 		};
 		init_internal(knob_ctrl, button_ctrl);
 		select_instance(current_instance);

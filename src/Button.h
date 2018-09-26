@@ -37,13 +37,10 @@ public:
 	 *  \brief Button Initialization structure
 	 */
 	struct button_init_map {
-		                                      /*!  \name Mux object related data */
-		Mux *mux;                             /*!< Pointer to global Mux object. */
-		uint16_t *mux_raw_data;               /*!< Pointer to Button specific Mux raw data. */
-		uint8_t mux_first_bit;                /*!< First bit in Button specific Mux raw data. */
-		                                      /*!  \name Pwm object related data. */
-		Pwm *leds;					          /*!< Pointer to global Pwm object.
-		                                       *   Initialized in init() function. */
+		/*!  \name Mux object related data */
+		uint16_t mux_number;                  /*!< Mux number in global Mux array. */
+		uint8_t mux_first_bit;                /*!< First bit in Button specific Mux. */
+		/*!  \name Pwm object related data. */
 		uint16_t max_led_value;		          /*!< Led maximum brightness \n\n
 									           *   PCA9685 12 bit pwm -> 4095 values. */
 		uint8_t first_pwm_output;             /*!< Address of led in Pwm leds array.
@@ -71,7 +68,7 @@ public:
 	 *   proper filled Knob::button_configuration structure.
 	 *	 \param[in]     button_configuration Initialization structure.
 	 */
-	void init(button_init_map button_configuration);
+	void init(button_init_map button_configuration, Pwm *_leds, Mux *_mux);
 
 	/*! \fn bool update()
 	 *  \brief Update current state of Button.
@@ -119,6 +116,10 @@ private:
 	 *  \brief Button configuration structure.
 	 */
 	button_init_map button_config = {};
+
+    Pwm *leds = nullptr;
+    Mux *mux = nullptr;
+    uint16_t *mux_raw_data = nullptr;
 
 	/*! \var uint8_t last_state
  	 *  \brief Last switch state.

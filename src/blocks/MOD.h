@@ -50,12 +50,12 @@ public:
         };
 
         button_config button_ctrl={
-            mux, mux->get(2), 8, leds, button_max_led_val, (MOD_FIRST_BUTTON_LED + 5),
-            mux, mux->get(2), 7, leds, button_max_led_val, (MOD_FIRST_BUTTON_LED + 4),
-            mux, mux->get(2), 6, leds, button_max_led_val, (MOD_FIRST_BUTTON_LED + 3),
-            mux, mux->get(2), 5, leds, button_max_led_val, (MOD_FIRST_BUTTON_LED + 2),
-            mux, mux->get(2), 4, leds, button_max_led_val, (MOD_FIRST_BUTTON_LED + 1),
-            mux, mux->get(2), 3, leds, button_max_led_val, (MOD_FIRST_BUTTON_LED + 0)
+            2, 8, button_max_led_val, (MOD_FIRST_BUTTON_LED + 5),
+            2, 7, button_max_led_val, (MOD_FIRST_BUTTON_LED + 4),
+            2, 6, button_max_led_val, (MOD_FIRST_BUTTON_LED + 3),
+            2, 5, button_max_led_val, (MOD_FIRST_BUTTON_LED + 2),
+            2, 4, button_max_led_val, (MOD_FIRST_BUTTON_LED + 1),
+            2, 3, button_max_led_val, (MOD_FIRST_BUTTON_LED + 0)
         };
         init_internal(knob_ctrl, button_ctrl);
         select_instance(current_instance);

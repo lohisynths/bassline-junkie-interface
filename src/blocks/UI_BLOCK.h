@@ -34,7 +34,7 @@ public:
 			knob[i].init(knob_settings[i]);
 		}
 		for (int i = 0; i < BUTTON_COUNT; i++) {
-			sw[i].init(button_config[i]);
+			sw[i].init(button_config[i], leds, mux);
 		}
 	}
 

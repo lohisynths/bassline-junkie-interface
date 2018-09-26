@@ -65,10 +65,10 @@ public:
 		};
 
 		button_config button_ctrl={
-			Button::button_init_map{mux, mux->get(0), 15, leds, button_val_max_val, (ADSR_FIRST_BUTTON_LED+3)},
-			Button::button_init_map{mux, mux->get(0), 14, leds, button_val_max_val, (ADSR_FIRST_BUTTON_LED+2)},
-			Button::button_init_map{mux, mux->get(0), 13, leds, button_val_max_val, (ADSR_FIRST_BUTTON_LED+1)},
-			Button::button_init_map{mux, mux->get(0), 12, leds, button_val_max_val, (ADSR_FIRST_BUTTON_LED+0)}
+			Button::button_init_map{0, 15, button_val_max_val, (ADSR_FIRST_BUTTON_LED+3)},
+			Button::button_init_map{0, 14, button_val_max_val, (ADSR_FIRST_BUTTON_LED+2)},
+			Button::button_init_map{0, 13, button_val_max_val, (ADSR_FIRST_BUTTON_LED+1)},
+			Button::button_init_map{0, 12, button_val_max_val, (ADSR_FIRST_BUTTON_LED+0)}
 		};
 
 		init_internal(knob_ctrl, button_ctrl);
