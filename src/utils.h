@@ -20,6 +20,7 @@
 #define DISPLAY_MAX_LED_VAL         (256)
 #define FLT_BIG_KNOB_LED_COUNT      (12)
 #define FLT_BIG_KNOB_MAX_VAL        (127)
+#define LED_DISPLAY_MAX_VAL         (2047)
 
 #define CHECKBIT(n, x)      ((n >> x) & 1)
 #define SETBIT(n, x)        (n |=  (1L << x))

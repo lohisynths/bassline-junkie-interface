@@ -51,7 +51,7 @@ public:
 		ADSR0, ADSR1, ADSR2, LOOP
 	};
 
-	void force_mode(uint8_t input) {
+	void force_function(uint8_t input) {
 		uint8_t button_adr = ADSR_COUNT;
 
 		set_current_preset_value(LOOP, input);
@@ -62,7 +62,7 @@ public:
 		}
 	}
 
-	void select_mode(uint8_t index) {
+	void select_function(uint8_t index) {
 		// index ignored as ADSR has only one extra function
 		// with no parameters.
 		// for now we care only about triggering loop state for
@@ -85,7 +85,7 @@ public:
 			turn_off_sw(button_adr);
 		}
 		set_current_preset_value(preset_adr, loop_state);
-        LOG::LOG0("ADSR %d LOOP %d\r\n", current_instance, loop_state);
+        LOG::LOG0("ADSR %d LOOP %d\r\n", get_current_instasnce(), loop_state);
 	}
 
     uint8_t get_midi_nr(uint8_t instance, uint8_t index){
@@ -93,7 +93,7 @@ public:
     }
 
     uint8_t get_current_instance_midi_nr(uint8_t index) {
-        return get_midi_nr(current_instance, index);
+        return get_midi_nr(get_current_instasnce(), index);
     }
 
 private:

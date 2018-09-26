@@ -61,31 +61,6 @@ public:
         return 1;
     }
 
-	void init() {
-		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
-		uint8_t knob_max_val = KNOB_MAX_VAL;
-		uint16_t knob_led_max_val = KNOB_MAX_LED_VAL;
-		uint16_t button_max_led_val = BUTTON_MAX_LED_VAL;
-
-		knob_config knob_ctrl={
-			Knob::knob_init_map{4, 0, knob_max_val, knob_led_max_val, (LFO_FIRST_ENC_LED +  0), knob_led_count},
-		};
-
-		button_config button_ctrl={
-			Button::button_init_map{3, 0,  button_max_led_val, (LFO_FIRST_BUTTON_LED + 20)},
-			Button::button_init_map{2, 15, button_max_led_val, (LFO_FIRST_BUTTON_LED + 19)},
-			Button::button_init_map{2, 14, button_max_led_val, (LFO_FIRST_BUTTON_LED + 18)},
-
-			Button::button_init_map{2, 13, button_max_led_val, (LFO_FIRST_BUTTON_LED + 4)},
-			Button::button_init_map{2, 12, button_max_led_val, (LFO_FIRST_BUTTON_LED + 3)},
-			Button::button_init_map{2, 11, button_max_led_val, (LFO_FIRST_BUTTON_LED + 2)},
-			Button::button_init_map{2, 10, button_max_led_val, (LFO_FIRST_BUTTON_LED + 1)},
-			Button::button_init_map{2, 9,  button_max_led_val, (LFO_FIRST_BUTTON_LED + 0)}
-		};
-		init_internal(knob_ctrl, button_ctrl);
-		select_instance(current_instance);
-	}
-
 	void select_lfo_shape(uint8_t index, bool force = 0) {
 		if(last_lfo_shape != index || force) {
 		    LOG::LOG0("%s mod %d selected\r\n", get_name(), index);
@@ -101,11 +76,11 @@ public:
 		}
 	}
 
-	void select_mode(uint8_t index) {
+	void select_function(uint8_t index) {
 		select_lfo_shape(index);
 	}
 
-	void force_mode(uint8_t index) {
+	void force_function(uint8_t index) {
 	    LOG::LOG0("%s mode %d forced\r\n", get_name(), index);
 		select_lfo_shape(index, true);
 	}
@@ -115,7 +90,7 @@ public:
     }
 
     uint8_t get_current_instance_midi_nr(uint8_t index) {
-        return get_midi_nr(current_instance, index);
+        return get_midi_nr(get_current_instasnce(), index);
     }
 
 private:

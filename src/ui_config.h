@@ -67,6 +67,27 @@ MOD::button_config mod_button_ctrl={
 };
 
 
+LFO::knob_config lfo_knob_ctrl={
+    Knob::knob_init_map{4, 0, KNOB_MAX_VAL, KNOB_MAX_LED_VAL, (LFO_FIRST_ENC_LED +  0), COMMON_KNOB_LED_COUNT},
+};
+
+LFO::button_config lfo_button_ctrl={
+    Button::button_init_map{3, 0,  BUTTON_MAX_LED_VAL, (LFO_FIRST_BUTTON_LED + 20)},
+    Button::button_init_map{2, 15, BUTTON_MAX_LED_VAL, (LFO_FIRST_BUTTON_LED + 19)},
+    Button::button_init_map{2, 14, BUTTON_MAX_LED_VAL, (LFO_FIRST_BUTTON_LED + 18)},
+
+    Button::button_init_map{2, 13, BUTTON_MAX_LED_VAL, (LFO_FIRST_BUTTON_LED + 4)},
+    Button::button_init_map{2, 12, BUTTON_MAX_LED_VAL, (LFO_FIRST_BUTTON_LED + 3)},
+    Button::button_init_map{2, 11, BUTTON_MAX_LED_VAL, (LFO_FIRST_BUTTON_LED + 2)},
+    Button::button_init_map{2, 10, BUTTON_MAX_LED_VAL, (LFO_FIRST_BUTTON_LED + 1)},
+    Button::button_init_map{2, 9,  BUTTON_MAX_LED_VAL, (LFO_FIRST_BUTTON_LED + 0)}
+};
+
+LED_DISP::knob_config disp_knob_ctrl = {
+    Knob::knob_init_map{4, 6, KNOB_MAX_LED_VAL, LED_DISPLAY_MAX_VAL, 0, 0 }
+};
+
+LED_DISP::button_config disp_button_ctrl;
 
 
 #endif /* SRC_UI_CONFIG_H_ */

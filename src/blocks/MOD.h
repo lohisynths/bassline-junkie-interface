@@ -45,17 +45,19 @@ public:
 	    return "MOD";
 	}
 
-    virtual int16_t get_current_preset_value(const uint8_t index) {
-        return preset_values[current_instance][actual_mod_dest];
+	virtual int16_t get_current_preset_value(const uint8_t index) {
+	    // ignoring index - use actual mod dest instead
+        return get_preset_value(get_current_instasnce(), actual_mod_dest);
     }
 
     virtual void set_current_preset_value(const uint8_t index, const uint16_t value) {
-        preset_values[current_instance][actual_mod_dest] = value;
+        set_preset_value(get_current_instasnce(), actual_mod_dest, value);
     }
 
     virtual void select_MOD_dest(const int index) {
         LOG::LOG0("%s dst %d selected\r\n", get_name(), index);
         actual_mod_dest = index;
+        reset();
     }
 
 	virtual uint8_t get_midi_ch(){
@@ -68,11 +70,11 @@ public:
 
 	virtual uint8_t get_current_instance_midi_nr(const uint8_t index) {
         LOG::LOG0("%s midi index %d\r\n", get_name(), index);
-        return get_midi_nr(current_instance, actual_mod_dest);
+        return get_midi_nr(get_current_instasnce(), actual_mod_dest);
     }
 
-    virtual void select_mode(const uint8_t index) { }
-    virtual void force_mode(const uint8_t index) { }
+    virtual void select_function(const uint8_t index) { }
+    virtual void force_function(const uint8_t index) { }
 
 private:
 	uint8_t actual_mod_dest = 0;

@@ -48,12 +48,12 @@ public:
         return 1;
     }
 
-	void select_mode(uint8_t index) {
-	    LOG::LOG0("%s %d special_function %d\r\n", get_name(), current_instance, index);
+	void select_function(uint8_t index) {
+	    LOG::LOG0("%s %d special_function %d\r\n", get_name(), get_current_instasnce(), index);
 	}
 
-	void force_mode(uint8_t index) {
-	    LOG::LOG0("%s %d forced %d\r\n", get_name(), current_instance, index);
+	void force_function(uint8_t index) {
+	    LOG::LOG0("%s %d forced %d\r\n", get_name(), get_current_instasnce(), index);
 	}
 
    uint8_t get_midi_nr(uint8_t instance, uint8_t index){
@@ -61,10 +61,10 @@ public:
     }
 
    uint8_t get_current_instance_midi_nr(uint8_t index) {
-       return get_midi_nr(current_instance, index);
+       return get_midi_nr(get_current_instasnce(), index);
    }
 
-	uint8_t get_current_osc() { return current_instance; };
+	uint8_t get_current_osc() { return get_current_instasnce(); };
 
 private:
 

@@ -45,11 +45,11 @@ public:
         return 1;
     }
 
-	void select_mode(uint8_t index) {
+	void select_function(uint8_t index) {
 			select_filter_type(index);
 	}
 
-	void force_mode(uint8_t index) {
+	void force_function(uint8_t index) {
 			select_filter_type(index, true);
 	}
 
@@ -68,7 +68,7 @@ public:
     }
 
     uint8_t get_current_instance_midi_nr(uint8_t index) {
-        return get_midi_nr(current_instance, index);
+        return get_midi_nr(get_current_instasnce(), index);
     }
 
 private:

@@ -75,8 +75,8 @@ int main() {
 	osc.init(osc_knob_ctrl, osc_button_ctrl);
     filter.init(flt_knob_ctrl, flt_button_ctrl);
 	mod.init(mod_knob_ctrl, mod_button_ctrl);
-	lfo.init();
-	display.init();
+	lfo.init(lfo_knob_ctrl, lfo_button_ctrl);
+	display.init(disp_knob_ctrl, disp_button_ctrl);
 
 	preset.load_global(0);
 
@@ -99,7 +99,6 @@ int main() {
 		int ret = osc.update();
 		if (ret > -1) {
 			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
-            mod.update_instance();
 		}
 
 		adsr.update();
@@ -107,7 +106,6 @@ int main() {
 		ret = filter.update();
 		if (ret > -1) {
 			mod.select_MOD_dest(ret+15);
-			mod.update_instance();
 		}
 
         ret = display.update();

@@ -52,7 +52,7 @@ public:
 		return 0;
 	}
 
-    virtual void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
+    virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
         LOG::LOG0("%s value changed %d\r\n", get_name(), value_scaled);
         actual_preset_value = value_scaled;
 
@@ -83,46 +83,25 @@ public:
         LOG::LOG0("%s set digit %d %d\r\n", get_name(), seg_nr, digit);
 
 		for(int i=0;i<7;i++) {
-			leds->set(PRESET_FIRST_ENC_LED+i+(seg_nr*SEGMENTS), digits[digit][i]*DISPLAY_MAX_LED_VAL);
+		    get_leds()->set(PRESET_FIRST_ENC_LED+i+(seg_nr*SEGMENTS), digits[digit][i]*DISPLAY_MAX_LED_VAL);
 		}
-
-//		m_leds->set(PRESET_FIRST_ENC_LED+digit, 1024);
-//		m_leds->set(last_led, 0);
-//
-//		last_led = PRESET_FIRST_ENC_LED+digit;
 	}
 
 	void set_all(uint16_t val) {
         LOG::LOG0("%s set all %d\r\n", get_name(), val);
 		for(int i=0;i<SEGMENTS*3;i++) {
-			leds->set(PRESET_FIRST_ENC_LED+i, val);
+		    get_leds()->set(PRESET_FIRST_ENC_LED+i, val);
 		}
 	}
 
-    void init() {
-        LOG::LOG0("%s init\r\n", get_name());
-        uint8_t knob_led_max_val = KNOB_MAX_LED_VAL;
-        uint16_t knob_max_val = 1024;
-
-        knob_config knob_ctrl={
-            Knob::knob_init_map{4, 6, knob_max_val, knob_led_max_val, 0, 0}
-        };
-
-        button_config button_ctrl;
-
-        init_internal(knob_ctrl, button_ctrl);
-        select_instance(current_instance);
-        LOG::LOG0("%s initialized %d\r\n", get_name(), current_instance);
-    }
-
 	int last_led = PRESET_FIRST_ENC_LED;
 
-    void select_mode(uint8_t index) {
-        LOG::LOG0("%s %d special_function %d\r\n", get_name(), current_instance, index);
+    void select_function(uint8_t index) {
+        LOG::LOG0("%s %d special_function %d\r\n", get_name(), get_current_instasnce(), index);
     }
 
-    void force_mode(uint8_t index) {
-        LOG::LOG0("%s %d forced %d\r\n", get_name(), current_instance, index);
+    void force_function(uint8_t index) {
+        LOG::LOG0("%s %d forced %d\r\n", get_name(), get_current_instasnce(), index);
     }
 
     uint8_t get_actual_preset_nr() {
