@@ -27,10 +27,14 @@ public:
      */
     typedef logger<UI_BLOCK_LOG_LEVEL> LOG;
 
-	explicit UI_BLOCK(MIDI *_midi, Pwm *_leds, Mux *_mux) : midi(_midi), leds(_leds), mux(_mux) {};
+	UI_BLOCK(){};
 	virtual ~UI_BLOCK(){};
 
-    void init(knob_config knob_ctrl, button_config button_ctrl) {
+    void init(knob_config knob_ctrl, button_config button_ctrl,
+            MIDI *_midi, Pwm *_leds, Mux *_mux) {
+        midi = _midi;
+        leds = _leds;
+        mux = _mux;
         init_internal(knob_ctrl, button_ctrl);
         select_instance(current_instance);
     }

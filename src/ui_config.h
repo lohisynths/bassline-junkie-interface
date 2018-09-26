@@ -84,7 +84,7 @@ LFO::button_config lfo_button_ctrl={
 };
 
 LED_DISP::knob_config disp_knob_ctrl = {
-    Knob::knob_init_map{4, 6, KNOB_MAX_LED_VAL, LED_DISPLAY_MAX_VAL, 0, 0 }
+    Knob::knob_init_map{4, 6, DISPLAY_KNOB_MAX_VAL, DISPLAY_MAX_VAL, 0, 0 }
 };
 
 LED_DISP::button_config disp_button_ctrl;

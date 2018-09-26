@@ -58,27 +58,28 @@ int main() {
 	Mux mux;
 	Preset preset;
 
-	ADSR adsr(&midi, &leds, &mux);
-	OSC osc(&midi, &leds, &mux);
-    LFO lfo(&midi, &leds, &mux);
-	MOD mod(&midi, &leds, &mux);
-	FLT filter(&midi, &leds, &mux);
-	LED_DISP display(&midi, &leds, &mux);
+	ADSR adsr;
+	OSC osc;
+    LFO lfo;
+	MOD mod;
+	FLT filter;
+	LED_DISP display;
 
     baud(115200);
 	midi_usb.attach(do_message);
 	midi_glob = &midi;
 	leds.init();
 	mux.init();
+    preset.load_global(0);
 
-	adsr.init(adsr_knob_config, adsr_button_config);
-	osc.init(osc_knob_ctrl, osc_button_ctrl);
-    filter.init(flt_knob_ctrl, flt_button_ctrl);
-	mod.init(mod_knob_ctrl, mod_button_ctrl);
-	lfo.init(lfo_knob_ctrl, lfo_button_ctrl);
-	display.init(disp_knob_ctrl, disp_button_ctrl);
 
-	preset.load_global(0);
+	adsr.init(adsr_knob_config, adsr_button_config, &midi, &leds, &mux);
+	osc.init(osc_knob_ctrl, osc_button_ctrl, &midi, &leds, &mux);
+    filter.init(flt_knob_ctrl, flt_button_ctrl, &midi, &leds, &mux);
+	mod.init(mod_knob_ctrl, mod_button_ctrl, &midi, &leds, &mux);
+	lfo.init(lfo_knob_ctrl, lfo_button_ctrl, &midi, &leds, &mux);
+	display.init(disp_knob_ctrl, disp_button_ctrl, &midi, &leds, &mux);
+
 
 	osc.set_preset(preset.get_osc_preset());
 	adsr.set_preset(preset.get_adrsr_preset());
