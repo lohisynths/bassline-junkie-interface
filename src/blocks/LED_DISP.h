@@ -109,7 +109,7 @@ public:
         uint16_t knob_max_val = 1024;
 
         knob_config knob_ctrl={
-            Knob::knob_init_map{mux, mux->get(4), 6, knob_max_val, leds, knob_led_max_val, 0, 0}
+            Knob::knob_init_map{4, 6, knob_max_val, knob_led_max_val, 0, 0}
         };
 
         button_config button_ctrl;

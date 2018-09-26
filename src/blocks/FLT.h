@@ -54,8 +54,8 @@ public:
 		uint16_t button_max_led_val = BUTTON_MAX_LED_VAL;
 
 		knob_config knob_ctrl={
-			Knob::knob_init_map{mux, mux->get(3), 4, big_knob_max_val, leds, knob_led_max_val, (FLT_FIRST_ENC_LED + 0), big_knob_led_count},
-			Knob::knob_init_map{mux, mux->get(3), 7, knob_max_val , leds, knob_led_max_val, (FLT_FIRST_ENC_LED + 16), knob_led_count}
+			Knob::knob_init_map{3, 4, big_knob_max_val, knob_led_max_val, (FLT_FIRST_ENC_LED + 0), big_knob_led_count},
+			Knob::knob_init_map{3, 7, knob_max_val , knob_led_max_val, (FLT_FIRST_ENC_LED + 16), knob_led_count}
 		};
 
 		button_config button_ctrl={

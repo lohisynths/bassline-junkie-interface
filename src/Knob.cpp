@@ -10,13 +10,15 @@
 #include "utils.h"
 #include <string>
 
-void Knob::init(knob_init_map config) {
+void Knob::init(knob_init_map config, Pwm *_leds, Mux *_mux) {
+    leds = _leds;
+    mux = _mux;
 	memcpy(&knob_config, &config, sizeof(knob_init_map));
 
 	// knob_config.mux_first_bit corresponds to rotary encoder rotary switch
 	// so first_bit is knob_config.mux_first_bit+1
 	uint8_t first_bit = knob_config.mux_first_bit+1;
-	encoder.init(*knob_config.mux_raw_data, first_bit);
+	encoder.init(*mux->get(knob_config.mux_number), first_bit);
 	// TODO: propper reseting
 	encoder.set(0);
 	encoder.update();
@@ -31,7 +33,8 @@ void Knob::init(knob_init_map config) {
 
 Knob::knob_msg Knob::update() {
 	knob_msg ret={};
-	bool sw_state = CHECKBIT(*knob_config.mux_raw_data, knob_config.mux_first_bit);
+    uint16_t data = *mux->get(knob_config.mux_number);
+	bool sw_state = CHECKBIT(data, knob_config.mux_first_bit);
 
 	if (last_sw_state != sw_state) {
         LOG::LOG0("%s switch state changed changed, ", name);
@@ -84,8 +87,8 @@ void Knob::led_on_last_off(uint8_t led_on_nr, uint8_t led_off_nr, int16_t bright
     uint8_t led_nr_tmp = calculate_led_position(led_on_nr);
     uint8_t last_led_nr_tmp = calculate_led_position(led_off_nr);
     if(knob_config.total_led_count > 0 ) {
-	knob_config.leds->set(last_led_nr_tmp, 0);
-	knob_config.leds->set(led_nr_tmp, bright);
+	leds->set(last_led_nr_tmp, 0);
+	leds->set(led_nr_tmp, bright);
     } else {
       LOG::LOG2("%s error led on %d led off %d\r\n", name, last_led_nr_tmp, led_nr_tmp);
     }
@@ -104,11 +107,8 @@ void Knob::led_indicator_set_value(uint16_t value, bool force) {
 void Knob::print_config(knob_init_map config) {
 	std::string sep("\r\n");
 	std::string out(std::string(name) + " config: " + sep +
-	        "\t\tmux                 " + std::to_string((uint32_t)config.mux) + sep +
-	        "\t\tmux_raw_data        " + std::to_string((uint32_t)config.mux_raw_data) + sep +
 	        "\t\tmux_first_bit       " + std::to_string(config.mux_first_bit) + sep +
 	        "\t\tencoder_max_value   " + std::to_string(config.encoder_max_value) + sep +
-	        "\t\tleds                " + std::to_string((uint32_t)config.leds) + sep +
 	        "\t\tmax_led_value       " + std::to_string(config.max_led_value) + sep +
 	        "\t\tfirst_pwm_output    " + std::to_string(config.first_pwm_output) + sep +
 	        "\t\ttotal_led_count     " + std::to_string(config.total_led_count) + sep);

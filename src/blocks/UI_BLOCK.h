@@ -31,7 +31,7 @@ public:
 
 	void init_internal(knob_config &knob_settings, button_config &button_config) {
 		for (int i = 0; i < KNOB_COUNT; i++) {
-			knob[i].init(knob_settings[i]);
+			knob[i].init(knob_settings[i], leds, mux);
 		}
 		for (int i = 0; i < BUTTON_COUNT; i++) {
 			sw[i].init(button_config[i], leds, mux);

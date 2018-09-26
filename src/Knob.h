@@ -37,15 +37,12 @@ public:
 	 *  \brief Knob Initialization structure
 	 */
 	struct knob_init_map {
-								              /*!  \name Mux object related data */
-		Mux *mux;                             /*!< Pointer to global Mux object. */
-		uint16_t *mux_raw_data;               /*!< Pointer to Knob specific Mux raw data. */
+		/*!  \name Mux object related data */
+        uint16_t mux_number;                  /*!< Mux number in global Mux array. */
 		uint8_t mux_first_bit;                /*!< First bit in Knob specific Mux raw data. */
 		uint16_t encoder_max_value;           /*!< Maximum encoder value.
 		 	 	 	 	 	 	 	 	 	   *   Internal value of encoder TODO:  */
-		                                      /*!  \name Pwm object related data. */
-		Pwm *leds;                 		      /*!< Pointer to global Pwm object.
-                                               *   Initialized in init() function. */
+		/*!  \name Pwm object related data. */
 		uint16_t max_led_value;      		  /*!< Led maximum brightness \n\n
                                                *   PCA9685 12 bit pwm -> 4095 values. */
 		uint8_t first_pwm_output;             /*!< Address of led in Pwm leds array.
@@ -88,7 +85,7 @@ public:
 	 *   proper filled Knob::button_configuration structure.
 	 *	 \param[in] config Initialization structure.
 	 */
-	void init(knob_init_map config);
+	void init(knob_init_map config, Pwm *_leds, Mux *_mux);
 
 	/*! \fn knob_msg update()
 	 *  \brief Update current state of Knob.
@@ -108,6 +105,10 @@ public:
 	bool get_switch_state();
 
 private:
+
+	Pwm *leds = nullptr;
+    Mux *mux = nullptr;
+
 	/*! \var knob_init_map knob_config
 	 *  \brief Knob configuration structure.
 	 */
