@@ -86,6 +86,8 @@ public:
 		}
 		set_current_preset_value(preset_adr, loop_state);
         LOG::LOG0("ADSR %d LOOP %d\r\n", get_current_instasnce(), loop_state);
+        uint8_t midi_nr = get_current_instance_midi_nr(ADSR_LOOP);
+        get_midi()->send_cc(midi_nr, loop_state, get_midi_ch());
 	}
 
     uint8_t get_midi_nr(uint8_t instance, uint8_t index){
