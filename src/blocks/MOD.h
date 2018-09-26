@@ -39,24 +39,7 @@ public:
 
     using UI_BLOCK::UI_BLOCK;
 
-    void init() {
-        uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
-        uint8_t knob_max_val = KNOB_MAX_VAL;
-        uint16_t knob_led_max_val = KNOB_MAX_LED_VAL;
-        uint16_t button_max_led_val = BUTTON_MAX_LED_VAL;
-
-        knob_config knob_ctrl={
-            2, 0, knob_max_val,  knob_led_max_val, (MOD_FIRST_ENC_LED +  0), knob_led_count
-        };
-
-        button_config button_ctrl={
-            2, 8, button_max_led_val, (MOD_FIRST_BUTTON_LED + 5),
-            2, 7, button_max_led_val, (MOD_FIRST_BUTTON_LED + 4),
-            2, 6, button_max_led_val, (MOD_FIRST_BUTTON_LED + 3),
-            2, 5, button_max_led_val, (MOD_FIRST_BUTTON_LED + 2),
-            2, 4, button_max_led_val, (MOD_FIRST_BUTTON_LED + 1),
-            2, 3, button_max_led_val, (MOD_FIRST_BUTTON_LED + 0)
-        };
+    void init(knob_config knob_ctrl, button_config button_ctrl) {
         init_internal(knob_ctrl, button_ctrl);
         select_instance(current_instance);
     }

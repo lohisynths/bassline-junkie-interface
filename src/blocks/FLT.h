@@ -45,24 +45,7 @@ public:
         return 1;
     }
 
-	void init() {
-		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
-		uint8_t big_knob_led_count = knob_led_count + 2;
-		uint8_t knob_max_val = KNOB_MAX_VAL;
-		uint8_t big_knob_max_val = 127;
-		uint16_t knob_led_max_val = KNOB_MAX_LED_VAL;
-		uint16_t button_max_led_val = BUTTON_MAX_LED_VAL;
-
-		knob_config knob_ctrl={
-			Knob::knob_init_map{3, 4, big_knob_max_val, knob_led_max_val, (FLT_FIRST_ENC_LED + 0), big_knob_led_count},
-			Knob::knob_init_map{3, 7, knob_max_val , knob_led_max_val, (FLT_FIRST_ENC_LED + 16), knob_led_count}
-		};
-
-		button_config button_ctrl={
-			Button::button_init_map{3, 15, button_max_led_val, (FLT_FIRST_BUTTON_LED+2)},
-			Button::button_init_map{3, 14, button_max_led_val, (FLT_FIRST_BUTTON_LED+1)},
-			Button::button_init_map{3, 13, button_max_led_val, (FLT_FIRST_BUTTON_LED+0)}
-		};
+	void init(knob_config knob_ctrl, button_config button_ctrl) {
 		init_internal(knob_ctrl, button_ctrl);
 		select_instance(current_instance);
 	}

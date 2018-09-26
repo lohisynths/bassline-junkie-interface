@@ -14,6 +14,7 @@
 #include "blocks/FLT.h"
 #include "blocks/LED_DISP.h"
 
+#include "ui_config.h"
 
 MIDI *midi_glob;
 
@@ -59,8 +60,8 @@ int main() {
 
 	ADSR adsr(&midi, &leds, &mux);
 	OSC osc(&midi, &leds, &mux);
+    LFO lfo(&midi, &leds, &mux);
 	MOD mod(&midi, &leds, &mux);
-	LFO lfo(&midi, &leds, &mux);
 	FLT filter(&midi, &leds, &mux);
 	LED_DISP display(&midi, &leds, &mux);
 
@@ -70,11 +71,11 @@ int main() {
 	leds.init();
 	mux.init();
 
-	adsr.init();
-	osc.init();
-	mod.init();
+	adsr.init(adsr_knob_config, adsr_button_config);
+	osc.init(osc_knob_ctrl, osc_button_ctrl);
+    filter.init(flt_knob_ctrl, flt_button_ctrl);
+	mod.init(mod_knob_ctrl, mod_button_ctrl);
 	lfo.init();
-	filter.init();
 	display.init();
 
 	preset.load_global(0);
