@@ -24,10 +24,10 @@
 
 class LED_DISP : public UI_BLOCK<PRESET_KNOB_COUNT, PRESET_BUTTON_COUNT, PRESET_PARAM_COUNT, PRESET_COUNT> {
 public:
-	LED_DISP(){};
-	virtual ~LED_DISP(){};
 
-	bool if_knob_sw_pushed(){
+    using UI_BLOCK::UI_BLOCK;
+
+    bool if_knob_sw_pushed(){
 	    auto &knobs = get_knobs();
 	    return !knobs[0].get_switch_state();
 	}
@@ -87,7 +87,7 @@ public:
         LOG::LOG0("%s set digit %d %d\r\n", get_name(), seg_nr, digit);
 
 		for(int i=0;i<7;i++) {
-			m_leds->set(PRESET_FIRST_ENC_LED+i+(seg_nr*SEGMENTS), digits[digit][i]*DISPLAY_MAX_LED_VAL);
+			leds->set(PRESET_FIRST_ENC_LED+i+(seg_nr*SEGMENTS), digits[digit][i]*DISPLAY_MAX_LED_VAL);
 		}
 
 //		m_leds->set(PRESET_FIRST_ENC_LED+digit, 1024);
@@ -99,16 +99,14 @@ public:
 	void set_all(uint16_t val) {
         LOG::LOG0("%s set all %d\r\n", get_name(), val);
 		for(int i=0;i<SEGMENTS*3;i++) {
-			m_leds->set(PRESET_FIRST_ENC_LED+i, val);
+			leds->set(PRESET_FIRST_ENC_LED+i, val);
 		}
 	}
 
-    void init(Mux *mux, Pwm *leds, MIDI *midi_) {
+    void init() {
         LOG::LOG0("%s init\r\n", get_name());
         uint8_t knob_led_max_val = KNOB_MAX_LED_VAL;
         uint16_t knob_max_val = 1024;
-        midi = midi_;
-        m_leds = leds;
 
         knob_config knob_ctrl={
             Knob::knob_init_map{mux, mux->get(4), 6, knob_max_val, leds, knob_led_max_val, 0, 0}
@@ -121,7 +119,6 @@ public:
         LOG::LOG0("%s initialized %d\r\n", get_name(), current_instance);
     }
 
-	Pwm *m_leds = nullptr;
 	int last_led = PRESET_FIRST_ENC_LED;
 
     void select_mode(uint8_t index) {

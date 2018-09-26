@@ -35,7 +35,7 @@ public:
      */
     typedef logger<FLT_LOG_LEVEL> LOG;
 
-	~FLT(){};
+    using UI_BLOCK::UI_BLOCK;
 
 	virtual const char* get_name() {
 	    return "FLT";
@@ -45,8 +45,7 @@ public:
         return 1;
     }
 
-	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
-		midi = midi_;
+	void init() {
 		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
 		uint8_t big_knob_led_count = knob_led_count + 2;
 		uint8_t knob_max_val = KNOB_MAX_VAL;

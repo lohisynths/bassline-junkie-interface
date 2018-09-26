@@ -51,7 +51,7 @@ public:
      */
     typedef logger<LFO_LOG_LEVEL> LOG;
 
-	~LFO(){};
+    using UI_BLOCK::UI_BLOCK;
 
 	virtual const char* get_name() {
 	    return "LFO";
@@ -61,8 +61,7 @@ public:
         return 1;
     }
 
-	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
-		midi = midi_;
+	void init() {
 		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
 		uint8_t knob_max_val = KNOB_MAX_VAL;
 		uint16_t knob_led_max_val = KNOB_MAX_LED_VAL;

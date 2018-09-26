@@ -51,34 +51,33 @@ void baud(int baudrate) {
 }
 
 int main() {
-    baud(115200);
-
 	USBMIDI midi_usb;
 	MIDI midi;
-	midi_glob = &midi;
-
 	Pwm leds;
 	Mux mux;
-	ADSR adsr;
-	OSC osc;
-	MOD mod;
-	LFO lfo;
-	FLT filter;
 	Preset preset;
-	LED_DISP display;
 
+	ADSR adsr(&midi, &leds, &mux);
+	OSC osc(&midi, &leds, &mux);
+	MOD mod(&midi, &leds, &mux);
+	LFO lfo(&midi, &leds, &mux);
+	FLT filter(&midi, &leds, &mux);
+	LED_DISP display(&midi, &leds, &mux);
+
+    baud(115200);
+	midi_usb.attach(do_message);
+	midi_glob = &midi;
 	leds.init();
 	mux.init();
 
-	preset.load_global(0);
+	adsr.init();
+	osc.init();
+	mod.init();
+	lfo.init();
+	filter.init();
+	display.init();
 
-	adsr.init(&mux, &leds, &midi);
-	osc.init(&mux, &leds, &midi);
-	mod.init(&mux, &leds, &midi);
-	lfo.init(&mux, &leds, &midi);
-	filter.init(&mux, &leds, &midi);
-	midi_usb.attach(do_message);
-	display.init(&mux, &leds, &midi);
+	preset.load_global(0);
 
 	osc.set_preset(preset.get_osc_preset());
 	adsr.set_preset(preset.get_adrsr_preset());

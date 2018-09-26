@@ -38,6 +38,8 @@ public:
      */
     typedef logger<OSC_LOG_LEVEL> LOG;
 
+    using UI_BLOCK::UI_BLOCK;
+
 	virtual const char* get_name() {
 	    return "OSC";
 	}
@@ -46,12 +48,7 @@ public:
         return 1;
     }
 
-    OSC(){};
-    ~OSC(){};
-
-	void init(Mux *mux, Pwm *leds, MIDI *midi_) {
-		midi = midi_;
-
+	void init() {
 		uint8_t knob_led_count = COMMON_KNOB_LED_COUNT;
 		uint8_t knob_led_max_val = KNOB_MAX_LED_VAL;
 		uint16_t knob_max_val = KNOB_MAX_VAL;

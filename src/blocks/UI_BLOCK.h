@@ -26,7 +26,7 @@ public:
      */
     typedef logger<UI_BLOCK_LOG_LEVEL> LOG;
 
-	UI_BLOCK() : midi(nullptr) {};
+	explicit UI_BLOCK(MIDI *_midi, Pwm *_leds, Mux *_mux) : midi(_midi), leds(_leds), mux(_mux) {};
 	virtual ~UI_BLOCK(){};
 
 	void init_internal(knob_config &knob_settings, button_config &button_config) {
@@ -188,6 +188,8 @@ public:
     virtual uint8_t get_midi_ch() = 0;
 
 	MIDI *midi;
+	Pwm *leds;
+	Mux *mux;
 	std::array<Button, BUTTON_COUNT> sw;
 	preset preset_values = {};
 
