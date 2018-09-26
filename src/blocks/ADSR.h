@@ -51,11 +51,6 @@ public:
 		ADSR0, ADSR1, ADSR2, LOOP
 	};
 
-	void init(knob_config knob_ctrl, button_config button_ctrl) {
-		init_internal(knob_ctrl, button_ctrl);
-		select_instance(current_instance);
-	}
-
 	void force_mode(uint8_t input) {
 		uint8_t button_adr = ADSR_COUNT;
 
@@ -91,10 +86,6 @@ public:
 		}
 		set_current_preset_value(preset_adr, loop_state);
         LOG::LOG0("ADSR %d LOOP %d\r\n", current_instance, loop_state);
-	}
-
-	virtual void knob_sw_changed(uint8_t index, bool state) {
-
 	}
 
     uint8_t get_midi_nr(uint8_t instance, uint8_t index){

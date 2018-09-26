@@ -52,10 +52,6 @@ public:
 		return 0;
 	}
 
-	virtual void knob_sw_changed(uint8_t index, bool state) {
-
-	}
-
     virtual void knob_val_changed(uint8_t index, uint16_t value_scaled, bool force_led_update = false) {
         LOG::LOG0("%s value changed %d\r\n", get_name(), value_scaled);
         actual_preset_value = value_scaled;

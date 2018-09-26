@@ -45,11 +45,6 @@ public:
         return 1;
     }
 
-	void init(knob_config knob_ctrl, button_config button_ctrl) {
-		init_internal(knob_ctrl, button_ctrl);
-		select_instance(current_instance);
-	}
-
 	void select_mode(uint8_t index) {
 			select_filter_type(index);
 	}
@@ -66,10 +61,6 @@ public:
 			set_current_preset_value(FLT_SHAPE, index);
 			last_filter_type = index;
 		}
-	}
-
-	void knob_sw_changed(uint8_t index, bool state) {
-
 	}
 
     uint8_t get_midi_nr(uint8_t instance, uint8_t index) {

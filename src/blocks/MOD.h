@@ -39,11 +39,6 @@ public:
 
     using UI_BLOCK::UI_BLOCK;
 
-    void init(knob_config knob_ctrl, button_config button_ctrl) {
-        init_internal(knob_ctrl, button_ctrl);
-        select_instance(current_instance);
-    }
-
     virtual ~MOD(){};
 
 	virtual const char* get_name() {
@@ -78,7 +73,6 @@ public:
 
     virtual void select_mode(const uint8_t index) { }
     virtual void force_mode(const uint8_t index) { }
-    virtual void knob_sw_changed(const uint8_t index, bool state) { }
 
 private:
 	uint8_t actual_mod_dest = 0;

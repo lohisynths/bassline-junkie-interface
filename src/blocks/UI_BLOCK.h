@@ -29,6 +29,11 @@ public:
 	explicit UI_BLOCK(MIDI *_midi, Pwm *_leds, Mux *_mux) : midi(_midi), leds(_leds), mux(_mux) {};
 	virtual ~UI_BLOCK(){};
 
+    void init(knob_config knob_ctrl, button_config button_ctrl) {
+        init_internal(knob_ctrl, button_ctrl);
+        select_instance(current_instance);
+    }
+
 	void init_internal(knob_config &knob_settings, button_config &button_config) {
 		for (int i = 0; i < KNOB_COUNT; i++) {
 			knob[i].init(knob_settings[i], leds, mux);
@@ -174,7 +179,8 @@ public:
 		sw[index].set_led_val(BUTTON_MAX_LED_VAL);
 	}
 
-	virtual void knob_sw_changed(uint8_t index, bool state) = 0;
+	virtual void knob_sw_changed(uint8_t index, bool state) {};
+
 	virtual void select_mode(uint8_t index) = 0;
 	virtual void force_mode(uint8_t index) = 0;
 

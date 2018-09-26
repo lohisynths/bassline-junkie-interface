@@ -110,8 +110,6 @@ public:
 		select_lfo_shape(index, true);
 	}
 
-	virtual void knob_sw_changed(uint8_t index, bool state) {}
-
     uint8_t get_midi_nr(uint8_t instance, uint8_t index){
         return LFO_MIDI_OFFSET+index + (instance*2);
     }

@@ -48,21 +48,12 @@ public:
         return 1;
     }
 
-	void init(knob_config knob_ctrl, button_config button_ctrl) {
-		init_internal(knob_ctrl, button_ctrl);
-		select_instance(current_instance);
-	}
-
 	void select_mode(uint8_t index) {
 	    LOG::LOG0("%s %d special_function %d\r\n", get_name(), current_instance, index);
 	}
 
 	void force_mode(uint8_t index) {
 	    LOG::LOG0("%s %d forced %d\r\n", get_name(), current_instance, index);
-	}
-
-	virtual void knob_sw_changed(uint8_t index, bool state) {
-
 	}
 
    uint8_t get_midi_nr(uint8_t instance, uint8_t index){
