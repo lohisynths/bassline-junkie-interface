@@ -79,6 +79,10 @@ public:
         return leds;
     }
 
+    MIDI* get_midi(){
+        return midi;
+    }
+
     void set_preset(preset input) {
         memcpy(&preset_values, &input, sizeof(input));
         select_instance(current_instance);

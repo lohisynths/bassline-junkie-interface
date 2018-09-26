@@ -73,6 +73,8 @@ public:
 
 			set_current_preset_value(LFO_SHAPE, index);
 			last_lfo_shape = index;
+			uint8_t midi_nr = get_current_instance_midi_nr(LFO_SHAPE);
+	        get_midi()->send_cc(midi_nr, index, get_midi_ch());
 		}
 	}
 

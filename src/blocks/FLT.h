@@ -23,7 +23,7 @@
 enum FLT_PARAMS {
 	FLT_FREQ,
 	FLT_RES,
-	FLT_SHAPE,
+	FLT_TYPE,
 	FLT_PARAM_COUNT
 };
 
@@ -58,8 +58,10 @@ public:
 		    LOG::LOG0("%s type %d selected\r\n", get_name(), index);
 			turn_off_sw(last_filter_type);
 			turn_on_sw(index);
-			set_current_preset_value(FLT_SHAPE, index);
+			set_current_preset_value(FLT_TYPE, index);
 			last_filter_type = index;
+            uint8_t midi_nr = get_current_instance_midi_nr(FLT_TYPE);
+            get_midi()->send_cc(midi_nr, index, get_midi_ch());
 		}
 	}
 
