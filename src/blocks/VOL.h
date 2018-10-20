@@ -18,7 +18,7 @@
 #define VOL_COUNT					(1)
 
 #define VOL_PARAM_COUNT			(VOL_KNOB_COUNT)
-#define VOL_MIDI_OFFSET             126
+#define VOL_MIDI_OFFSET             95
 
 class VOL : public UI_BLOCK<VOL_KNOB_COUNT, VOL_BUTTON_COUNT, VOL_PARAM_COUNT, VOL_COUNT> {
 public:
