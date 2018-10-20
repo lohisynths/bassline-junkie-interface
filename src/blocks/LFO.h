@@ -23,8 +23,18 @@
 enum LFO_PARAMS {
 	LFO_FREQ,
 	LFO_SHAPE,
+    LFO_SYNC,
 	LFO_PARAM_COUNT
 };
+
+enum LFO_SHAPES {
+    LFO_SIN,
+    LFO_SAW,
+    LFO_TRI,
+    LFO_SQR,
+    LFO_SHAPE_COUNT
+};
+
 /*
 LFO_OFFSET 36	0 + LFO_PARAMS*0	36	LFO 0 SHAPE
 	1 + LFO_PARAMS*0	37	LFO 0 FREQ
@@ -78,17 +88,45 @@ public:
 		}
 	}
 
+    void select_sync() {
+        uint8_t sync_button_adr = LFO_SHAPE_COUNT + LFO_COUNT;
+        bool sync = get_current_preset_value(LFO_SYNC);
+        uint8_t midi_nr = get_current_instance_midi_nr(LFO_SYNC);
+
+        if(sync) {
+            turn_on_sw(sync_button_adr);
+        } else {
+            turn_off_sw(sync_button_adr);
+        }
+        get_midi()->send_cc(midi_nr, sync, get_midi_ch());
+    }
+
+
+    void trigger_sync(uint8_t index, bool force = 0) {
+        LOG::LOG0("%s mod %d selected\r\n", get_name(), index);
+
+        bool sync = get_current_preset_value(LFO_SYNC);
+        sync ^= 1;
+        set_current_preset_value(LFO_SYNC, sync);
+        select_sync();
+    }
+
 	void select_function(uint8_t index) {
-		select_lfo_shape(index);
+	    if(index < LFO_SHAPE_COUNT) {
+	        select_lfo_shape(index);
+	    } else {
+	        trigger_sync(index);
+	    }
 	}
 
 	void force_function(uint8_t index) {
 	    LOG::LOG0("%s mode %d forced\r\n", get_name(), index);
 		select_lfo_shape(index, true);
+        select_sync();
 	}
 
     uint8_t get_midi_nr(uint8_t instance, uint8_t index){
-        return LFO_MIDI_OFFSET+index + (instance*2);
+        return LFO_MIDI_OFFSET+index + (instance*LFO_PARAM_COUNT);
     }
 
     uint8_t get_current_instance_midi_nr(uint8_t index) {

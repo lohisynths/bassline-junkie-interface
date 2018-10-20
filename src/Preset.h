@@ -14,6 +14,7 @@
 #include "blocks/LFO.h"
 #include "blocks/FLT.h"
 #include "blocks/MOD.h"
+#include "blocks/VOL.h"
 
 #include "EEPROM.h"
 
@@ -39,6 +40,7 @@ public:
         FLT::preset flt_preset;
         LFO::preset lfo_preset;
         MOD::preset mod_preset;
+        VOL::preset vol_preset;
     };
 
     Preset() {
@@ -140,6 +142,12 @@ public:
                 LOG::LOG1("%s flt %d %d %d\r\n", get_name(), i, j, input.flt_preset[i][j]);
             }
         }
+
+        for (size_t i = 0; i < VOL_COUNT; i++) {
+            for (int j = 0; j < VOL_PARAM_COUNT; j++) {
+                LOG::LOG1("%s vol %d %d %d\r\n", get_name(), i, j, input.vol_preset[i][j]);
+            }
+        }
     }
     const OSC::preset &get_osc_preset() {
         return (main_preset.osc_preset);
@@ -155,6 +163,9 @@ public:
     }
     const MOD::preset &get_mod_preset() {
         return (main_preset.mod_preset);
+    }
+    const VOL::preset &get_vol_preset() {
+        return (main_preset.vol_preset);
     }
 
 private:

@@ -13,6 +13,7 @@
 #include "blocks/LFO.h"
 #include "blocks/FLT.h"
 #include "blocks/LED_DISP.h"
+#include "blocks/VOL.h"
 
 #include "ui_config.h"
 
@@ -64,6 +65,7 @@ int main() {
 	MOD mod;
 	FLT filter;
 	LED_DISP display;
+    VOL vol;
 
     baud(115200);
 	midi_usb.attach(do_message);
@@ -79,13 +81,14 @@ int main() {
 	mod.init(mod_knob_ctrl, mod_button_ctrl, &midi, &leds, &mux);
 	lfo.init(lfo_knob_ctrl, lfo_button_ctrl, &midi, &leds, &mux);
 	display.init(disp_knob_ctrl, disp_button_ctrl, &midi, &leds, &mux);
-
+	vol.init(vol_knob_ctrl, vol_button_ctrl, &midi, &leds, &mux);
 
 	osc.set_preset(preset.get_osc_preset());
 	adsr.set_preset(preset.get_adrsr_preset());
 	filter.set_preset(preset.get_flt_preset());
 	lfo.set_preset(preset.get_lfo_preset());
     mod.set_preset(preset.get_mod_preset());
+    vol.set_preset(preset.get_vol_preset());
 
     bool last_disp_pushed = false;
     int last_disp_count = 0;
@@ -96,6 +99,7 @@ int main() {
 			mux.update();
 		}
 
+		vol.update();
 		//mux.print(1);
 		int ret = osc.update();
 		if (ret > -1) {
@@ -143,7 +147,8 @@ int main() {
 	                    adsr.get_preset(),
 	                    filter.get_preset(),
 	                    lfo.get_preset(),
-	                    mod.get_preset()
+	                    mod.get_preset(),
+                        vol.get_preset()
 	            };
 	            preset.save_preset_eeprom(asdsa, display.get_actual_preset_nr());
 //	            leds.restore_state();
@@ -159,6 +164,7 @@ int main() {
                 filter.set_preset(preset.get_flt_preset());
                 lfo.set_preset(preset.get_lfo_preset());
                 mod.set_preset(preset.get_mod_preset());
+                vol.set_preset(preset.get_vol_preset());
 
                 //leds.restore_state();
 		    }

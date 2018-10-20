@@ -90,4 +90,10 @@ LED_DISP::knob_config disp_knob_ctrl = {
 LED_DISP::button_config disp_button_ctrl;
 
 
+VOL::knob_config vol_knob_ctrl = {
+    Knob::knob_init_map{4, 3, KNOB_MAX_VAL, 0, 0, 0 }
+};
+
+VOL::button_config vol_button_ctrl;
+
 #endif /* SRC_UI_CONFIG_H_ */
