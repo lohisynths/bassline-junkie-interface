@@ -15,6 +15,7 @@
 #include "blocks/FLT.h"
 #include "blocks/MOD.h"
 #include "blocks/VOL.h"
+#include "blocks/LED_DISP.h"
 
 #include "EEPROM.h"
 
@@ -47,6 +48,24 @@ public:
 
     ~Preset() { }
 
+    void update() {
+        int ret = -1;
+        ret = _disp->preset_changed();
+        if(ret > -1) {
+            LOG::LOG1("loading preset %d\r\n", ret);
+            load_preset_eeprom(ret);
+            update_preset();
+            LOG::LOG1("preset %d loaded\r\n", ret);
+        }
+
+        ret = _disp->get_long_push();
+        if(ret == 1) {
+            LOG::LOG1("saving preset %d\r\n", _disp->get_actual_preset_nr());
+            save_preset_eeprom(_disp->get_actual_preset_nr());
+            LOG::LOG1("preset %d saved\r\n", _disp->get_actual_preset_nr());
+        }
+    }
+
     void update_preset() {
         _osc->set_preset(get_osc_preset());
         _adsr->set_preset(get_adrsr_preset());
@@ -55,13 +74,14 @@ public:
         _mod->set_preset(get_mod_preset());
         _vol->set_preset(get_vol_preset());
     }
-    void init(ADSR *adsr, OSC *osc, LFO *lfo, MOD *mod, FLT *filter, VOL *vol) {
+    void init(ADSR *adsr, OSC *osc, LFO *lfo, MOD *mod, FLT *filter, VOL *vol, LED_DISP *disp) {
         _adsr = adsr;
         _osc = osc;
         _lfo = lfo;
         _mod = mod;
         _filter = filter;
         _vol = vol;
+        _disp = disp;
     }
 
     void load_global(int index) {
@@ -188,6 +208,7 @@ private:
     MOD *_mod;
     FLT *_filter;
     VOL *_vol;
+    LED_DISP *_disp;
 
 };
 

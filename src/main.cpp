@@ -9,11 +9,11 @@
 
 #include "blocks/OSC.h"
 #include "blocks/ADSR.h"
-#include "blocks/MOD.h"
 #include "blocks/LFO.h"
 #include "blocks/FLT.h"
 #include "blocks/LED_DISP.h"
 #include "blocks/VOL.h"
+#include "blocks/MOD.h"
 
 #include "ui_config.h"
 
@@ -74,6 +74,8 @@ int main() {
 	mux.init();
     preset.load_global(0);
 
+    mod.init_(&adsr, &osc, &lfo, &mod, &filter, &vol);
+
 	adsr.init(adsr_knob_config, adsr_button_config, &midi, &leds, &mux);
 	osc.init(osc_knob_ctrl, osc_button_ctrl, &midi, &leds, &mux);
     filter.init(flt_knob_ctrl, flt_button_ctrl, &midi, &leds, &mux);
@@ -82,10 +84,8 @@ int main() {
 	display.init(disp_knob_ctrl, disp_button_ctrl, &midi, &leds, &mux);
 	vol.init(vol_knob_ctrl, vol_button_ctrl, &midi, &leds, &mux);
 
-    preset.init(&adsr, &osc, &lfo, &mod, &filter, &vol);
+    preset.init(&adsr, &osc, &lfo, &mod, &filter, &vol, &display);
     preset.update_preset();
-
-    bool mod_viewer_mode = false;
 
 	while(1) {
 		mux.update();
@@ -97,39 +97,8 @@ int main() {
         display.update();
         mod.update();
 
-		int ret = -1;
-
-		ret = osc.get_first_knob_sw_pushed();
-		if(ret > -1) {
-            mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
-		}
-
-        ret = filter.get_first_knob_sw_pushed();
-        if(ret > -1) {
-            mod.select_MOD_dest(ret+15);
-		}
-
-        ret = display.preset_changed();
-        if(ret > -1) {
-            LOG::LOG1("loading preset %d\r\n", ret);
-            preset.load_preset_eeprom(ret);
-            preset.update_preset();
-            LOG::LOG1("preset %d loaded\r\n", ret);
-        }
-
-        ret = display.get_long_push();
-        if(ret == 1) {
-            LOG::LOG1("saving preset %d\r\n", display.get_actual_preset_nr());
-            preset.save_preset_eeprom(display.get_actual_preset_nr());
-            LOG::LOG1("preset %d saved\r\n", display.get_actual_preset_nr());
-        }
-
-        ret = mod.get_first_knob_sw_pushed();
-        if(ret > -1) {
-            mod_viewer_mode ^= 1;
-            osc.set_viewer_mode(mod_viewer_mode);
-            LOG::LOG1("mod_viever mode changed %d\r\n", mod_viewer_mode);
-        }
+        mod.update2();
+        preset.update();
 	}
 }
 

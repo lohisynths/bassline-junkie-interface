@@ -45,6 +45,11 @@ public:
         }
 	};
 
+    mod_preset mod_preset_values = {};
+    bool mod_viever_mode = false;
+    int current_mod_src = 0;
+
+
     /*! \typedef logger
      *  \brief Typedef defining logger used in all instances of this object
      */
@@ -52,6 +57,7 @@ public:
 
 	UI_BLOCK(){};
 	virtual ~UI_BLOCK(){};
+
 
     void init(knob_config knob_ctrl, button_config button_ctrl,
             MIDI *_midi, Pwm *_leds, Mux *_mux) {
@@ -74,27 +80,35 @@ public:
     }
 
     virtual int16_t get_current_preset_value(uint8_t index) {
-        if(!mod_viever_mode) {
-            return preset_values[current_instance][index];
+        return get_preset_value(current_instance, index);
+    }
+
+    virtual int16_t get_preset_mod_value(uint8_t src, uint8_t dst, uint8_t index) {
+          return mod_preset_values[src][dst][index];
+    }
+
+    virtual void set_preset_mod_value(uint8_t src, uint8_t dst, uint8_t index, int value) {
+          mod_preset_values[src][dst][index] = value;
+    }
+
+    virtual int16_t get_preset_value(uint8_t instance, uint8_t index) {
+        if (!mod_viever_mode) {
+            return preset_values[instance][index];
         } else {
             return mod_preset_values[current_mod_src][current_instance][index];
         }
     }
 
-    virtual int16_t get_preset_value(uint8_t instance, uint8_t index) {
-        return preset_values[instance][index];
-    }
-
     virtual void set_preset_value(uint8_t instance, uint8_t index, uint8_t value) {
-        preset_values[instance][index] = value;
-    }
-
-    virtual void set_current_preset_value(uint8_t index, uint16_t value) {
         if(!mod_viever_mode) {
-            preset_values[current_instance][index] = value;
+            preset_values[instance][index] = value;
         } else {
             mod_preset_values[current_mod_src][current_instance][index] = value;
         }
+    }
+
+    virtual void set_current_preset_value(uint8_t index, uint16_t value) {
+        set_preset_value(current_instance, index, value);
     }
 
     std::array<Button, BUTTON_COUNT> &get_sw(){
@@ -197,6 +211,7 @@ private:
 			if(COUNT != 1) {
 				if (index < COUNT) {
 					select_instance(index);
+					current_mod_src = index;
 				} else {
 					select_function(index-COUNT);
 				}
@@ -283,10 +298,7 @@ private:
     virtual uint8_t get_midi_ch() = 0;
 
     preset preset_values = {};
-    mod_preset mod_preset_values = {};
-    int current_mod_src = 0;
 
-    bool mod_viever_mode = false;
 
 	MIDI *midi;
 	Pwm *leds;
