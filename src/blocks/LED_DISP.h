@@ -27,6 +27,10 @@ public:
 
     using UI_BLOCK::UI_BLOCK;
 
+    bool last_disp_pushed = false;
+    int last_disp_count = 0;
+    int last_preset_selected = 0;
+
 	virtual const char* get_name() {
 	    return "Disp";
 	}
@@ -35,6 +39,41 @@ public:
         return 1;
     }
 
+    int get_long_push() {
+        int ret = -1;
+        bool pushed = get_first_knob_sw_pushed();
+        if (last_disp_pushed != pushed) {
+            LOG::LOG1("changed %d\r\n", pushed);
+        }
+
+        if (pushed) {
+            last_disp_count++;
+        }
+
+        if (!pushed && last_disp_pushed) {
+            if (last_disp_count > 500) {
+                ret = 1;
+            } else {
+                ret = 2;
+            }
+            last_disp_count = 0;
+        }
+
+        last_disp_pushed = pushed;
+        return ret;
+    }
+
+    int preset_changed() {
+        int ret = -1;
+        if(get_knob_changed()) {
+            int val = get_actual_preset_nr();
+            if(last_preset_selected !=val) {
+                ret = val;
+                last_preset_selected = val;
+            }
+        }
+        return ret;
+    }
 
     uint8_t get_midi_nr(uint8_t instance, uint8_t index) {
         return get_midi_ch();

@@ -74,7 +74,6 @@ int main() {
 	mux.init();
     preset.load_global(0);
 
-
 	adsr.init(adsr_knob_config, adsr_button_config, &midi, &leds, &mux);
 	osc.init(osc_knob_ctrl, osc_button_ctrl, &midi, &leds, &mux);
     filter.init(flt_knob_ctrl, flt_button_ctrl, &midi, &leds, &mux);
@@ -86,10 +85,6 @@ int main() {
     preset.init(&adsr, &osc, &lfo, &mod, &filter, &vol);
     preset.update_preset();
 
-    bool last_disp_pushed = false;
-    int last_disp_count = 0;
-    int last_presset_selected = 0;
-
     bool mod_viewer_mode = false;
 
 	while(1) {
@@ -100,6 +95,7 @@ int main() {
         lfo.update();
         filter.update();
         display.update();
+        mod.update();
 
 		int ret = -1;
 
@@ -113,47 +109,26 @@ int main() {
             mod.select_MOD_dest(ret+15);
 		}
 
-        ret = display.get_knob_changed();
-        if(ret) {
-            int val = display.get_actual_preset_nr();
-            if(last_presset_selected != val) {
-                LOG::LOG1("changed %d\r\n", val);
-                preset.load_preset_eeprom(val);
-                preset.update_preset();
-                last_presset_selected = val;
-            }
+        ret = display.preset_changed();
+        if(ret > -1) {
+            LOG::LOG1("loading preset %d\r\n", ret);
+            preset.load_preset_eeprom(ret);
+            preset.update_preset();
+            LOG::LOG1("preset %d loaded\r\n", ret);
         }
 
-        bool pushed  = display.get_first_knob_sw_pushed();
-		if(last_disp_pushed != pushed) {
-		    LOG::LOG1("changed %d\r\n", pushed);
-		}
+        ret = display.get_long_push();
+        if(ret == 1) {
+            LOG::LOG1("saving preset %d\r\n", display.get_actual_preset_nr());
+            preset.save_preset_eeprom(display.get_actual_preset_nr());
+            LOG::LOG1("preset %d saved\r\n", display.get_actual_preset_nr());
+        }
 
-		if(pushed) {
-		    last_disp_count++;
-		}
-
-		if(!pushed && last_disp_pushed) {
-		    if(last_disp_count > 500) {
-	            LOG::LOG1("saving preset %d\r\n", display.get_actual_preset_nr());
-	            preset.save_preset_eeprom(display.get_actual_preset_nr());
-                LOG::LOG1("preset %d saved\r\n", display.get_actual_preset_nr());
-
-		    } else {
-                LOG::LOG1("load preset %d\r\n", display.get_actual_preset_nr());
-                preset.load_preset_eeprom(display.get_actual_preset_nr());
-                preset.update_preset();
-		    }
-		    last_disp_count = 0;
-		}
-
-        last_disp_pushed = pushed;
-
-        ret = mod.update().knobs_sw_changed;
-        if(ret) {
-            printf("button changed\r\n");
+        ret = mod.get_first_knob_sw_pushed();
+        if(ret > -1) {
             mod_viewer_mode ^= 1;
             osc.set_viewer_mode(mod_viewer_mode);
+            LOG::LOG1("mod_viever mode changed %d\r\n", mod_viewer_mode);
         }
 	}
 }

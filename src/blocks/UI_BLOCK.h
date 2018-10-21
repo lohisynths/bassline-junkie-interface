@@ -36,7 +36,9 @@ public:
             int index = -1;
             for(unsigned int i = 0; i < KNOB_COUNT; i++) {
                 if(knobs_sw_changed_array[i]) {
-                    return i;
+                    if(knobs_sw[i]) {
+                        return i;
+                    }
                 }
             }
             return index;
@@ -136,7 +138,7 @@ public:
         return ret;
     }
 
-    int get_knob_changed() {
+    bool get_knob_changed() {
         return last_ret.knobs_changed;
     }
 
