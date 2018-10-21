@@ -99,20 +99,23 @@ int main() {
 	while(1) {
 		mux.update();
 		vol.update();
-		int ret = osc.update();
-		if (ret > -1) {
+
+		auto osc_ret = osc.update();
+		if (osc_ret.knobs_sw_changed) {
+		    int ret =  osc_ret.get_first_pushed_knob_sw();
 			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
 		}
 
 		adsr.update();
 		lfo.update();
-		ret = filter.update();
-		if (ret > -1) {
-			mod.select_MOD_dest(ret+15);
+		auto flt_ret = filter.update();
+		if (flt_ret.knobs_sw_changed) {
+            int ret =  flt_ret.get_first_pushed_knob_sw();
+            mod.select_MOD_dest(ret+15);
 		}
 
-        ret = display.update();
-        if(ret == -2) {
+        bool ret = display.update().knobs_changed;
+        if(ret) {
             int val = display.get_actual_preset_nr();
             if(last_presset_selected != val) {
                 LOG::LOG1("changed %d\r\n", val);
@@ -165,8 +168,9 @@ int main() {
 
         last_disp_pushed = pushed;
 
-        ret = mod.update();
-        if(ret >= 0) {
+        ret = mod.update().knobs_sw_changed;
+        if(ret) {
+            printf("button changed\r\n");
             mod_viewer_mode ^= 1;
             osc.set_viewer_mode(mod_viewer_mode);
         }

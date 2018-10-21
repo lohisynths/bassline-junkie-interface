@@ -23,6 +23,26 @@ public:
 	typedef std::array<Knob::knob_init_map, KNOB_COUNT> knob_config;
 	typedef std::array<Button::button_init_map, BUTTON_COUNT> button_config;
 
+	// masakra ^-^
+	struct ret_value {
+	    bool buttons_changed = false;
+	    std::array<bool, BUTTON_COUNT> buttons = {};
+        bool knobs_sw_changed = false;
+        std::array<bool, KNOB_COUNT> knobs_sw;
+        bool knobs_changed = false;
+        std::array<bool, KNOB_COUNT> knobs_sw_changed_array = {};
+        std::array<int, KNOB_COUNT> knobs_val;
+        int get_first_pushed_knob_sw() {
+            int index = -1;
+            for(unsigned int i = 0; i < KNOB_COUNT; i++) {
+                if(knobs_sw_changed_array[i]) {
+                    return i;
+                }
+            }
+            return index;
+        }
+	};
+
     /*! \typedef logger
      *  \brief Typedef defining logger used in all instances of this object
      */
@@ -101,9 +121,11 @@ public:
         return preset_values;
     }
 
-    int update() {
-        update_buttons();
-        return update_knobs();
+    ret_value update() {
+        ret_value last_ret;
+        update_buttons(last_ret);
+        update_knobs(last_ret);
+        return last_ret;
     }
 
     void set_viewer_mode(bool enable) {
@@ -131,26 +153,25 @@ private:
 		}
 	}
 
-	int update_knobs() {
-        int ret_val = -1;
+	void update_knobs(ret_value &input) {
         for (uint8_t i = 0; i < KNOB_COUNT; i++) {
             Knob::knob_msg ret = knob[i].update();
             if (ret.switch_changed) {
                 bool state = !knob[i].get_switch_state();
                 LOG::LOG0("%s %d encoder switch %d ", get_name(), current_instance, i);
-                LOG::LOG0( (state) ? "pushed\r\n" : "released\r\n" );
+                LOG::LOG0( (!state) ? "pushed\r\n" : "released\r\n" );
                 knob_sw_changed(i, state);
-                if (state) {
-                    ret_val = i;
-                }
+                input.knobs_sw[i] = state;
+                input.knobs_sw_changed = true;
+                input.knobs_sw_changed_array[i] = true;
             }
             if (ret.value_changed) {
                 LOG::LOG0("%s %d knob %d changed %d\r\n", get_name(), current_instance, i, knob[i].get_knob_value());
                 knob_val_changed(i, knob[i].get_knob_value());
-                ret_val = -2;
+                input.knobs_val[i] = knob[i].get_knob_value();
+                input.knobs_changed = true;
             }
         }
-        return ret_val;
     }
 
 	void button_changed(uint8_t index, bool state) {
@@ -183,7 +204,7 @@ private:
         knob[index].led_indicator_set_value(value_scaled, true);
 	}
 
-	void update_buttons() {
+	void update_buttons(ret_value &input) {
 		for (int i = 0; i < BUTTON_COUNT; i++) {
 			bool ret = sw[i].update();
 			if (ret) {
@@ -191,6 +212,8 @@ private:
 				LOG::LOG0("%s %d button switch %d", get_name(), current_instance, i);
 				LOG::LOG0((pushed) ? "pushed\r\n" : "released\r\n" );
 				button_changed(i, pushed);
+				input.buttons[i] = pushed;
+                input.buttons_changed = true;
 			}
 		}
 	};
