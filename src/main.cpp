@@ -95,12 +95,8 @@ int main() {
     int last_presset_selected = 0;
 
 	while(1) {
-		for(int i=0; i < MUX_COUNT; i++) {
-			mux.update();
-		}
-
+		mux.update();
 		vol.update();
-		//mux.print(1);
 		int ret = osc.update();
 		if (ret > -1) {
 			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
@@ -128,7 +124,6 @@ int main() {
             }
         }
 
-
 		bool pushed = display.if_knob_sw_pushed();
 		if(last_disp_pushed != pushed) {
 		    LOG::LOG1("changed %d\r\n", pushed);
@@ -141,7 +136,6 @@ int main() {
 		if(!pushed && last_disp_pushed) {
 		    if(last_disp_count > 500) {
 	            LOG::LOG1("saving preset %d\r\n", display.get_actual_preset_nr());
-//	            leds.backup_state();
 	            Preset::SynthPreset asdsa = {
 	                    osc.get_preset(),
 	                    adsr.get_preset(),
@@ -151,12 +145,10 @@ int main() {
                         vol.get_preset()
 	            };
 	            preset.save_preset_eeprom(asdsa, display.get_actual_preset_nr());
-//	            leds.restore_state();
                 LOG::LOG1("preset %d saved\r\n", display.get_actual_preset_nr());
 
 		    } else {
                 LOG::LOG1("load preset %d\r\n", display.get_actual_preset_nr());
-//                leds.backup_state();
                 preset.load_preset_eeprom(display.get_actual_preset_nr());
 
                 osc.set_preset(preset.get_osc_preset());
@@ -165,15 +157,22 @@ int main() {
                 lfo.set_preset(preset.get_lfo_preset());
                 mod.set_preset(preset.get_mod_preset());
                 vol.set_preset(preset.get_vol_preset());
-
-                //leds.restore_state();
 		    }
 		    last_disp_count = 0;
 		}
 
         last_disp_pushed = pushed;
 
-		mod.update();
+        ret = mod.update();
+        if(ret >= 0) {
+            static bool on = true;
+            if(on) {
+                leds.backup_state();
+            } else {
+                leds.restore_state();
+            }
+            on ^= 1;
+        }
 	}
 }
 
