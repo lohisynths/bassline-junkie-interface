@@ -60,10 +60,6 @@ public:
         return OSC_MIDI_OFFSET+index+(instance * (OSC_KNOB_COUNT));
     }
 
-   uint8_t get_current_instance_midi_nr(uint8_t index) {
-       return get_midi_nr(get_current_instasnce(), index);
-   }
-
 	uint8_t get_current_osc() { return get_current_instasnce(); };
 
 private:

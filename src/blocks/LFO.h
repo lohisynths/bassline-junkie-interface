@@ -129,10 +129,6 @@ public:
         return LFO_MIDI_OFFSET+index + (instance*LFO_PARAM_COUNT);
     }
 
-    uint8_t get_current_instance_midi_nr(uint8_t index) {
-        return get_midi_nr(get_current_instasnce(), index);
-    }
-
 private:
 	uint8_t last_lfo_shape = 0;
 };

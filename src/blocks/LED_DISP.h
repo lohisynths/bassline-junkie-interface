@@ -48,10 +48,6 @@ public:
 
 	void select_instance(uint8_t index) {};
 
-	uint8_t get_current_instance_midi_nr(uint8_t index) {
-		return 0;
-	}
-
     virtual void knob_val_changed(uint8_t index, uint16_t value_scaled) {
         LOG::LOG0("%s value changed %d\r\n", get_name(), value_scaled);
         actual_preset_value = value_scaled;

@@ -45,10 +45,6 @@ public:
 
 	void select_instance(uint8_t index) {};
 
-	uint8_t get_current_instance_midi_nr(uint8_t index) {
-        return get_midi_nr(get_current_instasnce(), index);
-	}
-
     void select_function(uint8_t index) {
         LOG::LOG0("%s %d special_function %d\r\n", get_name(), get_current_instasnce(), index);
     }

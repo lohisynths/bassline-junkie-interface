@@ -94,10 +94,6 @@ public:
         return ADSR_MIDI_OFFSET+index+(instance * ADSR_PARAM_NR);
     }
 
-    uint8_t get_current_instance_midi_nr(uint8_t index) {
-        return get_midi_nr(get_current_instasnce(), index);
-    }
-
 private:
 
 };
