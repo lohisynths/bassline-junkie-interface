@@ -19,6 +19,7 @@ template<uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t PARAM_COUNT, uint8_t 
 class UI_BLOCK {
 public:
 	typedef std::array<std::array<int, PARAM_COUNT>, COUNT> preset;
+    typedef std::array<std::array<std::array<int, PARAM_COUNT>, COUNT>, 6> mod_preset;
 	typedef std::array<Knob::knob_init_map, KNOB_COUNT> knob_config;
 	typedef std::array<Button::button_init_map, BUTTON_COUNT> button_config;
 
@@ -51,7 +52,11 @@ public:
     }
 
     virtual int16_t get_current_preset_value(uint8_t index) {
-        return preset_values[current_instance][index];
+        if(!mod_viever_mode) {
+            return preset_values[current_instance][index];
+        } else {
+            return mod_preset_values[current_mod_src][current_instance][index];
+        }
     }
 
     virtual int16_t get_preset_value(uint8_t instance, uint8_t index) {
@@ -63,9 +68,12 @@ public:
     }
 
     virtual void set_current_preset_value(uint8_t index, uint16_t value) {
-        preset_values[current_instance][index] = value;
+        if(!mod_viever_mode) {
+            preset_values[current_instance][index] = value;
+        } else {
+            mod_preset_values[current_mod_src][current_instance][index] = value;
+        }
     }
-
 
     std::array<Button, BUTTON_COUNT> &get_sw(){
         return sw;
@@ -96,6 +104,11 @@ public:
     int update() {
         update_buttons();
         return update_knobs();
+    }
+
+    void set_viewer_mode(bool enable) {
+        mod_viever_mode = enable;
+        select_instance(get_current_instasnce());
     }
 
     //needed only by mod class - do something with it
@@ -196,11 +209,13 @@ private:
             force_knob_update(j, val);
         }
 
-        const int special_parameters_count = PARAM_COUNT - KNOB_COUNT;
-        for (int i = 0; i < special_parameters_count; i++) {
-            uint16_t val = get_current_preset_value(KNOB_COUNT+i);
-            force_function(val);
-            LOG::LOG0("%s %d UI_BLOCK special param %d %d \r\n", get_name(), current_instance, KNOB_COUNT+i, val);
+        if(!mod_viever_mode) {
+            const int special_parameters_count = PARAM_COUNT - KNOB_COUNT;
+            for (int i = 0; i < special_parameters_count; i++) {
+                uint16_t val = get_current_preset_value(KNOB_COUNT+i);
+                force_function(val);
+                LOG::LOG0("%s %d UI_BLOCK special param %d %d \r\n", get_name(), current_instance, KNOB_COUNT+i, val);
+            }
         }
 
         LOG::LOG0("%s %d selected\r\n", get_name(), index);
@@ -226,6 +241,10 @@ private:
     virtual uint8_t get_midi_ch() = 0;
 
     preset preset_values = {};
+    mod_preset mod_preset_values = {};
+    int current_mod_src = 0;
+
+    bool mod_viever_mode = false;
 
 	MIDI *midi;
 	Pwm *leds;

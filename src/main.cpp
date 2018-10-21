@@ -94,6 +94,8 @@ int main() {
     int last_disp_count = 0;
     int last_presset_selected = 0;
 
+    bool mod_viewer_mode = false;
+
 	while(1) {
 		mux.update();
 		vol.update();
@@ -165,13 +167,8 @@ int main() {
 
         ret = mod.update();
         if(ret >= 0) {
-            static bool on = true;
-            if(on) {
-                leds.backup_state();
-            } else {
-                leds.restore_state();
-            }
-            on ^= 1;
+            mod_viewer_mode ^= 1;
+            osc.set_viewer_mode(mod_viewer_mode);
         }
 	}
 }
