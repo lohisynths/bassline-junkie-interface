@@ -116,6 +116,11 @@ public:
         select_instance(current_instance);
     }
 
+
+    virtual uint8_t get_current_instance_midi_nr(uint8_t index) {
+        return get_midi_nr(get_current_instasnce(), index);
+    }
+
 private:
 	void init_internal(knob_config &knob_settings, button_config &button_config) {
 		for (int i = 0; i < KNOB_COUNT; i++) {
@@ -236,10 +241,6 @@ private:
 	virtual void select_function(uint8_t index) = 0;
 	virtual void force_function(uint8_t index) = 0;
     virtual const char* get_name() = 0;
-
-    virtual uint8_t get_current_instance_midi_nr(uint8_t index) {
-        return get_midi_nr(get_current_instasnce(), index);
-    }
 
     virtual uint8_t get_midi_nr(uint8_t instance, uint8_t index) = 0;
     virtual uint8_t get_midi_ch() = 0;
