@@ -27,10 +27,6 @@ public:
 
     using UI_BLOCK::UI_BLOCK;
 
-    bool if_knob_sw_pushed(){
-	    auto &knobs = get_knobs();
-	    return !knobs[0].get_switch_state();
-	}
 	virtual const char* get_name() {
 	    return "Disp";
 	}

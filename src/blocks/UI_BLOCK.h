@@ -122,10 +122,22 @@ public:
     }
 
     ret_value update() {
-        ret_value last_ret;
+        memset(&last_ret, 0, sizeof(last_ret));
         update_buttons(last_ret);
         update_knobs(last_ret);
         return last_ret;
+    }
+
+    int get_first_knob_sw_pushed() {
+        int ret = -1;
+        if (last_ret.knobs_sw_changed) {
+            ret =  last_ret.get_first_pushed_knob_sw();
+        }
+        return ret;
+    }
+
+    int get_knob_changed() {
+        return last_ret.knobs_changed;
     }
 
     void set_viewer_mode(bool enable) {
@@ -277,6 +289,7 @@ private:
 	MIDI *midi;
 	Pwm *leds;
 	Mux *mux;
+    ret_value last_ret;
 
     std::array<Button, BUTTON_COUNT> sw;
     std::array<Knob, KNOB_COUNT> knob;

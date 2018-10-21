@@ -99,22 +99,25 @@ int main() {
 	while(1) {
 		mux.update();
 		vol.update();
+		osc.update();
+        adsr.update();
+        lfo.update();
+        filter.update();
+        display.update();
 
-		auto osc_ret = osc.update();
-		if (osc_ret.knobs_sw_changed) {
-		    int ret =  osc_ret.get_first_pushed_knob_sw();
-			mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
+		int ret = -1;
+
+		ret = osc.get_first_knob_sw_pushed();
+		if(ret > -1) {
+            mod.select_MOD_dest(ret+(osc.get_current_osc()*5));
 		}
 
-		adsr.update();
-		lfo.update();
-		auto flt_ret = filter.update();
-		if (flt_ret.knobs_sw_changed) {
-            int ret =  flt_ret.get_first_pushed_knob_sw();
+        ret = filter.get_first_knob_sw_pushed();
+        if(ret > -1) {
             mod.select_MOD_dest(ret+15);
 		}
 
-        bool ret = display.update().knobs_changed;
+        ret = display.get_knob_changed();
         if(ret) {
             int val = display.get_actual_preset_nr();
             if(last_presset_selected != val) {
@@ -129,7 +132,7 @@ int main() {
             }
         }
 
-		bool pushed = display.if_knob_sw_pushed();
+        bool pushed  = display.get_first_knob_sw_pushed();
 		if(last_disp_pushed != pushed) {
 		    LOG::LOG1("changed %d\r\n", pushed);
 		}
