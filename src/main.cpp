@@ -83,12 +83,8 @@ int main() {
 	display.init(disp_knob_ctrl, disp_button_ctrl, &midi, &leds, &mux);
 	vol.init(vol_knob_ctrl, vol_button_ctrl, &midi, &leds, &mux);
 
-	osc.set_preset(preset.get_osc_preset());
-	adsr.set_preset(preset.get_adrsr_preset());
-	filter.set_preset(preset.get_flt_preset());
-	lfo.set_preset(preset.get_lfo_preset());
-    mod.set_preset(preset.get_mod_preset());
-    vol.set_preset(preset.get_vol_preset());
+    preset.init(&adsr, &osc, &lfo, &mod, &filter, &vol);
+    preset.update_preset();
 
     bool last_disp_pushed = false;
     int last_disp_count = 0;
@@ -123,11 +119,7 @@ int main() {
             if(last_presset_selected != val) {
                 LOG::LOG1("changed %d\r\n", val);
                 preset.load_preset_eeprom(val);
-                osc.set_preset(preset.get_osc_preset());
-                adsr.set_preset(preset.get_adrsr_preset());
-                filter.set_preset(preset.get_flt_preset());
-                lfo.set_preset(preset.get_lfo_preset());
-                mod.set_preset(preset.get_mod_preset());
+                preset.update_preset();
                 last_presset_selected = val;
             }
         }
@@ -144,27 +136,13 @@ int main() {
 		if(!pushed && last_disp_pushed) {
 		    if(last_disp_count > 500) {
 	            LOG::LOG1("saving preset %d\r\n", display.get_actual_preset_nr());
-	            Preset::SynthPreset asdsa = {
-	                    osc.get_preset(),
-	                    adsr.get_preset(),
-	                    filter.get_preset(),
-	                    lfo.get_preset(),
-	                    mod.get_preset(),
-                        vol.get_preset()
-	            };
-	            preset.save_preset_eeprom(asdsa, display.get_actual_preset_nr());
+	            preset.save_preset_eeprom(display.get_actual_preset_nr());
                 LOG::LOG1("preset %d saved\r\n", display.get_actual_preset_nr());
 
 		    } else {
                 LOG::LOG1("load preset %d\r\n", display.get_actual_preset_nr());
                 preset.load_preset_eeprom(display.get_actual_preset_nr());
-
-                osc.set_preset(preset.get_osc_preset());
-                adsr.set_preset(preset.get_adrsr_preset());
-                filter.set_preset(preset.get_flt_preset());
-                lfo.set_preset(preset.get_lfo_preset());
-                mod.set_preset(preset.get_mod_preset());
-                vol.set_preset(preset.get_vol_preset());
+                preset.update_preset();
 		    }
 		    last_disp_count = 0;
 		}

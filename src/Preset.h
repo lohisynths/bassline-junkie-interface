@@ -43,24 +43,25 @@ public:
         VOL::preset vol_preset;
     };
 
-    Preset() {
-        init();
-    }
+    Preset() { }
 
-    ~Preset() {
-    }
+    ~Preset() { }
 
-    void init() {
-        LOG::LOG0("%s eeprom write\r\n", get_name());
-//        main_preset.osc_preset[0][OSC_PITCH] = 10;
-//        main_preset.osc_preset[0][OSC_SAW] = 127;
-//        main_preset.osc_preset[1][OSC_SAW] = 127;
-//
-//        main_preset.adsr_preset[0][ADSR_LOOP] = 1;
-//        main_preset.flt_preset[0][FLT_FREQ] = 127;
-//        main_preset.flt_preset[0][FLT_SHAPE] = 2;
-//        main_preset.lfo_preset[0][LFO_SHAPE] = 2;
-//        main_preset.lfo_preset[0][LFO_FREQ] = 64;
+    void update_preset() {
+        _osc->set_preset(get_osc_preset());
+        _adsr->set_preset(get_adrsr_preset());
+        _filter->set_preset(get_flt_preset());
+        _lfo->set_preset(get_lfo_preset());
+        _mod->set_preset(get_mod_preset());
+        _vol->set_preset(get_vol_preset());
+    }
+    void init(ADSR *adsr, OSC *osc, LFO *lfo, MOD *mod, FLT *filter, VOL *vol) {
+        _adsr = adsr;
+        _osc = osc;
+        _lfo = lfo;
+        _mod = mod;
+        _filter = filter;
+        _vol = vol;
     }
 
     void load_global(int index) {
@@ -91,8 +92,16 @@ public:
         print_preset(input);
     }
 
-    void save_preset_eeprom(SynthPreset &input, int index) {
-        global_presets[index] = input;
+    void save_preset_eeprom(int index) {
+        Preset::SynthPreset asdsa = {
+                _osc->get_preset(),
+                _adsr->get_preset(),
+                _filter->get_preset(),
+                _lfo->get_preset(),
+                _mod->get_preset(),
+                _vol->get_preset()
+        };
+        global_presets[index] = asdsa;
         save_global();
         print_preset(main_preset);
     }
@@ -172,6 +181,13 @@ private:
     EEPROM eeprom;
     SynthPreset main_preset = { };
     SynthPreset global_presets[GLOBAL_PRESET_COUNT] = { };
+
+    ADSR *_adsr;
+    OSC *_osc;
+    LFO *_lfo;
+    MOD *_mod;
+    FLT *_filter;
+    VOL *_vol;
 
 };
 
