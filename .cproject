@@ -62,6 +62,8 @@
                                     <listOptionValue builtIn="false" value="DEVICE_SERIAL=1"/>
                                     									
                                     <listOptionValue builtIn="false" value="DEVICE_SERIAL_ASYNCH=1"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="TARGET_STM32F4=1"/>
                                     								
                                 </option>
                                 								
