@@ -40,8 +40,8 @@ public:
         ADSR::preset adsr_preset;
         FLT::preset flt_preset;
         LFO::preset lfo_preset;
-        MOD::preset mod_preset;
         VOL::preset vol_preset;
+        MOD::mod_preset mod_preset;
     };
 
     Preset() { }
@@ -59,7 +59,7 @@ public:
         }
 
         ret = _disp->get_long_push();
-        if(ret == 1) {
+        if(ret != -1) {
             LOG::LOG1("saving preset %d\r\n", _disp->get_actual_preset_nr());
             save_preset_eeprom(_disp->get_actual_preset_nr());
             LOG::LOG1("preset %d saved\r\n", _disp->get_actual_preset_nr());
@@ -71,9 +71,10 @@ public:
         _adsr->set_preset(get_adrsr_preset());
         _filter->set_preset(get_flt_preset());
         _lfo->set_preset(get_lfo_preset());
-        _mod->set_preset(get_mod_preset());
         _vol->set_preset(get_vol_preset());
+        _mod->set_mod_preset(get_mod_preset());
     }
+
     void init(ADSR *adsr, OSC *osc, LFO *lfo, MOD *mod, FLT *filter, VOL *vol, LED_DISP *disp) {
         _adsr = adsr;
         _osc = osc;
@@ -118,13 +119,18 @@ public:
                 _adsr->get_preset(),
                 _filter->get_preset(),
                 _lfo->get_preset(),
-                _mod->get_preset(),
-                _vol->get_preset()
-        };
+                _vol->get_preset(),
+                _mod->get_mod_preset()};
         global_presets[index] = asdsa;
-        save_global();
+        save_preset_eeprom(index);
         print_preset(main_preset);
     }
+
+    void erase() {
+        memset(&global_presets, 0, sizeof(global_presets));
+        save_global();
+    }
+
 
     void save_global() {
         eeprom.erase(sizeof(SynthPreset)*GLOBAL_PRESET_COUNT);
@@ -190,7 +196,7 @@ public:
     const LFO::preset &get_lfo_preset() {
         return (main_preset.lfo_preset);
     }
-    const MOD::preset &get_mod_preset() {
+    const MOD::mod_preset &get_mod_preset() {
         return (main_preset.mod_preset);
     }
     const VOL::preset &get_vol_preset() {

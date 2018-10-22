@@ -72,7 +72,8 @@ int main() {
 	midi_glob = &midi;
 	leds.init();
 	mux.init();
-    preset.load_global(0);
+	preset.erase();
+    //preset.load_global(0);
 
     mod.init_(&adsr, &osc, &lfo, &mod, &filter, &vol);
 

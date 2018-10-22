@@ -133,8 +133,18 @@ public:
         dump_midi();
     };
 
+    void set_mod_preset(mod_preset input) {
+        memcpy(&mod_preset_values, &input, sizeof(input));
+        select_instance(current_instance);
+        dump_midi();
+    };
+
     preset &get_preset() {
         return preset_values;
+    }
+
+    mod_preset &get_mod_preset() {
+        return mod_preset_values;
     }
 
     ret_value update() {
