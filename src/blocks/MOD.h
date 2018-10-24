@@ -74,29 +74,33 @@ public:
 	    return "MOD";
 	}
 
-	virtual int16_t get_current_preset_value(const uint8_t index) {
+	virtual int16_t get_current_preset_value(uint8_t index) {
+	    // ignore index - index of knob
+	    // in case of mod class only one
 	    int ret =0;
+        printf("get index %d\r\n", index);
+
 	    // ignoring index - use actual mod dest instead
-        uint8_t actual_mod_src = get_current_instasnce();
-        if(actual_mod_dest < OSC_PARAM_COUNT*OSC_COUNT) {
-            uint8_t actual_osc_instance = actual_mod_dest / OSC_PARAM_COUNT;
-            uint8_t actual_osc_knob = actual_mod_dest % OSC_PARAM_COUNT;
-            printf("actual_osc_instance %d, actual_osc_knob %d\r\n", actual_osc_instance, actual_osc_knob);
-            ret = _osc->get_preset_mod_value(actual_mod_src, actual_osc_instance, actual_osc_knob);
+        const uint8_t src = get_current_instasnce();
+        const uint8_t dst = actual_mod_dest;
+
+        if(dst < OSC_PARAM_COUNT*OSC_COUNT) {
+            ret = _osc->get_preset_mod_value(src, dst);
+            printf("get src %d dst %d, val %d\r\n", src, dst, ret);
         }
         return ret;
     }
 
-    virtual void set_current_preset_value(const uint8_t index, const uint16_t value) {
+    virtual void set_current_preset_value(uint8_t index, uint16_t value) {
         if(!mod_viever_mode) {
+            const uint8_t src = get_current_instasnce();
+            const uint8_t dst = actual_mod_dest;
+            printf("set index %d\r\n", index);
 
-        }
-        uint8_t actual_mod_src = get_current_instasnce();
-        if(actual_mod_dest < OSC_PARAM_COUNT*OSC_COUNT) {
-            uint8_t actual_osc_instance = actual_mod_dest / OSC_PARAM_COUNT;
-            uint8_t actual_osc_knob = actual_mod_dest % OSC_PARAM_COUNT;
-            printf("actual_osc_instance %d, actual_osc_knob %d\r\n", actual_osc_instance, actual_osc_knob);
-            _osc->set_preset_mod_value(actual_mod_src, actual_osc_instance, actual_osc_knob, value);
+            if(dst < OSC_PARAM_COUNT*OSC_COUNT) {
+               _osc->set_preset_mod_value(src, dst, value);
+               printf("set src %d dst %d, val %d\r\n", src, dst, value);
+            }
         }
     }
 
@@ -104,6 +108,7 @@ public:
         LOG::LOG0("%s dst %d selected\r\n", get_name(), index);
         actual_mod_dest = index;
         reset();
+        _osc->reset();
     }
 
 	virtual uint8_t get_midi_ch(){

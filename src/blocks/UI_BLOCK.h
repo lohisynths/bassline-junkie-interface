@@ -15,11 +15,13 @@
 
 #include <array>
 
+#define MOD_SRC_COUNT 6
+
 template<uint8_t KNOB_COUNT, uint8_t BUTTON_COUNT, uint8_t PARAM_COUNT, uint8_t COUNT>
 class UI_BLOCK {
 public:
 	typedef std::array<std::array<int, PARAM_COUNT>, COUNT> preset;
-    typedef std::array<std::array<std::array<int, PARAM_COUNT>, COUNT>, 6> mod_preset;
+    typedef std::array<std::array<int, PARAM_COUNT*MOD_SRC_COUNT>, MOD_SRC_COUNT> mod_preset;
 	typedef std::array<Knob::knob_init_map, KNOB_COUNT> knob_config;
 	typedef std::array<Button::button_init_map, BUTTON_COUNT> button_config;
 
@@ -47,7 +49,6 @@ public:
 
     mod_preset mod_preset_values = {};
     bool mod_viever_mode = false;
-    int current_mod_src = 0;
 
 
     /*! \typedef logger
@@ -83,19 +84,19 @@ public:
         return get_preset_value(current_instance, index);
     }
 
-    virtual int16_t get_preset_mod_value(uint8_t src, uint8_t dst, uint8_t index) {
-          return mod_preset_values[src][dst][index];
+    virtual int16_t get_preset_mod_value(uint8_t src, uint8_t dst) {
+          return mod_preset_values[src][dst];
     }
 
-    virtual void set_preset_mod_value(uint8_t src, uint8_t dst, uint8_t index, int value) {
-          mod_preset_values[src][dst][index] = value;
+    virtual void set_preset_mod_value(uint8_t src, uint8_t dst, int value) {
+          mod_preset_values[src][dst] = value;
     }
 
     virtual int16_t get_preset_value(uint8_t instance, uint8_t index) {
         if (!mod_viever_mode) {
             return preset_values[instance][index];
         } else {
-            return mod_preset_values[current_mod_src][current_instance][index];
+            return get_preset_mod_value(instance, index);
         }
     }
 
@@ -103,7 +104,7 @@ public:
         if(!mod_viever_mode) {
             preset_values[instance][index] = value;
         } else {
-            mod_preset_values[current_mod_src][current_instance][index] = value;
+            set_preset_mod_value(instance, index, value);
         }
     }
 
@@ -221,7 +222,6 @@ private:
 			if(COUNT != 1) {
 				if (index < COUNT) {
 					select_instance(index);
-					current_mod_src = index;
 				} else {
 					select_function(index-COUNT);
 				}
