@@ -43,8 +43,8 @@ OSC::button_config osc_button_ctrl={
 
 
 FLT::knob_config flt_knob_ctrl={
-    Knob::knob_init_map{3, 4, FLT_BIG_KNOB_MAX_VAL, COMMON_KNOB_LED_COUNT, (FLT_FIRST_ENC_LED + 0), FLT_BIG_KNOB_LED_COUNT},
-    Knob::knob_init_map{3, 7, KNOB_MAX_VAL , COMMON_KNOB_LED_COUNT, (FLT_FIRST_ENC_LED + 16), COMMON_KNOB_LED_COUNT}
+    Knob::knob_init_map{3, 4, FLT_BIG_KNOB_MAX_VAL, KNOB_MAX_LED_VAL, (FLT_FIRST_ENC_LED + 0), FLT_BIG_KNOB_LED_COUNT},
+    Knob::knob_init_map{3, 7, KNOB_MAX_VAL , KNOB_MAX_LED_VAL, (FLT_FIRST_ENC_LED + 16), COMMON_KNOB_LED_COUNT}
 };
 
 FLT::button_config flt_button_ctrl={
