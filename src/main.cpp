@@ -17,21 +17,14 @@
 
 #include "ui_config.h"
 
-MIDI *midi_glob;
+#include "platform/CircularBuffer.h"
+
+#define BUF_SIZE 128
+CircularBuffer<MIDIMessage, BUF_SIZE> buf;
+
 
 void do_message(MIDIMessage msg) {
-    switch (msg.type()) {
-        case MIDIMessage::NoteOnType:
-        	midi_glob->send_note_on(msg.key(), msg.velocity() , 0 );
-        	midi_glob->show_message(msg);
-            break;
-        case MIDIMessage::NoteOffType:
-        	midi_glob->send_note_off(msg.key(), msg.velocity() , 0 );
-            midi_glob->show_message(msg);
-            break;
-        default:
-            midi_glob->show_message(msg);
-    }
+	buf.push(msg);
 }
 
 /*! \typedef logger
@@ -69,7 +62,6 @@ int main() {
 
     baud(115200);
 	midi_usb.attach(do_message);
-	midi_glob = &midi;
 	leds.init();
 	mux.init();
     preset.load_global(0);
@@ -89,6 +81,23 @@ int main() {
     preset.update_preset();
 
 	while(1) {
+
+		while(buf.size() > 0) {
+			MIDIMessage msg = {};
+			buf.pop(msg);
+		    switch (msg.type()) {
+		        case MIDIMessage::NoteOnType:
+		        	midi.send_note_on(msg.key(), msg.velocity() , 0 );
+		        	midi.show_message(msg);
+		            break;
+		        case MIDIMessage::NoteOffType:
+		        	midi.send_note_off(msg.key(), msg.velocity() , 0 );
+		        	midi.show_message(msg);
+		            break;
+		        default:
+		        	midi.show_message(msg);
+		    }
+		}
 		mux.update();
 		vol.update();
 		osc.update();
@@ -100,7 +109,6 @@ int main() {
 
         mod.update2();
         preset.update();
-        wait_ms(2);
 	}
 }
 
