@@ -122,7 +122,7 @@ public:
                 _vol->get_preset(),
                 _mod->get_mod_preset()};
         global_presets[index] = asdsa;
-        save_preset_eeprom(index);
+        save_global();
         print_preset(main_preset);
     }
 
