@@ -10,7 +10,7 @@ set(PROJECT_ROOT_DIR ${PROJECT_SOURCE_DIR} CACHE STRING "Project root directory"
 
 set(CMAKE_MODULE_PATH "${PROJECT_ROOT_DIR}")
 
-set(MBED_LOCATION "/home/alax/git/nucleo_mbed/mbed-os/BUILD/mbed")
+set(MBED_LOCATION "/home/alax/git/mbed-os/BUILD/mbed")
 
 
 find_package(mbed REQUIRED)
