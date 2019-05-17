@@ -9,7 +9,7 @@
                 				
                 <macros>
                     					
-                    <stringMacro name="MBED_ROOT" type="VALUE_TEXT" value="/home/alax/git/nucleo_mbed/mbed-os/BUILD/mbed"/>
+                    <stringMacro name="MBED_ROOT" type="VALUE_TEXT" value="/home/alax/git/mbed-os/BUILD/mbed"/>
                     				
                 </macros>
                 				
