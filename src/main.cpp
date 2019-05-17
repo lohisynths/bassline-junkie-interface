@@ -100,6 +100,7 @@ int main() {
 
         mod.update2();
         preset.update();
+        wait_ms(2);
 	}
 }
 

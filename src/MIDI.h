@@ -24,7 +24,7 @@ public:
      */
     typedef logger<MIDI_LOG_LEVEL> LOG;
 
-    MIDI() : pc(PA_9, PA_10, 115200) {}
+    MIDI() : pc(PA_9, PA_10, 460800) {}
     virtual ~MIDI() {}
 
 	void send_cc(uint8_t CC, uint8_t val, uint8_t channel);

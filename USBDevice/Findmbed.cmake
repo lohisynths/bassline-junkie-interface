@@ -1,6 +1,4 @@
-if(NOT EXISTS ${MBED_LOCATION})
-    message(FATAL_ERROR "\nMBED_LOCATION not set\n")
-endif()
+set(MBED_LOCATION "/home/alax/git/mbed-os/BUILD/mbed")
 
 link_directories("${MBED_LOCATION}/TARGET_NUCLEO_F411RE/TOOLCHAIN_GCC_ARM/")
 
