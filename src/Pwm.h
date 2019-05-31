@@ -28,7 +28,7 @@ public:
 
     void backup_state();
     void restore_state();
-
+    void set_all(uint16_t val);
     uint16_t tmp1[PWM_DRIVERS_COUNT * PWM_COUNT];
 };
 

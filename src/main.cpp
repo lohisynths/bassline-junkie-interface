@@ -46,69 +46,29 @@ void baud(int baudrate) {
 }
 
 int main() {
-	USBMIDI midi_usb;
-	MIDI midi;
+
+
+
 	Pwm leds;
 	Mux mux;
-	Preset preset;
 
-	ADSR adsr;
-	OSC osc;
-    LFO lfo;
-	MOD mod;
-	FLT filter;
-	LED_DISP display;
-    VOL vol;
+
 
     baud(115200);
-	midi_usb.attach(do_message);
+
 	leds.init();
 	mux.init();
-    preset.load_global(0);
-	//preset.erase();
 
-    mod.init_(&adsr, &osc, &lfo, &mod, &filter, &vol);
-
-	adsr.init(adsr_knob_config, adsr_button_config, &midi, &leds, &mux);
-	osc.init(osc_knob_ctrl, osc_button_ctrl, &midi, &leds, &mux);
-    filter.init(flt_knob_ctrl, flt_button_ctrl, &midi, &leds, &mux);
-	mod.init(mod_knob_ctrl, mod_button_ctrl, &midi, &leds, &mux);
-	lfo.init(lfo_knob_ctrl, lfo_button_ctrl, &midi, &leds, &mux);
-	display.init(disp_knob_ctrl, disp_button_ctrl, &midi, &leds, &mux);
-	vol.init(vol_knob_ctrl, vol_button_ctrl, &midi, &leds, &mux);
-
-    preset.init(&adsr, &osc, &lfo, &mod, &filter, &vol, &display);
-    preset.update_preset();
-
+	// set following const for debug prints
+	//const LOG_LEVELS MUX_LOG_LEVEL = set_level(LOG_LEVELS::DISABLED);
+	mux.update();
+	int i =0;
 	while(1) {
-
-		while(buf.size() > 0) {
-			MIDIMessage msg = {};
-			buf.pop(msg);
-		    switch (msg.type()) {
-		        case MIDIMessage::NoteOnType:
-		        	midi.send_note_on(msg.key(), msg.velocity() , 0 );
-		        	midi.show_message(msg);
-		            break;
-		        case MIDIMessage::NoteOffType:
-		        	midi.send_note_off(msg.key(), msg.velocity() , 0 );
-		        	midi.show_message(msg);
-		            break;
-		        default:
-		        	midi.show_message(msg);
-		    }
+		if(i > (1<<11)) {
+			i = 0;
 		}
-		mux.update();
-		vol.update();
-		osc.update();
-        adsr.update();
-        lfo.update();
-        filter.update();
-        display.update();
-        mod.update();
-
-        mod.update2();
-        preset.update();
+		leds.set_all(i++);
+		//wait(0.01);
 	}
 }
 

@@ -7,7 +7,7 @@
  */
 
 #include "Button.h"
-#include <string>
+#include <string.h>
 
 void Button::init(button_init_map button_configuration, Pwm *_leds, Mux *_mux){
     leds = _leds;

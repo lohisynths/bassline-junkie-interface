@@ -15,6 +15,15 @@ Pwm::Pwm() {
 Pwm::~Pwm() {
 }
 
+
+void Pwm::set_all(uint16_t val) {
+	for (uint16_t i = 0; i < sizeof(pwm_array)/sizeof(pwm_array[0]); i++) {
+		set(i, val);
+	}
+}
+
+
+
 void Pwm::backup_state() {
     auto led_val = get();
     memcpy(tmp1, led_val, sizeof(tmp1));
