@@ -19,6 +19,15 @@
 
 #include "platform/CircularBuffer.h"
 
+/*! \var bool shit_init
+ *  \brier The very important variable which is responsible for some shity initialization on synthesizer preset.
+ *
+ *   All of the presets will be erased if shit_init = true.
+ *   Use if  preset.update_preset() after  preset.load_global() causes problems.
+ */
+const bool shit_init = false;
+
+
 #define BUF_SIZE 128
 CircularBuffer<MIDIMessage, BUF_SIZE> buf;
 
@@ -64,8 +73,11 @@ int main() {
 	midi_usb.attach(do_message);
 	leds.init();
 	mux.init();
-    preset.load_global(0);
-	//preset.erase();
+	if(shit_init) {
+	  preset.erase();
+	} else {
+	  preset.load_global(0);
+	}
 
     mod.init_(&adsr, &osc, &lfo, &mod, &filter, &vol);
 
