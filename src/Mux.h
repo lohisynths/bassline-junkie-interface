@@ -13,24 +13,41 @@
 
 #define MUX_COUNT 4
 
+const PinName MUX_ADDR_PINS[4] = {
+    PB_5,   // MUX ADDR A
+    PB_4,   // MUX ADDR B
+    PB_10,  // MUX ADDR C
+    PA_8    // MUX ADDR D
+};
+
+const PinName MUX_OUTPUT_PINS[MUX_COUNT] = {
+    PA_0,   // MUX 0 OUT
+    PA_1,   // MUX 1 OUT
+    PA_4,   // MUX 2 OUT
+    PB_0    // MUX 3 OUT
+};
+
+const PinName FAKE_MUX_INPUT_PINS[] = {
+    PB_2,
+    PB_1,
+    PB_15,
+    PB_13,
+    PC_2,
+    PC_3,
+    PC_0,
+    PC_1,
+    PB_14
+};
+
 
 class Mux {
 public:
-    // PA_0 - mux 0 - env encoders, env buttons
-    // 0-2  - env encoder 0
-    // 3-5  - env encoder 1
-    // 6-8  - env encoder 2
-    // 9-11 - env encoder 3
-    // 12   - env button  loop
-    // 13   - env button  2
-    // 14   - env button  1
-    // 15   - env button  0
-    // PB_2, PB_1, PB_15 - LFO knob
-    // PH_1, PC_2, PC_3, PC_0, PC_1, PH_0
-    //mux_raw(PB_2, PB_1, PB_15, /**/  PH_1, PC_2, PC_3, PC_0, PC_1, PH_0) {
-    //mux_raw(PB_2, PB_1, PB_15, PB_14, PB_13) {
-    Mux() : mux_adr(PB_5, PB_4, PB_10, PA_8),
-                 mux_raw(PB_2, PB_1, PB_15, /**/  PB_13, PC_2, PC_3, PC_0, PC_1, PB_14) {
+
+    Mux() : mux_adr(MUX_ADDR_PINS[0], MUX_ADDR_PINS[1], MUX_ADDR_PINS[2], MUX_ADDR_PINS[3]),
+            fake_mux_4(
+          FAKE_MUX_INPUT_PINS[0], FAKE_MUX_INPUT_PINS[1], FAKE_MUX_INPUT_PINS[2],
+          FAKE_MUX_INPUT_PINS[3], FAKE_MUX_INPUT_PINS[4], FAKE_MUX_INPUT_PINS[5],
+          FAKE_MUX_INPUT_PINS[6], FAKE_MUX_INPUT_PINS[7], FAKE_MUX_INPUT_PINS[8]) {
     }
 
 	virtual ~Mux() {};
@@ -58,7 +75,7 @@ private:
 	uint16_t mux_data[MUX_COUNT+1];
 	DigitalIn *mux[MUX_COUNT];
 	BusOut mux_adr;
-	BusIn mux_raw;
+	BusIn fake_mux_4;
 };
 
 #endif /* SRC_MUX_H_ */

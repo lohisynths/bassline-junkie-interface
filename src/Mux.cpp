@@ -7,11 +7,10 @@
 
 #include "Mux.h"
 
-static PinName mux_addr[MUX_COUNT] = {PA_0, PA_1, PA_4, PB_0};
 
 void Mux::init() {
 	for(int i=0; i < MUX_COUNT; i++) {
-		mux[i] = new DigitalIn(mux_addr[i]);
+		mux[i] = new DigitalIn(MUX_OUTPUT_PINS[i]);
 	}
 }
 
@@ -35,7 +34,7 @@ void Mux::update() {
 				CLEARBIT(mux_data[mux_nr], (i));
 		}
 	}
-	mux_data[MUX_COUNT] = mux_raw;
+	mux_data[MUX_COUNT] = fake_mux_4;
 }
 
 uint16_t *Mux::get(uint8_t index) {
