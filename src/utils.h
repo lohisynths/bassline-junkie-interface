@@ -13,7 +13,7 @@
 #define PWM_DRIVERS_COUNT 13
 #define PWM_COUNT 16
 
-#define KNOB_MAX_VAL                (32)
+#define KNOB_MAX_VAL                (64+16)
 #define KNOB_MAX_LED_VAL 			(256)
 #define COMMON_KNOB_LED_COUNT 		(10)
 #define BUTTON_MAX_LED_VAL 			(1024)
@@ -21,7 +21,7 @@
 #define FLT_BIG_KNOB_LED_COUNT      (12)
 #define FLT_BIG_KNOB_MAX_VAL        (127)
 #define DISPLAY_MAX_VAL             (2047)
-#define DISPLAY_KNOB_MAX_VAL        (1024)
+#define DISPLAY_KNOB_MAX_VAL        (512)
 
 #define CHECKBIT(n, x)      ((n >> x) & 1)
 #define SETBIT(n, x)        (n |=  (1L << x))

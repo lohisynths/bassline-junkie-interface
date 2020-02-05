@@ -23,6 +23,7 @@ void Mux::update() {
    LOG::LOG4( "%s 2 data %s\r\n", name, get_binary(mux_data[2]));
    LOG::LOG5( "%s 3 data %s\r\n", name, get_binary(mux_data[3]));
    LOG::LOG6( "%s 4 data %s\r\n", name, get_binary(mux_data[4]));
+   LOG::LOG6("\n");
 
 	for (uint8_t i = 0; i < 16; i++) {
 		mux_adr.write(i);
@@ -34,7 +35,6 @@ void Mux::update() {
 				CLEARBIT(mux_data[mux_nr], (i));
 		}
 	}
-	mux_data[MUX_COUNT] = fake_mux_4;
 }
 
 uint16_t *Mux::get(uint8_t index) {

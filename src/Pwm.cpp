@@ -7,7 +7,6 @@
 
 #include "Pwm.h"
 
-static uint16_t pwm_array[PWM_DRIVERS_COUNT * PWM_COUNT] = { };
 
 Pwm::Pwm() {
 }
@@ -69,7 +68,8 @@ void Pwm::clear() {
 }
 
 void Pwm::set(const uint16_t input[PWM_DRIVERS_COUNT * PWM_COUNT]) {
-	memcpy(pwm_array, input, sizeof(pwm_array));
+    size_t arr = sizeof(pwm_array);
+	memcpy(pwm_array, input, arr);
 	update_all();
 }
 

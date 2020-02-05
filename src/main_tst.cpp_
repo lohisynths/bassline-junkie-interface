@@ -1,0 +1,103 @@
+#include "mbed.h"
+#include "Mux.h"
+#include "Pwm.h"
+#include "Knob.h"
+
+#include "MIDI.h"
+#include "USBMIDI.h"
+#include "Preset.h"
+
+#include "blocks/OSC.h"
+#include "blocks/ADSR.h"
+#include "blocks/LFO.h"
+#include "blocks/FLT.h"
+#include "blocks/LED_DISP.h"
+#include "blocks/VOL.h"
+#include "blocks/MOD.h"
+
+#include "ui_config.h"
+
+#include "platform/CircularBuffer.h"
+
+/*! \var bool shit_init
+ *  \brier The very important variable which is responsible for some shity initialization on synthesizer preset.
+ *
+ *   All of the presets will be erased if shit_init = true.
+ *   Use if  preset.update_preset() after  preset.load_global() causes problems.
+ */
+const bool shit_init = false;
+
+
+#define BUF_SIZE 128
+CircularBuffer<MIDIMessage, BUF_SIZE> buf;
+
+
+void do_message(MIDIMessage msg) {
+	buf.push(msg);
+}
+
+/*! \typedef logger
+ *  \brief Typedef defining logger used in all instances of this object
+ */
+typedef logger<MAIN_LOG_LEVEL> LOG;
+
+
+void baud(int baudrate) {
+    Serial s(USBTX, USBRX);
+    s.baud(baudrate);
+
+    LOG::LOG0("\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+    LOG::LOG0("\t\t\t     ----******---******----\r\n");
+    LOG::LOG0("\t\t\t     ****BASSLINE--JUNKIE***\r\n");
+    LOG::LOG0("\t\t\t     ''**    SIEMANKO   **''\r\n");
+    LOG::LOG0("\t\t\t     %s at %s\r\n", __DATE__, __TIME__);
+    LOG::LOG0("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+}
+
+
+
+int main() {
+  uint16_t pies[PWM_DRIVERS_COUNT * PWM_COUNT] = {};
+
+	Pwm leds;
+	Mux mux;
+
+    baud(115200);
+
+	leds.init();
+
+	mux.init();
+
+    for(int i=0; i< PWM_DRIVERS_COUNT * PWM_COUNT;  i++) {
+        leds.set(i, 0);
+    }
+
+
+
+	bool blink = false;
+	while(1) {
+
+#if 0
+	  for(int i=0; i< PWM_DRIVERS_COUNT * PWM_COUNT;  i++) {
+	        leds.set(i, 0);
+	    }
+	    HAL_Delay(1000);
+
+	    for(int i=0; i< PWM_DRIVERS_COUNT * PWM_COUNT;  i++) {
+	         leds.set(i, 200);
+	     }
+        HAL_Delay(1000);
+#else
+
+        for(int i=0; i< PWM_DRIVERS_COUNT * PWM_COUNT;  i++) {
+            leds.set(i, 1*100);
+            HAL_Delay(50);
+            blink ^= 1;
+            leds.set(i, 0*100);
+            HAL_Delay(50);
+            mux.update();
+        }
+#endif
+    }
+}
+

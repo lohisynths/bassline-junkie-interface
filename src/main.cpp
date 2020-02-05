@@ -55,7 +55,7 @@ void baud(int baudrate) {
 }
 
 int main() {
-	USBMIDI midi_usb;
+//	USBMIDI midi_usb;
 	MIDI midi;
 	Pwm leds;
 	Mux mux;
@@ -70,7 +70,7 @@ int main() {
     VOL vol;
 
     baud(115200);
-	midi_usb.attach(do_message);
+//	midi_usb.attach(do_message);
 	leds.init();
 	mux.init();
 	if(shit_init) {

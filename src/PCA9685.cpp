@@ -28,7 +28,7 @@ int *PCA9685::i2c_probe() {
 void PCA9685::begin(void) {
     reset();
     setPrescale(64);
-    frequencyI2C(800000);
+    frequencyI2C(400000);
     LOG::LOG2("%s init done\r\n", name);
 }
 

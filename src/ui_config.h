@@ -68,7 +68,7 @@ MOD::button_config mod_button_ctrl={
 
 
 LFO::knob_config lfo_knob_ctrl={
-    Knob::knob_init_map{4, 0, KNOB_MAX_VAL, KNOB_MAX_LED_VAL, (LFO_FIRST_ENC_LED +  0), COMMON_KNOB_LED_COUNT},
+    Knob::knob_init_map{4, 6, KNOB_MAX_VAL, KNOB_MAX_LED_VAL, (LFO_FIRST_ENC_LED +  0), COMMON_KNOB_LED_COUNT},
 };
 
 LFO::button_config lfo_button_ctrl={
@@ -84,7 +84,7 @@ LFO::button_config lfo_button_ctrl={
 };
 
 LED_DISP::knob_config disp_knob_ctrl = {
-    Knob::knob_init_map{4, 6, DISPLAY_KNOB_MAX_VAL, DISPLAY_MAX_VAL, 0, 0 }
+    Knob::knob_init_map{4, 0, DISPLAY_KNOB_MAX_VAL, DISPLAY_MAX_VAL, 0, 0 }
 };
 
 LED_DISP::button_config disp_button_ctrl;

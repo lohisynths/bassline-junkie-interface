@@ -30,6 +30,9 @@ public:
     void restore_state();
 
     uint16_t tmp1[PWM_DRIVERS_COUNT * PWM_COUNT];
+    uint16_t pwm_array[PWM_DRIVERS_COUNT * PWM_COUNT];
+
+
 };
 
 #endif /* SRC_PWM_H_ */
