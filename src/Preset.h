@@ -53,8 +53,8 @@ public:
         ret = _disp->preset_changed();
         if(ret > -1) {
             LOG::LOG1("loading preset %d\r\n", ret);
-//            load_preset_eeprom(ret);
-//            update_preset();
+            load_preset_eeprom(ret);
+            update_preset();
             LOG::LOG1("preset %d loaded\r\n", ret);
         }
 
