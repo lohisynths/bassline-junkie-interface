@@ -39,7 +39,7 @@ OSC::knob_config osc_knob_ctrl={
 OSC::button_config osc_button_ctrl={
     Button::button_init_map{3, 3, KNOB_MAX_LED_VAL, (OSC_FIRST_BUTTON_LED+2)},
     Button::button_init_map{3, 2, KNOB_MAX_LED_VAL, (OSC_FIRST_BUTTON_LED+1)},
-    Button::button_init_map{1, 15, KNOB_MAX_LED_VAL, (OSC_FIRST_BUTTON_LED)}};
+    Button::button_init_map{3, 1, KNOB_MAX_LED_VAL, (OSC_FIRST_BUTTON_LED)}};
 
 
 FLT::knob_config flt_knob_ctrl={
